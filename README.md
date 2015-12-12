@@ -21,4 +21,4 @@ STRUCTURE FOLDERS
 * scenes - xml scenes for the ray-tracer
 * Debug - built ray_tracer for debuging
 * Release - built ray_tracer for the release
-* RemoteSystemTempFiles - automatically created from eclipse, with some project infos
+* RemoteSystemTempFiles - automatically created from eclipse, with some project informations
