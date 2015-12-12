@@ -13,3 +13,12 @@ LIBRARIES AND SOURCES
 (http://www.libpng.org/pub/png/libpng.html)
 * pugixml 
 (http://pugixml.org/)
+
+STRUCTURE FOLDERS
+* docs - documentation
+* libs - libraries
+* src - source code
+* scenes - xml scenes for the ray-tracer
+* Debug - built ray_tracer for debuging
+* Release - built ray_tracer for the release
+* RemoteSystemTempFiles - automatically created from eclipse, with some project infos
