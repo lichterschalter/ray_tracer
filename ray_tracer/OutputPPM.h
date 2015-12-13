@@ -8,6 +8,7 @@
 #ifndef OUTPUTPPM_H_
 #define OUTPUTPPM_H_
 
+#include <string>
 #include "OutputImage.h"
 using namespace std;
 
@@ -17,7 +18,7 @@ class OutputPPM : public OutputImage{
 public:
 	OutputPPM() { };
 	virtual ~OutputPPM();
-	virtual void createOutput( int width, int height );
+	virtual void createOutput( string fileName, int width, int height );
 };
 
 

@@ -8,6 +8,7 @@
 #ifndef OUTPUTIMAGE_H_
 #define OUTPUTIMAGE_H_
 
+#include <string>
 using namespace std;
 
 class OutputImage{
@@ -16,7 +17,7 @@ class OutputImage{
 public:
 	OutputImage() { };
 	virtual ~OutputImage(){ };
-	virtual void createOutput( int width, int height ) = 0;
+	virtual void createOutput( string fileName, int width, int height ) = 0;
 };
 
 

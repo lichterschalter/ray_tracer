@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <string>
 #include "RayTracer.h"
 #include "OutputPPM.h"
 #include "OutputImage.h"
@@ -20,8 +21,9 @@ int main() {
 void RayTracer::main() {
 	cout<<"RayTracer.main()"<<endl;
 
+	string fileName = "example";
 	OutputImage* outputImage = new OutputPPM();
-	outputImage->createOutput( 100, 100 );
+	outputImage->createOutput( fileName, 100, 100 );
 }
 
 

@@ -7,18 +7,21 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "OutputPPM.h"
 #include "OutputImage.h"
 using namespace std;
 
 OutputPPM::~OutputPPM(){ }
 
-void OutputPPM::createOutput( int width, int height ){
+void OutputPPM::createOutput( string fileName, int width, int height ){
 	cout << "OutputPPM.createOutput()"<<endl;
+	string fName = fileName + ".ppm";
+	const char * fNameConst = fName.c_str();
 	ofstream myfile;
 	myfile.exceptions ( std::ofstream::failbit | std::ofstream::badbit );
 	try{
-		myfile.open("example.ppm");
+		myfile.open(fNameConst);
 		myfile << "P3 \n \
 			# sample.ppm \n" << \
 			width << " " << height << " \n \
