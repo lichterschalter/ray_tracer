@@ -10,6 +10,8 @@
 #include "OutputImage.h"
 using namespace std;
 
+OutputPPM::~OutputPPM(){ }
+
 void OutputPPM::createOutput(){
 	cout << "outputPPM ready to work!!!"<<endl;
 }

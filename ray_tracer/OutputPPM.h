@@ -12,7 +12,11 @@
 using namespace std;
 
 class OutputPPM : public OutputImage{
+	OutputPPM( const OutputPPM& ){ };
+	OutputPPM& operator=( const OutputPPM& ){ return *this; };
 public:
+	OutputPPM() { };
+	virtual ~OutputPPM();
 	virtual void createOutput();
 };
 

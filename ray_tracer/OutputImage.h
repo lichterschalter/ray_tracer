@@ -11,9 +11,11 @@
 using namespace std;
 
 class OutputImage{
+	OutputImage( const OutputImage& ){ };
+	OutputImage& operator=( const OutputImage& ){ return *this; };
 public:
-	OutputImage(){};
-	virtual ~OutputImage(){};
+	OutputImage() { };
+	virtual ~OutputImage(){ };
 	virtual void createOutput() = 0;
 };
 
