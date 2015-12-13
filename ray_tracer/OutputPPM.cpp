@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include "OutputPPM.h"
 #include "OutputImage.h"
 using namespace std;
@@ -13,6 +14,17 @@ using namespace std;
 OutputPPM::~OutputPPM(){ }
 
 void OutputPPM::createOutput(){
-	cout << "outputPPM ready to work!!!"<<endl;
+	cout << "OutputPPM.createOutput()"<<endl;
+	ofstream myfile;
+	myfile.open("example.ppm");
+	myfile << "P3 \n \
+		# sample.ppm \n \
+		4 4 \n \
+		15 \n \
+		 0  0  0    0  0  0    0  0  0   15  0 15 \n \
+		 0  0  0   15 15 15    0  0  0    0  0  0 \n \
+		 0  0  0    0  0  0    0 15  7    0  0  0 \n \
+		15  0 15    0  0  0    0  0  0    0  0  0";
+	myfile.close();
 }
 

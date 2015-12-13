@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <fstream>
 #include "RayTracer.h"
 #include "OutputPPM.h"
 using namespace std;
@@ -22,18 +21,6 @@ void RayTracer::main() {
 
 	OutputPPM outputPPM;
 	outputPPM.createOutput();
-
-	//ofstream myfile;
-	//myfile.open("example.ppm");
-	/*myfile << "P3 \n \
-		# sample.ppm \n \
-		4 4 \n \
-		15 \n \
-		 0  0  0    0  0  0    0  0  0   15  0 15 \n \
-		 0  0  0    0 15  7    0  0  0    0  0  0 \n \
-		 0  0  0    0  0  0    0 15  7    0  0  0 \n \
-		15  0 15    0  0  0    0  0  0    0  0  0";*/
-	//myfile.close();
 }
 
 
