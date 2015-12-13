@@ -17,8 +17,7 @@ LIBRARIES AND SOURCES
 STRUCTURE FOLDERS
 * docs - documentation
 * libs - libraries
-* src - source code
+* ray_tracer - code
 * scenes - xml scenes for the ray-tracer
-* Debug - built ray_tracer for debuging
-* Release - built ray_tracer for the release
+* ray_tracer/Debug - binary code of already built ray_tracer for debuging
 * RemoteSystemTempFiles - automatically created from eclipse, with some project informations
