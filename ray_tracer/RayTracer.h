@@ -9,7 +9,8 @@
 #define RAYTRACER_H_
 
 class RayTracer{
-
+public:
+	void main();
 };
 
 #endif /* RAYTRACER_H_ */

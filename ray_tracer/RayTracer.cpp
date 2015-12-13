@@ -11,8 +11,15 @@
 using namespace std;
 
 int main() {
+	RayTracer raytracer;
+	raytracer.main();
+	return 0;
+}
+
+void RayTracer::main() {
 	ofstream myfile;
 	myfile.open("example.ppm");
+	cout<<"h";
 	myfile << "P3 \n \
 		# sample.ppm \n \
 		4 4 \n \
@@ -21,6 +28,7 @@ int main() {
 		 0  0  0    0 15  7    0  0  0    0  0  0 \n \
 		 0  0  0    0  0  0    0 15  7    0  0  0 \n \
 		15  0 15    0  0  0    0  0  0    0  0  0";
+	myfile.close();
 }
 
 
