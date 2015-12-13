@@ -17,7 +17,7 @@ class OutputPPM : public OutputImage{
 public:
 	OutputPPM() { };
 	virtual ~OutputPPM();
-	virtual void createOutput();
+	virtual void createOutput( int width, int height );
 };
 
 

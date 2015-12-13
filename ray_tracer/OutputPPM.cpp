@@ -13,13 +13,13 @@ using namespace std;
 
 OutputPPM::~OutputPPM(){ }
 
-void OutputPPM::createOutput(){
+void OutputPPM::createOutput( int width, int height ){
 	cout << "OutputPPM.createOutput()"<<endl;
 	ofstream myfile;
 	myfile.open("example.ppm");
 	myfile << "P3 \n \
-		# sample.ppm \n \
-		4 4 \n \
+		# sample.ppm \n" << \
+		width << " " << height << " \n \
 		15 \n \
 		 0  0  0    0  0  0    0  0  0   15  0 15 \n \
 		 0  0  0   15 15 15    0  0  0    0  0  0 \n \

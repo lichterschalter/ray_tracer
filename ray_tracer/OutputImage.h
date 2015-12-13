@@ -16,7 +16,7 @@ class OutputImage{
 public:
 	OutputImage() { };
 	virtual ~OutputImage(){ };
-	virtual void createOutput() = 0;
+	virtual void createOutput( int width, int height ) = 0;
 };
 
 
