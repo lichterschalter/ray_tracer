@@ -21,7 +21,7 @@ void RayTracer::main() {
 	cout<<"RayTracer.main()"<<endl;
 
 	OutputImage* outputImage = new OutputPPM();
-	outputImage->createOutput( 4, 4 );
+	outputImage->createOutput( 100, 100 );
 }
 
 

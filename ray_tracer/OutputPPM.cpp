@@ -20,11 +20,16 @@ void OutputPPM::createOutput( int width, int height ){
 	myfile << "P3 \n \
 		# sample.ppm \n" << \
 		width << " " << height << " \n \
-		15 \n \
-		 0  0  0    0  0  0    0  0  0   15  0 15 \n \
-		 0  0  0   15 15 15    0  0  0    0  0  0 \n \
-		 0  0  0    0  0  0    0 15  7    0  0  0 \n \
-		15  0 15    0  0  0    0  0  0    0  0  0";
+		100 \n";
+	while( height > 0 ){
+		--height;
+		int w = width;
+		while( w > 0){
+			--w;
+			myfile << "0 0 0  ";
+		}
+		myfile << "\n";
+	}
 	myfile.close();
 }
 
