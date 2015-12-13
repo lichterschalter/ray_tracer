@@ -8,6 +8,7 @@
 #include <iostream>
 #include "RayTracer.h"
 #include "OutputPPM.h"
+#include "OutputImage.h"
 using namespace std;
 
 int main() {
@@ -19,8 +20,8 @@ int main() {
 void RayTracer::main() {
 	cout<<"RayTracer.main()"<<endl;
 
-	OutputPPM outputPPM;
-	outputPPM.createOutput();
+	OutputImage* outputImage = new OutputPPM();
+	outputImage->createOutput();
 }
 
 
