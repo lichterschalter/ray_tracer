@@ -30,11 +30,11 @@ Projection::Projection(){
 	//use contentImgPlane[row][colum]
 	int size = 10; //here should be used width later
 	for (int i = 0; i < size; i++) {
-		contentImgPlane.push_back(vector<int>()); // Add one empty row
+		contentImgPlane.push_back(vector<string>()); // Add one empty row
 	}
 	for (int j = 0; j < 20; j++) {
 	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
-	    	contentImgPlane[i].push_back(i + j); // Add column to every rows
+	    	contentImgPlane[i].push_back( "0, 0, 0" ); // Add column to every rows
 	    }
 	}
 };
@@ -50,6 +50,17 @@ Projection::Projection( const Projection& ){
 	heightImgPlane = 0;
 	widthImgPlane = 0;
 	//contentImgPlane;
+
+	//use contentImgPlane[row][colum]
+	int size = 10; //here should be used width later
+	for (int i = 0; i < size; i++) {
+		contentImgPlane.push_back(vector<string>()); // Add one empty row
+	}
+	for (int j = 0; j < 20; j++) {
+	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
+	    	contentImgPlane[i].push_back( "0, 0, 0" ); // Add column to every rows
+	    }
+	}
 };
 Projection& Projection::operator=( const Projection& ){ return *this; };
 
@@ -70,10 +81,14 @@ void Projection::print(){
 }
 
 void Projection::printContentImgPlane(){
+	for (unsigned int i = 0; i < contentImgPlane.size(); i++){
+		cout << "    " << i << ":       ";
+	}
+	cout << endl;
 	for (int j = 0; j < 20; j++) {
 		cout << j << ": ";
 	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
-	    	cout << contentImgPlane[ i ][ j ] << ", ";
+	    	cout << "| " << contentImgPlane[ i ][ j ] << " |  ";
 	    }
 	    cout << endl;
 	}

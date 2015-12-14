@@ -9,6 +9,7 @@
 #define PROJECTION_H_
 
 #include <vector>
+#include <string>
 #include "../libs/glm/glm/fwd.hpp"
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
@@ -28,7 +29,7 @@ class Projection{
 	glm::vec4 posImgPlaneBottomRight;
 	int heightImgPlane;
 	int widthImgPlane;
-	std::vector< std::vector<int> > contentImgPlane;
+	std::vector< std::vector<std::string> > contentImgPlane;
 
 	//RAY
 	Ray ray;
