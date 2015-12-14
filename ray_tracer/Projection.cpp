@@ -24,17 +24,16 @@ Projection::Projection(){
 	posImgPlaneCenter = glm::vec4 ( 0, 0, 0, 0);
 	posImgPlaneTopLeft = glm::vec4 ( 0, 0, 0, 0);
 	posImgPlaneBottomRight = glm::vec4 ( 0, 0, 0, 0);
-	heightImgPlane = 0;
-	widthImgPlane = 0;
+	heightImgPlane = 512;
+	widthImgPlane = 10;
 
 	//use contentImgPlane[row][colum]
-	int size = 10; //here should be used width later
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < widthImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
 	}
-	for (int j = 0; j < 20; j++) {
+	for (int j = 0; j < heightImgPlane; j++) {
 	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
-	    	contentImgPlane[i].push_back( "0, 0, 0" ); // Add column to every rows
+	    	contentImgPlane[i].push_back( "0 0 0  " ); // Add column to every rows
 	    }
 	}
 };
@@ -47,18 +46,17 @@ Projection::Projection( const Projection& ){
 	posImgPlaneCenter = glm::vec4 ( 0, 0, 0, 0);
 	posImgPlaneTopLeft = glm::vec4 ( 0, 0, 0, 0);
 	posImgPlaneBottomRight = glm::vec4 ( 0, 0, 0, 0);
-	heightImgPlane = 0;
-	widthImgPlane = 0;
+	heightImgPlane = 10;
+	widthImgPlane = 20;
 	//contentImgPlane;
 
 	//use contentImgPlane[row][colum]
-	int size = 10; //here should be used width later
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < widthImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
 	}
-	for (int j = 0; j < 20; j++) {
+	for (int j = 0; j < heightImgPlane; j++) {
 	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
-	    	contentImgPlane[i].push_back( "0, 0, 0" ); // Add column to every rows
+	    	contentImgPlane[i].push_back( "0 0 0  " ); // Add column to every rows
 	    }
 	}
 };
@@ -85,13 +83,33 @@ void Projection::printContentImgPlane(){
 		cout << "    " << i << ":       ";
 	}
 	cout << endl;
-	for (int j = 0; j < 20; j++) {
+	for (int j = 0; j < heightImgPlane; j++) {
 		cout << j << ": ";
 	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    	cout << "| " << contentImgPlane[ i ][ j ] << " |  ";
 	    }
 	    cout << endl;
 	}
+}
+
+string Projection::contentImgPlaneToString(){
+	string outputString;
+	for (int j = 0; j < widthImgPlane; j++) {
+	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
+	    	outputString.append( contentImgPlane[ i ][ j ] );
+	    }
+	    outputString.append("\n");
+	}
+    cout << outputString;
+	return outputString;
+}
+
+int Projection::getWidthImgPlane(){
+	return widthImgPlane;
+}
+
+int Projection::getHeightImgPlane(){
+	return heightImgPlane;
 }
 
 

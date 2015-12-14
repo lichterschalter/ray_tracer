@@ -41,6 +41,9 @@ public:
 	virtual ~Projection();
 	void print();
 	void printContentImgPlane();
+	std::string contentImgPlaneToString();
+	int getWidthImgPlane();
+	int getHeightImgPlane();
 };
 
 

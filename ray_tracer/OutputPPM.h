@@ -17,7 +17,7 @@ class OutputPPM : public OutputImage{
 public:
 	OutputPPM();
 	virtual ~OutputPPM();
-	virtual void createOutput( std::string fileName, int width, int height );
+	virtual void createOutput( std::string fileName, std::string content, int width, int height );
 };
 
 

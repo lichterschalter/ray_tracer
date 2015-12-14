@@ -22,13 +22,19 @@ int main() {
 void RayTracer::main() {
 	cout<<"RayTracer.main()" << endl;
 
-	/*string fileName = "example";
-	OutputImage* outputImage = new OutputPPM();
-	outputImage->createOutput( fileName, 100, 100 );*/
-
 	Projection projection;
-	projection.print();
-	projection.printContentImgPlane();
+	//projection.print();
+	//projection.printContentImgPlane();
+	string ppmOutput;
+	int width = projection.getWidthImgPlane();
+	int height = projection.getHeightImgPlane();
+	ppmOutput = projection.contentImgPlaneToString();
+
+	string fileName = "example";
+	OutputImage* outputImage = new OutputPPM();
+	outputImage->createOutput( fileName, ppmOutput, height, width );
+
+
 }
 
 
