@@ -1,40 +1,43 @@
 /*
- * Camera.h
+ * Projection.h
  *
  *  Created on: 14.12.2015
  *      Author: Fabian Türks
  */
 
-#ifndef VIEWFRUSTRUM_H_
-#define VIEWFRUSTRUM_H_
+#ifndef PROJECTION_H_
+#define PROJECTION_H_
 
 #include "../libs/glm/glm/fwd.hpp"
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
+#include "Ray.h"
 
-class Camera{
+class Projection{
+	//Camera
 	glm::vec4 posCamera;
 	glm::vec4 upCamera;
 	float horizontal_fov;
 	float vertical_fov;
+
+	//IMAGE PLANE
 	glm::vec4 posImgPlaneCenter;
 	glm::vec4 posImgPlaneTopLeft;
 	glm::vec4 posImgPlaneBottomRight;
 	int heightImgPlane;
 	int widthImgPlane;
 	//glm::vec3[][] contentImgPlane;
-	glm::vec4 posRay;
-	float deltaRay;
 
+	//RAY
+	Ray ray;
 
-
-	Camera( const Camera& );
-	Camera& operator=( const Camera& );
+	Projection( const Projection& );
+	Projection& operator=( const Projection& );
 public:
-	Camera();
-	virtual ~Camera();
+	Projection();
+	virtual ~Projection();
 };
 
 
 
-#endif /* VIEWFRUSTRUM_H_ */
+#endif /* PROJECTION_H_ */
