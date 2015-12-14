@@ -2,7 +2,7 @@
  * RayTracer.cpp
  *
  *  Created on: 12.12.2015
- *      Author: rustong_pu
+ *      Author: Fabian Türk
  */
 
 #include <iostream>
@@ -19,7 +19,7 @@ int main() {
 }
 
 void RayTracer::main() {
-	cout<<"RayTracer.main()"<<endl;
+	cout<<"RayTracer.main()" << endl;
 
 	string fileName = "example";
 	OutputImage* outputImage = new OutputPPM();

@@ -2,7 +2,7 @@
  * OutputPPM.cpp
  *
  *  Created on: 13.12.2015
- *      Author: rustong_pu
+ *      Author: Fabian Türk
  */
 
 #include <iostream>
@@ -12,7 +12,12 @@
 #include "OutputImage.h"
 using namespace std;
 
-OutputPPM::~OutputPPM(){ }
+OutputPPM::OutputPPM(){ };
+OutputPPM::~OutputPPM(){ };
+OutputPPM::OutputPPM( const OutputPPM& ){ };
+OutputPPM& OutputPPM::operator=( const OutputPPM& ){ return *this; };
+
+
 
 void OutputPPM::createOutput( string fileName, int width, int height ){
 	cout << "OutputPPM.createOutput()"<<endl;
@@ -35,8 +40,8 @@ void OutputPPM::createOutput( string fileName, int width, int height ){
 			}
 			myfile << "\n";
 		}
-	}catch( ofstream::failure &e ){
-		cout << "Exception writing PPM file!";
+	}catch( exception const &e ){
+		cerr << "Exception writing PPM file!" << endl;
 	}
 	myfile.close();
 }

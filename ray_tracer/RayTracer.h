@@ -2,7 +2,7 @@
  * RayTracer.h
  *
  *  Created on: 12.12.2015
- *      Author: rustong_pu
+ *      Author: Fabian Türk
  */
 
 #ifndef RAYTRACER_H_

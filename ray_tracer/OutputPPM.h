@@ -2,7 +2,7 @@
  * OutputPPM.h
  *
  *  Created on: 13.12.2015
- *      Author: rustong_pu
+ *      Author: Fabian Türk
  */
 
 #ifndef OUTPUTPPM_H_
@@ -13,10 +13,10 @@
 using namespace std;
 
 class OutputPPM : public OutputImage{
-	OutputPPM( const OutputPPM& ){ };
-	OutputPPM& operator=( const OutputPPM& ){ return *this; };
+	OutputPPM( const OutputPPM& );
+	OutputPPM& operator=( const OutputPPM& );
 public:
-	OutputPPM() { };
+	OutputPPM();
 	virtual ~OutputPPM();
 	virtual void createOutput( string fileName, int width, int height );
 };

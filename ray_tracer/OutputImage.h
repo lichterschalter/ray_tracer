@@ -2,7 +2,7 @@
  * OutputImage.h
  *
  *  Created on: 13.12.2015
- *      Author: rustong_pu
+ *      Author: Fabian Türk
  */
 
 #ifndef OUTPUTIMAGE_H_
