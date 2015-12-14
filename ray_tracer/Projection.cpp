@@ -51,6 +51,7 @@ void Projection::print(){
 	cout << "posImgPlaneBottomRight: " << glm::to_string(posImgPlaneBottomRight) << endl;
 	cout << "heightImgPlane: " << heightImgPlane << endl;
 	cout << "widthImgPlane: " << widthImgPlane << endl;
+	cout << "ray: \n [ " << ray.toString() << " ]"<< endl;
 }
 
 

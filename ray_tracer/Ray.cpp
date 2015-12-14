@@ -6,8 +6,11 @@
  */
 
 #include <iostream>
+#include <string>
+#include <sstream>
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
+#include "../libs/glm/glm/gtx/string_cast.hpp"
 #include "Ray.h"
 using namespace std;
 
@@ -21,5 +24,13 @@ Ray::Ray( const Ray& ){
 	delta = 1;
 };
 Ray& Ray::operator=( const Ray& ){ return *this; };
+
+std::string Ray::toString(){
+	string positionStr = glm::to_string(position);
+	stringstream sstr;
+	sstr << delta;
+	string deltaStr = sstr.str();
+	return "position: " + positionStr + "\n   delta: " + deltaStr;
+}
 
 

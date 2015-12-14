@@ -8,6 +8,7 @@
 #ifndef RAY_H_
 #define RAY_H_
 
+#include <string>
 #include "../libs/glm/glm/fwd.hpp"
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
@@ -21,6 +22,7 @@ class Ray{
 public:
 	Ray();
 	virtual ~Ray();
+	std::string toString();
 };
 
 
