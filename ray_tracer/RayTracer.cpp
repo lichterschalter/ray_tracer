@@ -28,6 +28,7 @@ void RayTracer::main() {
 
 	Projection projection;
 	projection.print();
+	projection.printContentImgPlane();
 }
 
 

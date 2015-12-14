@@ -28,8 +28,7 @@ class Projection{
 	glm::vec4 posImgPlaneBottomRight;
 	int heightImgPlane;
 	int widthImgPlane;
-	//araay<glm::vec3, contentImgPlane;
-	//array<int,3> myarray {10,20,30};
+	std::vector< std::vector<int> > contentImgPlane;
 
 	//RAY
 	Ray ray;
@@ -40,6 +39,7 @@ public:
 	Projection();
 	virtual ~Projection();
 	void print();
+	void printContentImgPlane();
 };
 
 
