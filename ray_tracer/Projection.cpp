@@ -37,8 +37,6 @@ Projection::Projection( const Projection& ){
 	heightImgPlane = 0;
 	widthImgPlane = 0;
 	//contentImgPlane;
-	posRay = glm::vec4 ( 0, 0, 0, 0);
-	deltaRay = 1;
 };
 Projection& Projection::operator=( const Projection& ){ return *this; };
 

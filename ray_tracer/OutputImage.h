@@ -9,7 +9,7 @@
 #define OUTPUTIMAGE_H_
 
 #include <string>
-using namespace std;
+
 
 class OutputImage{
 	OutputImage( const OutputImage& ){ };
@@ -17,7 +17,7 @@ class OutputImage{
 public:
 	OutputImage() { };
 	virtual ~OutputImage(){ };
-	virtual void createOutput( string fileName, int width, int height ) = 0;
+	virtual void createOutput( std::string fileName, int width, int height ) = 0;
 };
 
 

@@ -8,12 +8,14 @@
 #ifndef PROJECTION_H_
 #define PROJECTION_H_
 
+#include <vector>
 #include "../libs/glm/glm/fwd.hpp"
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
 #include "Ray.h"
 
 class Projection{
+
 	//Camera
 	glm::vec4 posCamera;
 	glm::vec4 upCamera;
@@ -26,7 +28,8 @@ class Projection{
 	glm::vec4 posImgPlaneBottomRight;
 	int heightImgPlane;
 	int widthImgPlane;
-	//glm::vec3[][] contentImgPlane;
+	//araay<glm::vec3, contentImgPlane;
+	//array<int,3> myarray {10,20,30};
 
 	//RAY
 	Ray ray;
