@@ -39,6 +39,7 @@ class Projection{
 public:
 	Projection();
 	virtual ~Projection();
+	void print();
 };
 
 
