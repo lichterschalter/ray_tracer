@@ -5,8 +5,8 @@
  *      Author: Fabian Türks
  */
 
-#ifndef CAMERA_H_
-#define CAMERA_H_
+#ifndef VIEWFRUSTRUM_H_
+#define VIEWFRUSTRUM_H_
 
 #include "../libs/glm/glm/fwd.hpp"
 #include "../libs/glm/glm/vec4.hpp"
@@ -26,4 +26,4 @@ public:
 
 
 
-#endif /* CAMERA_H_ */
+#endif /* VIEWFRUSTRUM_H_ */

@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include "../libs/glm/glm/vec4.hpp"
-#include "Camera.h"
+#include "ViewFrustrum.h"
 using namespace std;
 
 Camera::Camera(){
