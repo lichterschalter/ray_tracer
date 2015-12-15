@@ -17,13 +17,13 @@
 using namespace std;
 
 Projection::Projection(){
-	posCamera = glm::vec4 ( 0.0, 0.0, 0.0, 0.0 );
-	upCamera = glm::vec4 ( 0, 1, 0, 0 );
+	posCamera = glm::vec4 ( 0.0, 0.0, 0.0, 1.0 );
+	upCamera = glm::vec4 ( 0, 1, 0, 1 );
+	lookAtCamera = glm::vec4 ( 0, 0, 0, 1 );
 	horizontal_fov = 45;
 	vertical_fov = 45;
-	posImgPlaneCenter = glm::vec4 ( 0, 0, 0, 0);
-	posImgPlaneTopLeft = glm::vec4 ( 0, 0, 0, 0);
-	posImgPlaneBottomRight = glm::vec4 ( 0, 0, 0, 0);
+	posImgPlaneTopLeft = glm::vec4 ( 0, 0, 0, 1 );
+	posImgPlaneBottomRight = glm::vec4 ( 0, 0, 0, 1 );
 	heightImgPlane = 512;
 	widthImgPlane = 10;
 
@@ -33,22 +33,21 @@ Projection::Projection(){
 	}
 	for (int j = 0; j < heightImgPlane; j++) {
 	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
-	    	contentImgPlane[i].push_back( "0 0 0  " ); // Add column to every rows
+	    	contentImgPlane.at( i ).push_back( "0 0 0  " ); // Add column to every rows
 	    }
 	}
 };
 Projection::~Projection(){ };
 Projection::Projection( const Projection& ){
-	posCamera = glm::vec4 ( 0, 0, 0, 0 );
-	upCamera = glm::vec4 ( 0, 1, 0, 0 );
+	posCamera = glm::vec4 ( 0.0, 0.0, 0.0, 1.0 );
+	upCamera = glm::vec4 ( 0, 1, 0, 1 );
+	lookAtCamera = glm::vec4 ( 0, 0, 0, 1 );
 	horizontal_fov = 45;
 	vertical_fov = 45;
-	posImgPlaneCenter = glm::vec4 ( 0, 0, 0, 0);
-	posImgPlaneTopLeft = glm::vec4 ( 0, 0, 0, 0);
-	posImgPlaneBottomRight = glm::vec4 ( 0, 0, 0, 0);
-	heightImgPlane = 10;
-	widthImgPlane = 20;
-	//contentImgPlane;
+	posImgPlaneTopLeft = glm::vec4 ( 0, 0, 0, 1 );
+	posImgPlaneBottomRight = glm::vec4 ( 0, 0, 0, 1 );
+	heightImgPlane = 512;
+	widthImgPlane = 10;
 
 	//use contentImgPlane[row][colum]
 	for (int i = 0; i < widthImgPlane; i++) {
@@ -56,7 +55,7 @@ Projection::Projection( const Projection& ){
 	}
 	for (int j = 0; j < heightImgPlane; j++) {
 	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
-	    	contentImgPlane[i].push_back( "0 0 0  " ); // Add column to every rows
+	    	contentImgPlane.at( i ).push_back( "0 0 0  " ); // Add column to every rows
 	    }
 	}
 };
@@ -67,9 +66,9 @@ void Projection::print(){
 	cout << "--begin class Projection--" << endl;
 	cout << "posCamera: " << glm::to_string(posCamera) << endl;
 	cout << "upCamera: " << glm::to_string(upCamera) << endl;
+	cout << "lookAtCamera: " << glm::to_string(lookAtCamera) << endl;
 	cout << "horizontal_fov: " << horizontal_fov << endl;
 	cout << "vertical_fov: " << vertical_fov << endl;
-	cout << "posImgPlaneCenter: " << glm::to_string(posImgPlaneCenter) << endl;
 	cout << "posImgPlaneTopLeft: " << glm::to_string(posImgPlaneTopLeft) << endl;
 	cout << "posImgPlaneBottomRight: " << glm::to_string(posImgPlaneBottomRight) << endl;
 	cout << "heightImgPlane: " << heightImgPlane << endl;
@@ -86,7 +85,7 @@ void Projection::printContentImgPlane(){
 	for (int j = 0; j < heightImgPlane; j++) {
 		cout << j << ": ";
 	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
-	    	cout << "| " << contentImgPlane[ i ][ j ] << " |  ";
+	    	cout << "| " << contentImgPlane.at( i ).at( j ) << " |  ";
 	    }
 	    cout << endl;
 	}
@@ -96,7 +95,7 @@ string Projection::contentImgPlaneToString(){
 	string outputString;
 	for (int j = 0; j < widthImgPlane; j++) {
 	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
-	    	outputString.append( contentImgPlane[ i ][ j ] );
+	    	outputString.append( contentImgPlane.at( i ).at( j ) );
 	    }
 	    outputString.append("\n");
 	}

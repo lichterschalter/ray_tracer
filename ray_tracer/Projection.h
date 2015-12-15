@@ -20,11 +20,11 @@ class Projection{
 	//Camera
 	glm::vec4 posCamera;
 	glm::vec4 upCamera;
+	glm::vec4 lookAtCamera;
 	float horizontal_fov;
 	float vertical_fov;
 
 	//IMAGE PLANE
-	glm::vec4 posImgPlaneCenter;
 	glm::vec4 posImgPlaneTopLeft;
 	glm::vec4 posImgPlaneBottomRight;
 	int heightImgPlane;
