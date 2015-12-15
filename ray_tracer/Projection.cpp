@@ -16,18 +16,20 @@
 #include "Projection.h"
 using namespace std;
 
-Projection::Projection(){
-	posCamera = glm::vec4 ( 0.0, 0.0, 0.0, 1.0 );
-	upCamera = glm::vec4 ( 0, 1, 0, 1 );
-	lookAtCamera = glm::vec4 ( 0, 0, 0, 1 );
-	horizontal_fov = 45;
-	vertical_fov = 45;
+Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
+		float horizontal_fov, float vertical_fov, int heightImgPlane, int widthImgPlane ){
+	this->posCamera = posCamera;
+	this->upCamera = upCamera;
+	this->lookAtCamera = lookAtCamera;
+	this->horizontal_fov = horizontal_fov;
+	this->vertical_fov = vertical_fov;
+	this->heightImgPlane = heightImgPlane;
+	this->widthImgPlane = widthImgPlane;
+
 	posImgPlaneTopLeft = glm::vec4 ( 0, 0, 0, 1 );
 	posImgPlaneBottomRight = glm::vec4 ( 0, 0, 0, 1 );
-	heightImgPlane = 512;
-	widthImgPlane = 10;
 
-	//use contentImgPlane[row][colum]
+	//use contentImgPlane[row][column]
 	for (int i = 0; i < widthImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
 	}
@@ -49,7 +51,7 @@ Projection::Projection( const Projection& ){
 	heightImgPlane = 512;
 	widthImgPlane = 10;
 
-	//use contentImgPlane[row][colum]
+	//use contentImgPlane[row][column]
 	for (int i = 0; i < widthImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
 	}

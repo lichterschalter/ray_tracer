@@ -22,7 +22,15 @@ int main() {
 void RayTracer::main() {
 	cout<<"RayTracer.main()" << endl;
 
-	Projection projection;
+	glm::vec4 posCamera = glm::vec4 ( 0.0, 0.0, 0.0, 1.0 );
+	glm::vec4 upCamera = glm::vec4 ( 0, 1, 0, 1 );
+	glm::vec4 lookAtCamera = glm::vec4 ( 0, 0, 0, 1 );
+	float horizontal_fov = 45;
+	float vertical_fov = 45;
+	int heightImgPlane = 512;
+	int widthImgPlane = 512;
+
+	Projection projection( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, heightImgPlane, widthImgPlane );
 	//projection.print();
 	//projection.printContentImgPlane();
 	string ppmOutput;

@@ -37,7 +37,8 @@ class Projection{
 	Projection( const Projection& );
 	Projection& operator=( const Projection& );
 public:
-	Projection();
+	Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
+			float horizontal_fov, float vertical_fov, int heightImgPlane, int widthImgPlane );
 	virtual ~Projection();
 	void print();
 	void printContentImgPlane();
