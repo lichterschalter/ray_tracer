@@ -15,12 +15,12 @@
 using namespace std;
 
 Ray::Ray(){
-	position = glm::vec4( 0, 0, 0, 1 );
+	position = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 	delta = 1;
 };
 Ray::~Ray(){ };
 Ray::Ray( const Ray& ){
-	position = glm::vec4( 0, 0, 0, 1 );
+	position = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 	delta = 1;
 };
 Ray& Ray::operator=( const Ray& ){ return *this; };
