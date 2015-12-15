@@ -29,7 +29,7 @@ void OutputPPM::createOutput( string fileName, string content, int width, int he
 		myfile.open(fNameConst);
 		myfile << "P3 \n \
 			# sample.ppm \n" << \
-			width << " " << height << " \n \
+			height << " " << width << " \n \
 			100 \n";
 		myfile << content;
 		/*

@@ -47,14 +47,15 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 	posImgPlaneBottomRight = glm::vec4 ( 0, 0, 0, 1 );
 
 	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])
-	for (int i = 0; i < widthImgPlane; i++) {
+	for (int i = 0; i < heightImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
 	}
-	for (int j = 0; j < heightImgPlane; j++) {
-	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
+	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
+	    for (int j = 0; j < widthImgPlane; j++) {
 	    	contentImgPlane.at( i ).push_back( "0 0 0  " ); // Add column to every rows
 	    }
 	}
+
 };
 Projection::~Projection(){ };
 Projection::Projection( const Projection& ){
@@ -99,13 +100,13 @@ void Projection::print(){
 }
 
 void Projection::printContentImgPlane(){
-	for (unsigned int i = 0; i < contentImgPlane.size(); i++){
-		cout << "    " << i << ":       ";
+	for (int j = 0; j < widthImgPlane; j++){
+		cout << "    " << j << ":       ";
 	}
 	cout << endl;
-	for (int j = 0; j < heightImgPlane; j++) {
-		cout << j << ": ";
-	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
+	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
+		cout << i << ": ";
+	    for (int j = 0; j < widthImgPlane; j++) {
 	    	cout << "| " << contentImgPlane.at( i ).at( j ) << " |  ";
 	    }
 	    cout << endl;
@@ -114,8 +115,9 @@ void Projection::printContentImgPlane(){
 
 string Projection::contentImgPlaneToString(){
 	string outputString;
-	for (int j = 0; j < widthImgPlane; j++) {
-	    for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
+
+	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
+	    for (int j = 0; j < widthImgPlane; j++) {
 	    	outputString.append( contentImgPlane.at( i ).at( j ) );
 	    }
 	    outputString.append("\n");
