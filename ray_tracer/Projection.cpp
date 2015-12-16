@@ -65,7 +65,14 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
-	Ray ray( glm::vec4( 0.0, 0.0, 0.0, 1.0 ), 1 );
+	double pixelWidth = ( 2 * lengthImgPlaneCenterToRight ) / this->widthImgPlane;
+	double pixelHeight = ( 2 * lengthImgPlaneCenterToTop ) / this->widthImgPlane;
+	glm::vec3 posRayOnPlane = matrixvecmath.vec4ToVec3( posImgPlaneTopLeft ) - matrixvecmath.vec4ToVec3( posCamera );
+	posRayOnPlane[ 0 ] += pixelWidth;
+	posRayOnPlane[ 1 ] -= pixelHeight;
+	cout << glm::to_string(posRayOnPlane) << endl;
+
+	Ray ray( glm::vec4( posRayOnPlane[ 0 ], posRayOnPlane[ 1 ], posRayOnPlane[ 2 ], 1.0 ), 1 );
 	this->ray = ray;
 
 
