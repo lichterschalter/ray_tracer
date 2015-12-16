@@ -40,7 +40,7 @@ void RayTracer::main() {
 
 	string fileName = "example";
 	OutputImage* outputImage = new OutputPPM();
-	outputImage->createOutput( fileName, ppmOutput, height, width );
+	outputImage->createOutput( fileName, ppmOutput, "512", height, width );
 
 
 }

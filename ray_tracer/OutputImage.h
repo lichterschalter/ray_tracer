@@ -17,7 +17,7 @@ class OutputImage{
 public:
 	OutputImage() { };
 	virtual ~OutputImage(){ };
-	virtual void createOutput( std::string fileName, std::string content, int width, int height ) = 0;
+	virtual void createOutput( std::string fileName, std::string content, std::string maxValueColor, int width, int height ) = 0;
 };
 
 

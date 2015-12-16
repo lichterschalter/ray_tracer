@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <cmath>
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
 #include "../libs/glm/glm/gtx/string_cast.hpp"
@@ -33,12 +34,42 @@ Ray& Ray::operator=( const Ray& ray ){
 	return *this;
 };
 
-std::string Ray::toString(){
+string Ray::toString(){
 	string positionStr = glm::to_string(position);
 	stringstream sstr;
 	sstr << delta;
 	string deltaStr = sstr.str();
 	return "position: " + positionStr + "\n   delta: " + deltaStr;
+}
+
+string Ray::posToColorString(){
+	/*
+	stringstream sstrX, sstrY, sstrZ;
+	unsigned int x, y, z;
+	x = position[ 0 ] >= 0 ? position[ 0 ] : 0;
+	y = position[ 1 ] >= 0 ? position[ 1 ] : 0;
+	z = position[ 2 ] >= 0 ? position[ 2 ] : 0;
+	sstrX << int(x);
+	string posX = sstrX.str();
+	sstrY << int(y);
+	string posY = sstrY.str();
+	sstrZ << int(z);
+	string posZ = sstrZ.str();
+	return posX + " " + posY + " " + posZ;
+	*/
+
+	stringstream sstrX, sstrY, sstrZ;
+	unsigned int x, y, z;
+	x = position[ 0 ];
+	y = position[ 1 ];
+	z = position[ 2 ] >= 0 ? position[ 2 ] : 0;
+	sstrX << abs(int(x));
+	string posX = sstrX.str();
+	sstrY << abs(int(y));
+	string posY = sstrY.str();
+	sstrZ << abs(int(z));
+	string posZ = sstrZ.str();
+	return posX + " " + posY + " " + posZ;
 }
 
 

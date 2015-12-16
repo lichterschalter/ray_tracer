@@ -24,6 +24,7 @@ public:
 	Ray( const Ray& ray );
 	Ray& operator=( const Ray& ray );
 	std::string toString();
+	std::string posToColorString();
 };
 
 

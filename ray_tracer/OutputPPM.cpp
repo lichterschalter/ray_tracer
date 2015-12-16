@@ -19,7 +19,7 @@ OutputPPM& OutputPPM::operator=( const OutputPPM& ){ return *this; };
 
 
 
-void OutputPPM::createOutput( string fileName, string content, int width, int height ){
+void OutputPPM::createOutput( string fileName, string content, string maxValueColor, int width, int height ){
 	cout << "OutputPPM.createOutput()"<<endl;
 	string fName = fileName + ".ppm";
 	const char * fNameConst = fName.c_str();
@@ -29,8 +29,8 @@ void OutputPPM::createOutput( string fileName, string content, int width, int he
 		myfile.open(fNameConst);
 		myfile << "P3 \n \
 			# sample.ppm \n" << \
-			height << " " << width << " \n \
-			100 \n";
+			height << " " << width << " \n " << \
+			maxValueColor << "\n";
 		myfile << content;
 		/*
 		while( height > 0 ){

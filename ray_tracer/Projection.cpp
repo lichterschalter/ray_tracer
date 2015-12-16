@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
 #include <cmath>
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
@@ -75,7 +76,18 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 	Ray ray( glm::vec4( posRayOnPlane[ 0 ], posRayOnPlane[ 1 ], posRayOnPlane[ 2 ], 1.0 ), 1 );
 	this->ray = ray;
 
+	for (int i = 0; i < heightImgPlane; i++) {
+		contentImgPlane.push_back(vector<string>()); // Add one empty row
+	}
+	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
+	    for (int j = 0; j < widthImgPlane; j++) {
+			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ), 1 );
+	    	contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " ); // Add column to every rows
+	    }
+    	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every rows
+	}
 
+/*
 	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])
 	for (int i = 0; i < heightImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
@@ -85,6 +97,7 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 	    	contentImgPlane.at( i ).push_back( "0 0 0  " ); // Add column to every rows
 	    }
 	}
+	*/
 
 };
 Projection::~Projection(){ };
@@ -198,6 +211,5 @@ int Projection::getWidthImgPlane(){
 int Projection::getHeightImgPlane(){
 	return heightImgPlane;
 }
-
 
 
