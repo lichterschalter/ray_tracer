@@ -27,11 +27,11 @@ void RayTracer::main() {
 	glm::vec4 lookAtCamera = glm::vec4 ( 0.0, 0.0, -2.5, 1.0 );
 	double horizontal_fov = 45;
 	double vertical_fov = 45;
-	int heightImgPlane = 200;
-	int widthImgPlane = 400;
+	int heightImgPlane = 512;
+	int widthImgPlane = 512;
 
 	Projection projection( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, heightImgPlane, widthImgPlane );
-	//projection.print();
+	projection.print();
 	//projection.printContentImgPlane();
 	string ppmOutput;
 	int width = projection.getWidthImgPlane();

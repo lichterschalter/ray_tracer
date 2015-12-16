@@ -17,11 +17,12 @@ class Ray{
 	glm::vec4 position;
 	float delta;
 
-	Ray( const Ray& );
-	Ray& operator=( const Ray& );
 public:
-	Ray();
+	Ray( );
+	Ray( glm::vec4 position, float delta );
 	virtual ~Ray();
+	Ray( const Ray& ray );
+	Ray& operator=( const Ray& ray );
 	std::string toString();
 };
 

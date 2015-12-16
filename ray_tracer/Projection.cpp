@@ -64,6 +64,11 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 	posImgPlaneBottomRight = transMatrix * posCamera;
 
 
+	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
+	Ray ray( glm::vec4( 0.0, 0.0, 0.0, 1.0 ), 1 );
+	this->ray = ray;
+
+
 	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])
 	for (int i = 0; i < heightImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
@@ -117,6 +122,11 @@ Projection::Projection( const Projection& ){
 	transMatrix = translate( transMatrix, centerToRightImgPlane );
 	transMatrix = translate( transMatrix, posImgPlaneCenter );
 	posImgPlaneBottomRight = transMatrix * posCamera;
+
+
+	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
+	Ray ray( glm::vec4( 0.0, 0.0, 0.0, 1.0 ), 1 );
+	this->ray = ray;
 
 
 	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])

@@ -14,16 +14,24 @@
 #include "Ray.h"
 using namespace std;
 
-Ray::Ray(){
-	position = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-	delta = 1;
+Ray::Ray(  ){
+	this->position = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+	this->delta = 1;
+};
+Ray::Ray( glm::vec4 position, float delta ){
+	this->position = position;
+	this->delta = delta;
 };
 Ray::~Ray(){ };
-Ray::Ray( const Ray& ){
-	position = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-	delta = 1;
+Ray::Ray( const Ray& ray ){
+	this->position = ray.position;
+	this->delta = ray.delta;
 };
-Ray& Ray::operator=( const Ray& ){ return *this; };
+Ray& Ray::operator=( const Ray& ray ){
+	this->position = ray.position;
+	this->delta = ray.delta;
+	return *this;
+};
 
 std::string Ray::toString(){
 	string positionStr = glm::to_string(position);
