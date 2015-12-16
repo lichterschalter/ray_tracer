@@ -32,20 +32,21 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 	this->widthImgPlane = widthImgPlane;
 
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
-
-	glm::vec4 cameraToImgPlaneCenter = lookAtCamera - posCamera;
-	double lengthCameraToImgPlaneCenter = sqrt( pow(cameraToImgPlaneCenter[ 0 ], 2) + pow(cameraToImgPlaneCenter[ 1 ], 2) + pow(cameraToImgPlaneCenter[ 2 ], 2) );
-	double lengthImgPlaneCenterToRight = ( tan ( horizontal_fov ) ) * lengthCameraToImgPlaneCenter;
-	glm::vec4 centerToRightImgPlane( lengthImgPlaneCenterToRight, 0, 0, 1 );
-	double lengthImgPlaneCenterToUp = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * lengthImgPlaneCenterToRight;
-	//cout << glm::to_string(cameraToImgPlaneCenter) << endl;
-	//cout << glm::to_string(centerToRightImgPlane) << endl;
-	cout << lengthImgPlaneCenterToRight << endl;
+	glm::vec4 posImgPlaneCenter = lookAtCamera - posCamera;
+	double lengthposImgPlaneCenter = sqrt( pow(posImgPlaneCenter[ 0 ], 2) + pow(posImgPlaneCenter[ 1 ], 2) + pow(posImgPlaneCenter[ 2 ], 2) );
+	double lengthImgPlaneCenterToLeft = ( tan ( -horizontal_fov ) ) * lengthposImgPlaneCenter;
+	glm::vec4 centerToLeftImgPlane( lengthImgPlaneCenterToLeft, 0, 0, 1 );
+	double lengthImgPlaneCenterToUp = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * lengthImgPlaneCenterToLeft;
+	glm::vec4 centerToUpImgPlane( 0, lengthImgPlaneCenterToUp, 0, 1 );
+	posImgPlaneTopLeft = posImgPlaneCenter + centerToLeftImgPlane + centerToUpImgPlane;
+	posImgPlaneBottomRight = posImgPlaneCenter - centerToLeftImgPlane - centerToUpImgPlane;
+	cout << glm::to_string(posImgPlaneTopLeft) << endl;
+	cout << glm::to_string(posImgPlaneBottomRight) << endl;
+	cout << glm::to_string(posImgPlaneCenter) << endl;
+	cout << glm::to_string(centerToLeftImgPlane) << endl;
+	cout << lengthImgPlaneCenterToLeft << endl;
 	cout << lengthImgPlaneCenterToUp << endl;
 
-
-	posImgPlaneTopLeft = glm::vec4 ( 0, 0, 0, 1 );
-	posImgPlaneBottomRight = glm::vec4 ( 0, 0, 0, 1 );
 
 	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])
 	for (int i = 0; i < heightImgPlane; i++) {
