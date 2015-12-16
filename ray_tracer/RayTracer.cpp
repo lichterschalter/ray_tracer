@@ -25,10 +25,10 @@ void RayTracer::main() {
 	glm::vec4 posCamera = glm::vec4 ( 0.0, 0.0, 0.0, 1.0 );
 	glm::vec4 upCamera = glm::vec4 ( 0.0, 1.0, 0.0, 1.0 );
 	glm::vec4 lookAtCamera = glm::vec4 ( 0.0, 0.0, -2.5, 1.0 );
-	float horizontal_fov = 45;
-	float vertical_fov = 45;
+	double horizontal_fov = 45;
+	double vertical_fov = 45;
 	int heightImgPlane = 100;
-	int widthImgPlane = 200;
+	int widthImgPlane = 400;
 
 	Projection projection( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, heightImgPlane, widthImgPlane );
 	//projection.print();

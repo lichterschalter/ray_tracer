@@ -20,7 +20,7 @@
 using namespace std;
 
 Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
-		float horizontal_fov, float vertical_fov, int heightImgPlane, int widthImgPlane ){
+		double horizontal_fov, double vertical_fov, int heightImgPlane, int widthImgPlane ){
 
 	//INIT VARS FROM PARAMETERS
 	this->posCamera = posCamera;
@@ -33,13 +33,14 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
 
-	glm::vec4 posImgPlaneCenter = lookAtCamera - posCamera;
-	float lengthCameraToImgPlaneCenter = sqrt( pow(posImgPlaneCenter[ 0 ], 2) + pow(posImgPlaneCenter[ 1 ], 2) + pow(posImgPlaneCenter[ 2 ], 2) );
-	float lengthImgPlaneCenterToRight = ( tan ( horizontal_fov ) ) * lengthCameraToImgPlaneCenter;
+	glm::vec4 cameraToImgPlaneCenter = lookAtCamera - posCamera;
+	double lengthCameraToImgPlaneCenter = sqrt( pow(cameraToImgPlaneCenter[ 0 ], 2) + pow(cameraToImgPlaneCenter[ 1 ], 2) + pow(cameraToImgPlaneCenter[ 2 ], 2) );
+	double lengthImgPlaneCenterToRight = ( tan ( horizontal_fov ) ) * lengthCameraToImgPlaneCenter;
 	glm::vec4 centerToRightImgPlane( lengthImgPlaneCenterToRight, 0, 0, 1 );
-	float lengthImgPlaneCenterToUp = ( ( widthImgPlane / 2)  / ( heightImgPlane / 2 ) ) * lengthImgPlaneCenterToRight;
-	cout << glm::to_string(posImgPlaneCenter) << endl;
-	cout << glm::to_string(centerToRightImgPlane) << endl;
+	double lengthImgPlaneCenterToUp = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * lengthImgPlaneCenterToRight;
+	//cout << glm::to_string(cameraToImgPlaneCenter) << endl;
+	//cout << glm::to_string(centerToRightImgPlane) << endl;
+	cout << lengthImgPlaneCenterToRight << endl;
 	cout << lengthImgPlaneCenterToUp << endl;
 
 
