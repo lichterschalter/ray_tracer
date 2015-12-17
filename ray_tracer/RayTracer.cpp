@@ -12,7 +12,7 @@
 #include "OutputImage.h"
 #include "Projection.h"
 #include "Sphere.h"
-#include "Surface.h"
+#include "Mesh.h"
 using namespace std;
 
 int main() {
@@ -47,6 +47,8 @@ void RayTracer::main() {
 	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
 	Sphere sphere( posSphere, 1.0 );
 	sphere.print();
+	Mesh mesh( posSphere, "ex.obj");
+	mesh.print();
 	cout << width << height << endl;
 
 
