@@ -5,8 +5,8 @@
  *      Author: Fabian Türks
  */
 
-#ifndef PROJECTION_H_
-#define PROJECTION_H_
+#ifndef WORLD_H_
+#define WORLD_H_
 
 #include <vector>
 #include <string>
@@ -53,4 +53,4 @@ public:
 
 
 
-#endif /* PROJECTION_H_ */
+#endif /* WORLD_H_ */

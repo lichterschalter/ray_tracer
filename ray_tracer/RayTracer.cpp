@@ -10,9 +10,9 @@
 #include "RayTracer.h"
 #include "OutputPPM.h"
 #include "OutputImage.h"
-#include "Projection.h"
 #include "Sphere.h"
 #include "Mesh.h"
+#include "World.h"
 using namespace std;
 
 int main() {

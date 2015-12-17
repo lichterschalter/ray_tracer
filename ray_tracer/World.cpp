@@ -17,8 +17,8 @@
 #include "../libs/glm/glm/mat4x4.hpp"
 #include "../libs/glm/glm/gtc/matrix_transform.hpp"
 #include "../libs/glm/glm/gtx/string_cast.hpp"
-#include "Projection.h"
 #include "Matrix_vec_math.h"
+#include "World.h"
 using namespace std;
 
 Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
@@ -68,10 +68,8 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
-	Ray rayNorm( glm::vec4( 2.0, 1.0, 1.0, 2.0 ) );
-	cout << rayNorm.toString() << endl;
+	Ray rayNorm( glm::vec4( 1.0, 1.0, -5.0, 1.0 ) );
 	rayNorm.normalize();
-	cout << rayNorm.toString() << endl;
 
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
