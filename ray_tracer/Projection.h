@@ -31,14 +31,17 @@ class Projection{
 	int widthImgPlane;
 	std::vector< std::vector<std::string> > contentImgPlane;
 
-	//RAY
+	//Background color
+	glm::vec3 bgcolor;
+
+	//Ray
 	Ray ray;
 
 	Projection( const Projection& );
 	Projection& operator=( const Projection& );
 public:
 	Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
-			double horizontal_fov, double vertical_fov, int heightImgPlane, int widthImgPlane );
+			double horizontal_fov, double vertical_fov, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor );
 	virtual ~Projection();
 	void print();
 	void printContentImgPlane();

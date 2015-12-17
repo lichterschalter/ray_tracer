@@ -31,9 +31,10 @@ void RayTracer::main() {
 	double vertical_fov = 45;
 	int heightImgPlane = 512;
 	int widthImgPlane = 512;
+	glm::vec3 bgcolor = glm::vec3( 0.0, 0.0, 0.0 );
 
-	Projection projection( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, heightImgPlane, widthImgPlane );
-	//projection.print();
+	Projection projection( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, heightImgPlane, widthImgPlane, bgcolor );
+	projection.print();
 	//projection.printContentImgPlane();
 	string ppmOutput;
 	int width = projection.getWidthImgPlane();
@@ -47,8 +48,6 @@ void RayTracer::main() {
 	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
 	Sphere sphere( posSphere, 1.0 );
 	sphere.print();
-	Mesh mesh( posSphere, "ex.obj");
-	mesh.print();
 	cout << width << height << endl;
 
 

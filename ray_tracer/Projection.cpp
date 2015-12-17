@@ -22,7 +22,7 @@
 using namespace std;
 
 Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
-		double horizontal_fov, double vertical_fov, int heightImgPlane, int widthImgPlane ){
+		double horizontal_fov, double vertical_fov, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor ){
 
 
 	//INIT VARS FROM PARAMETERS
@@ -33,6 +33,7 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 	this->vertical_fov = vertical_fov;
 	this->heightImgPlane = heightImgPlane;
 	this->widthImgPlane = widthImgPlane;
+	this->bgcolor = bgcolor;
 
 
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
@@ -112,6 +113,7 @@ Projection::Projection( const Projection& ){
 	this->vertical_fov = vertical_fov;
 	this->heightImgPlane = heightImgPlane;
 	this->widthImgPlane = widthImgPlane;
+	this->bgcolor = bgcolor;
 
 
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
@@ -175,6 +177,7 @@ void Projection::print(){
 	cout << "heightImgPlane: " << heightImgPlane << endl;
 	cout << "contentImgPlane: [is not printed, use printContentImgPlane() to print it]" << endl;
 	cout << "ray: \n [ " << ray.toString() << " ]"<< endl;
+	cout << "bgcolor: " << glm::to_string(bgcolor) << endl;
 	cout << "--end class Projection--" << endl << endl;
 }
 
