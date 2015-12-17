@@ -11,6 +11,8 @@
 #include "OutputPPM.h"
 #include "OutputImage.h"
 #include "Projection.h"
+#include "Sphere.h"
+#include "Surface.h"
 using namespace std;
 
 int main() {
@@ -38,9 +40,13 @@ void RayTracer::main() {
 	int height = projection.getHeightImgPlane();
 	ppmOutput = projection.contentImgPlaneToString();
 
-	string fileName = "example";
+	/*string fileName = "example";
 	OutputImage* outputImage = new OutputPPM();
-	outputImage->createOutput( fileName, ppmOutput, "512", height, width );
+	outputImage->createOutput( fileName, ppmOutput, "512", height, width );*/
+
+	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
+	Surface* surface = new Sphere( posSphere, 1.0 );
+	cout << width << height << endl;
 
 
 }
