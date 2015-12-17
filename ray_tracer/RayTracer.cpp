@@ -29,11 +29,12 @@ void RayTracer::main() {
 	glm::vec4 lookAtCamera = glm::vec4 ( 0.0, 0.0, -2.5, 1.0 );
 	double horizontal_fov = 45;
 	double vertical_fov = 45;
+	int maxBounces = 8;
 	int heightImgPlane = 512;
 	int widthImgPlane = 512;
 	glm::vec3 bgcolor = glm::vec3( 0.0, 0.0, 0.0 );
 
-	Projection projection( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, heightImgPlane, widthImgPlane, bgcolor );
+	Projection projection( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
 	projection.print();
 	//projection.printContentImgPlane();
 	string ppmOutput;
@@ -41,9 +42,9 @@ void RayTracer::main() {
 	int height = projection.getHeightImgPlane();
 	ppmOutput = projection.contentImgPlaneToString();
 
-	/*string fileName = "example";
+	string fileName = "example";
 	OutputImage* outputImage = new OutputPPM();
-	outputImage->createOutput( fileName, ppmOutput, "512", height, width );*/
+	outputImage->createOutput( fileName, ppmOutput, "512", height, width );
 
 	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
 	Sphere sphere( posSphere, 1.0 );

@@ -22,7 +22,7 @@
 using namespace std;
 
 Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
-		double horizontal_fov, double vertical_fov, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor ){
+		double horizontal_fov, double vertical_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor ){
 
 
 	//INIT VARS FROM PARAMETERS
@@ -33,6 +33,7 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 	this->vertical_fov = vertical_fov;
 	this->heightImgPlane = heightImgPlane;
 	this->widthImgPlane = widthImgPlane;
+	this->maxBounces = maxBounces;
 	this->bgcolor = bgcolor;
 
 
@@ -102,18 +103,19 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 
 };
 Projection::~Projection(){ };
-Projection::Projection( const Projection& ){
+Projection::Projection( const Projection& project){
 	cerr << "Copy assignment constructor should not be used!" << endl;
 
 	//INIT VARS FROM PARAMETERS
-	this->posCamera = posCamera;
-	this->upCamera = upCamera;
-	this->lookAtCamera = lookAtCamera;
-	this->horizontal_fov = horizontal_fov;
-	this->vertical_fov = vertical_fov;
-	this->heightImgPlane = heightImgPlane;
-	this->widthImgPlane = widthImgPlane;
-	this->bgcolor = bgcolor;
+	this->posCamera = project.posCamera;
+	this->upCamera = project.upCamera;
+	this->lookAtCamera = project.lookAtCamera;
+	this->horizontal_fov = project.horizontal_fov;
+	this->vertical_fov = project.vertical_fov;
+	this->heightImgPlane = project.heightImgPlane;
+	this->widthImgPlane = project.widthImgPlane;
+	this->maxBounces = project.maxBounces;
+	this->bgcolor = project.bgcolor;
 
 
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
@@ -172,6 +174,7 @@ void Projection::print(){
 	cout << "lookAtCamera: " << glm::to_string(lookAtCamera) << endl;
 	cout << "horizontal_fov: " << horizontal_fov << endl;
 	cout << "vertical_fov: " << vertical_fov << endl;
+	cout << "maxBounces: " << maxBounces << endl;
 	cout << "posImgPlaneTopLeft: " << glm::to_string(posImgPlaneTopLeft) << endl;
 	cout << "posImgPlaneBottomRight: " << glm::to_string(posImgPlaneBottomRight) << endl;
 	cout << "heightImgPlane: " << heightImgPlane << endl;

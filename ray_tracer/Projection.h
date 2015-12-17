@@ -23,6 +23,7 @@ class Projection{
 	glm::vec4 lookAtCamera;
 	float horizontal_fov;
 	float vertical_fov;
+	int maxBounces;
 
 	//IMAGE PLANE
 	glm::vec4 posImgPlaneTopLeft;
@@ -41,7 +42,7 @@ class Projection{
 	Projection& operator=( const Projection& );
 public:
 	Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
-			double horizontal_fov, double vertical_fov, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor );
+			double horizontal_fov, double vertical_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor );
 	virtual ~Projection();
 	void print();
 	void printContentImgPlane();
