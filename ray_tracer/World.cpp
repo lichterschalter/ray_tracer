@@ -19,6 +19,8 @@
 #include "../libs/glm/glm/gtx/string_cast.hpp"
 #include "Matrix_vec_math.h"
 #include "World.h"
+#include "Sphere.h"
+#include "Mesh.h"
 using namespace std;
 
 World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
@@ -26,6 +28,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 
 	//INIT VARS FROM PARAMETERS
+	this->spheres = 0;
 	this->posCamera = posCamera;
 	this->upCamera = upCamera;
 	this->lookAtCamera = lookAtCamera;
@@ -68,8 +71,9 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
-	Ray rayNorm( glm::vec4( 1.0, 1.0, -5.0, 1.0 ) );
-	rayNorm.normalize();
+	Ray rayIntersect( glm::vec4( 1.0, 1.0, -5.0, 1.0 ) );
+	rayIntersect.normalize();
+	//pow ( (2 * posCamera * rayIntersect - 2 * posCamera * posSphere * rayIntersect), 2 ) - 4 * pow( rayIntersect, 2) * ( posCamera - posSphere ) - radius;
 
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
@@ -109,19 +113,20 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 };
 World::~World(){ };
-World::World( const World& project){
+World::World( const World& world){
 	cerr << "Copy assignment constructor should not be used!" << endl;
 
 	//INIT VARS FROM PARAMETERS
-	this->posCamera = project.posCamera;
-	this->upCamera = project.upCamera;
-	this->lookAtCamera = project.lookAtCamera;
-	this->horizontal_fov = project.horizontal_fov;
-	this->vertical_fov = project.vertical_fov;
-	this->heightImgPlane = project.heightImgPlane;
-	this->widthImgPlane = project.widthImgPlane;
-	this->maxBounces = project.maxBounces;
-	this->bgcolor = project.bgcolor;
+	this->spheres = world.spheres;
+	this->posCamera = world.posCamera;
+	this->upCamera = world.upCamera;
+	this->lookAtCamera = world.lookAtCamera;
+	this->horizontal_fov = world.horizontal_fov;
+	this->vertical_fov = world.vertical_fov;
+	this->heightImgPlane = world.heightImgPlane;
+	this->widthImgPlane = world.widthImgPlane;
+	this->maxBounces = world.maxBounces;
+	this->bgcolor = world.bgcolor;
 
 
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
@@ -171,6 +176,13 @@ World::World( const World& project){
 
 };
 World& World::operator=( const World& ){ return *this; };
+
+void World::createSphere( Sphere sphere ){
+	;
+}
+void World::createMesh( Mesh mesh ){
+	;
+}
 
 void World::print(){
 	cout << endl;

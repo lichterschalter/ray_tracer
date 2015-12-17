@@ -14,8 +14,13 @@
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
 #include "Ray.h"
+#include "Sphere.h"
+#include "Mesh.h"
 
 class World{
+
+	//World
+	Sphere* spheres;
 
 	//Camera
 	glm::vec4 posCamera;
@@ -44,6 +49,8 @@ public:
 	World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 			double horizontal_fov, double vertical_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor );
 	virtual ~World();
+	void createSphere( Sphere sphere );
+	void createMesh( Mesh mesh );
 	void print();
 	void printContentImgPlane();
 	std::string contentImgPlaneToString();
