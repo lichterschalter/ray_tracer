@@ -1,5 +1,5 @@
 /*
- * Projection.cpp
+ * World.cpp
  *
  *  Created on: 14.12.2015
  *      Author: Fabian Türk
@@ -21,7 +21,7 @@
 #include "World.h"
 using namespace std;
 
-Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
+World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 		double horizontal_fov, double vertical_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor ){
 
 
@@ -108,8 +108,8 @@ Projection::Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookA
 	*/
 
 };
-Projection::~Projection(){ };
-Projection::Projection( const Projection& project){
+World::~World(){ };
+World::World( const World& project){
 	cerr << "Copy assignment constructor should not be used!" << endl;
 
 	//INIT VARS FROM PARAMETERS
@@ -170,11 +170,11 @@ Projection::Projection( const Projection& project){
 	}
 
 };
-Projection& Projection::operator=( const Projection& ){ return *this; };
+World& World::operator=( const World& ){ return *this; };
 
-void Projection::print(){
+void World::print(){
 	cout << endl;
-	cout << "--begin class Projection--" << endl;
+	cout << "--begin class World--" << endl;
 	cout << "posCamera: " << glm::to_string(posCamera) << endl;
 	cout << "upCamera: " << glm::to_string(upCamera) << endl;
 	cout << "lookAtCamera: " << glm::to_string(lookAtCamera) << endl;
@@ -187,10 +187,10 @@ void Projection::print(){
 	cout << "contentImgPlane: [is not printed, use printContentImgPlane() to print it]" << endl;
 	cout << "ray: \n [ " << ray.toString() << " ]"<< endl;
 	cout << "bgcolor: " << glm::to_string(bgcolor) << endl;
-	cout << "--end class Projection--" << endl << endl;
+	cout << "--end class World--" << endl << endl;
 }
 
-void Projection::printContentImgPlane(){
+void World::printContentImgPlane(){
 	for (int j = 0; j < widthImgPlane; j++){
 		cout << "    " << j << ":       ";
 	}
@@ -204,7 +204,7 @@ void Projection::printContentImgPlane(){
 	}
 }
 
-string Projection::contentImgPlaneToString(){
+string World::contentImgPlaneToString(){
 	string outputString;
 
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
@@ -216,11 +216,11 @@ string Projection::contentImgPlaneToString(){
 	return outputString;
 }
 
-int Projection::getWidthImgPlane(){
+int World::getWidthImgPlane(){
 	return widthImgPlane;
 }
 
-int Projection::getHeightImgPlane(){
+int World::getHeightImgPlane(){
 	return heightImgPlane;
 }
 

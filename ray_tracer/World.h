@@ -1,5 +1,5 @@
 /*
- * Projection.h
+ * World.h
  *
  *  Created on: 14.12.2015
  *      Author: Fabian Türks
@@ -15,7 +15,7 @@
 #include "../libs/glm/glm/vec4.hpp"
 #include "Ray.h"
 
-class Projection{
+class World{
 
 	//Camera
 	glm::vec4 posCamera;
@@ -38,12 +38,12 @@ class Projection{
 	//Ray
 	Ray ray;
 
-	Projection( const Projection& );
-	Projection& operator=( const Projection& );
+	World( const World& );
+	World& operator=( const World& );
 public:
-	Projection( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
+	World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 			double horizontal_fov, double vertical_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor );
-	virtual ~Projection();
+	virtual ~World();
 	void print();
 	void printContentImgPlane();
 	std::string contentImgPlaneToString();

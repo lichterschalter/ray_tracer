@@ -34,13 +34,13 @@ void RayTracer::main() {
 	int widthImgPlane = 512;
 	glm::vec3 bgcolor = glm::vec3( 0.0, 0.0, 0.0 );
 
-	Projection projection( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
-	projection.print();
-	//projection.printContentImgPlane();
+	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
+	world.print();
+	//world.printContentImgPlane();
 	string ppmOutput;
-	int width = projection.getWidthImgPlane();
-	int height = projection.getHeightImgPlane();
-	ppmOutput = projection.contentImgPlaneToString();
+	int width = world.getWidthImgPlane();
+	int height = world.getHeightImgPlane();
+	ppmOutput = world.contentImgPlaneToString();
 
 	string fileName = "example";
 	OutputImage* outputImage = new OutputPPM();
