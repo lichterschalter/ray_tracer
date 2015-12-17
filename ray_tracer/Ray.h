@@ -26,6 +26,9 @@ public:
 	std::string toString();
 	std::string posToColorString();
 	void normalize();
+	float getX();
+	float getY();
+	float getZ();
 };
 
 

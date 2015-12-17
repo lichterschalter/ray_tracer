@@ -35,7 +35,7 @@ void RayTracer::main() {
 	glm::vec3 bgcolor = glm::vec3( 0.0, 0.0, 0.0 );
 
 	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
-	world.print();
+	//world.print();
 	//world.printContentImgPlane();
 	string ppmOutput;
 	int width = world.getWidthImgPlane();
@@ -48,7 +48,7 @@ void RayTracer::main() {
 
 	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
 	Sphere sphere( posSphere, 1.0 );
-	sphere.print();
+	//sphere.print();
 	cout << width << height << endl;
 
 

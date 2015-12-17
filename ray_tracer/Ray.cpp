@@ -79,4 +79,16 @@ void Ray::normalize(){
 		length = sqrt( pow( direction[ 0 ], 2 ) + pow( direction[ 1 ], 2 ) + pow( direction[ 2 ], 2 ) );
 }
 
+float Ray::getX(){
+	return direction[ 0 ];
+}
+
+float Ray::getY(){
+	return direction[ 1 ];
+}
+
+float Ray::getZ(){
+	return direction[ 2 ];
+}
+
 

@@ -71,10 +71,19 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
-	Ray rayIntersect( glm::vec4( 1.0, 1.0, -5.0, 1.0 ) );
-	rayIntersect.normalize();
-	//pow ( (2 * posCamera * rayIntersect - 2 * posCamera * posSphere * rayIntersect), 2 ) - 4 * pow( rayIntersect, 2) * ( posCamera - posSphere ) - radius;
-
+	glm::vec3 posSphere( 1.0, 0.0, -7.0 );
+	float radiusSphere = 1;
+	Ray rayIntersect( glm::vec4( 1.0, 0.0, -5.0, 1.0 ) );
+	//rayIntersect.normalize();
+	float a = pow( rayIntersect.getX(), 2 );
+	float b = 2 * posCamera[ 0 ] * rayIntersect.getX() - 2 * posSphere[ 0 ] * rayIntersect.getX();
+	float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
+	float intersection = pow ( b, 2 ) - 4 * a * c;
+	cout << "intersection!!! : " << intersection << endl;
+	cout << "a: " << a << endl;
+	cout << "b: " << b << endl;
+	cout << "c: " << c << endl;
+	cout << "posCamera[ 0 ]: " << posCamera[ 0 ] << endl;
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
