@@ -9,8 +9,10 @@
 #define SURFACE_H_
 
 #include <string>
+#include <iostream>
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
+#include "../libs/glm/glm/gtx/string_cast.hpp"
 
 
 class Surface{
@@ -32,8 +34,6 @@ protected:
 	bool textured;
 	std::string texture_name;
 	glm::vec3 color;
-	float radius;
-	std::string src_name_mesh;
 
 	Surface( const Surface& surface ){
 		position = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
@@ -53,8 +53,6 @@ protected:
 		textured = false;
 		texture_name = "";
 		color = glm::vec3( 0.5, 0.17, 0.18 );
-		radius = 1.0;
-		src_name_mesh = "";
 	};
 	Surface& operator=( const Surface& ){ return *this; };
 
@@ -80,10 +78,28 @@ public:
 		textured = false;
 		texture_name = "";
 		color = glm::vec3( 0.5, 0.17, 0.18 );
-		radius = 1.0;
-		src_name_mesh = "";
 	};
 	virtual ~Surface(){ };
+
+	void print(){
+		std::cout << "position: " << glm::to_string(position) << std::endl;
+		std::cout << "translate: " << glm::to_string(translate) << std::endl;
+		std::cout << "scale: " << glm::to_string(scale) << std::endl;
+		std::cout << "rotateX: " << glm::to_string(rotateX) << std::endl;
+		std::cout << "rotateY: " << glm::to_string(rotateY) << std::endl;
+		std::cout << "rotateZ: " << glm::to_string(rotateZ) << std::endl;
+		std::cout << "phong: " << glm::to_string(phong) << std::endl;
+		std::cout << "reflectance: " << reflectance << std::endl;
+		std::cout << "transmittance: " << transmittance << std::endl;
+		std::cout << "refraction: " << refraction << std::endl;
+		std::cout << "normalVec: " << glm::to_string(normalVec) << std::endl;
+		std::cout << "lightVec: " << glm::to_string(lightVec) << std::endl;
+		std::cout << "eyeVec: " << glm::to_string(eyeVec) << std::endl;
+		std::cout << "reflectanceVec: " << glm::to_string(reflectanceVec) << std::endl;
+		std::cout << "textured: " << textured << std::endl;
+		std::cout << "texture_name: " << texture_name << std::endl;
+		std::cout << "color: " << glm::to_string(color) << std::endl;
+	}
 };
 
 

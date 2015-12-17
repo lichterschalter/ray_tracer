@@ -33,7 +33,7 @@ void RayTracer::main() {
 	int widthImgPlane = 512;
 
 	Projection projection( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, heightImgPlane, widthImgPlane );
-	projection.print();
+	//projection.print();
 	//projection.printContentImgPlane();
 	string ppmOutput;
 	int width = projection.getWidthImgPlane();
@@ -45,7 +45,8 @@ void RayTracer::main() {
 	outputImage->createOutput( fileName, ppmOutput, "512", height, width );*/
 
 	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
-	Surface* surface = new Sphere( posSphere, 1.0 );
+	Sphere sphere( posSphere, 1.0 );
+	sphere.print();
 	cout << width << height << endl;
 
 

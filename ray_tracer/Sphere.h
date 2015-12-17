@@ -2,7 +2,7 @@
  * Sphere.h
  *
  *  Created on: 17.12.2015
- *      Author: rustong_pu
+ *      Author: Fabian Türk
  */
 
 #ifndef SPHERE_H_
@@ -23,6 +23,8 @@ public:
 	virtual void initPhongIlluModel();
 	virtual void transform();
 	virtual void initTexture();
+
+	void print();
 };
 
 

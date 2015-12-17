@@ -2,11 +2,12 @@
  * Sphere.cpp
  *
  *  Created on: 17.12.2015
- *      Author: rustong_pu
+ *      Author: Fabian Türk
  */
 
 #include <iostream>
 #include "Sphere.h"
+using namespace std;
 
 	Sphere::Sphere( glm::vec4 position, float radius ) : Surface( position ) {
 		this->radius = radius;
@@ -23,6 +24,15 @@
 	void Sphere::transform(){
 	}
 	void Sphere::initTexture(){
+	}
+
+	void Sphere::print(){
+		cout << endl << "--sphere--" << endl;
+		Surface::print();
+		cout << "radius: " << this->radius << endl;
+		cout << "--end sphere--" << endl;
+		cout << endl;
+
 	}
 
 
