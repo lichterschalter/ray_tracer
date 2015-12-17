@@ -14,17 +14,18 @@
 #include "../libs/glm/glm/vec4.hpp"
 
 class Ray{
-	glm::vec4 position;
-	float delta;
+	glm::vec4 direction;
+	float length;
 
 public:
 	Ray( );
-	Ray( glm::vec4 position, float delta );
+	Ray( glm::vec4 direction );
 	virtual ~Ray();
 	Ray( const Ray& ray );
 	Ray& operator=( const Ray& ray );
 	std::string toString();
 	std::string posToColorString();
+	void normalize();
 };
 
 
