@@ -104,8 +104,6 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ) );
 			ray.normalize();
 
-			//A = Xd^2 + Yd^2 + Zd^2
-
 			//B = 2 * (Xd * (X0 - Xc) +
 			//         Yd * (Y0 - Yc) +
 			//         Zd * (Z0 - Zc)
@@ -115,8 +113,6 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 			//    (Y0 - Yc)^2 +
 			//    (Z0 - Zc)^2 -
 			//    Sr^2
-
-			//float a = pow( ray.getX(), 2 ) + pow( ray.getY(), 2 ) + pow( ray.getZ(), 2 );
 
 	    	float b = 2 * \
 	    			( ray.getX() * ( posCamera[ 0 ] - posSphere[ 0 ] ) + \
@@ -129,25 +125,15 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 					  pow ( radiusSphere, 2 );
 	    	float intersectionX = pow ( b, 2 ) - 4 * c;
 	    	//intersectionX > 0 ? intersectionX = widthImgPlane : intersectionX = 0;
-/*
-	    	float bY = 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX();
-	    	float cY = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
-	    	float intersectionY = pow ( bY, 2 ) - 4 * cY;
-	    	intersectionY > 0 ? intersectionY = widthImgPlane : intersectionY = 0;
 
-	    	float bZ = 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX();
-	    	float cZ = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
-	    	float intersectionZ = pow ( bZ, 2 ) - 4 * cZ;
-	    	intersectionZ > 0 ? intersectionZ = widthImgPlane : intersectionZ = 0;
-*/
 	    	stringstream sstr;
 	    	sstr << int( intersectionX ) << " " << int ( intersectionX ) << " " << int ( intersectionX ) << "   ";
 	    	string intersections = sstr.str();
 
-	    	//contentImgPlane.at( i ).push_back( intersections ); // Add column to every rows
+	    	contentImgPlane.at( i ).push_back( intersections ); // Add column to every rows
 
 			//Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ) );
-	    	contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " ); // Add column to every rows
+	    	//contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " ); // Add column to every rows
 	    }
     	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every rows
 	}
