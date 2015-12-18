@@ -24,7 +24,8 @@ int main() {
 void RayTracer::main() {
 	cout<<"RayTracer.main()" << endl;
 
-	glm::vec4 posCamera = glm::vec4 ( 0.0, 0.0, -20.0, 1.0 );
+
+	glm::vec4 posCamera = glm::vec4 ( 0.0, 0.0, 0.0, 1.0 );
 	glm::vec4 upCamera = glm::vec4 ( 0.0, 1.0, 0.0, 1.0 );
 	glm::vec4 lookAtCamera = glm::vec4 ( 0.0, 0.0, -2.5, 1.0 );
 	double horizontal_fov = 45;
