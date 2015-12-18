@@ -72,7 +72,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
 	glm::vec3 posSphere( 0.0, 0.0, -7.0 );
-	float radiusSphere = 12;
+	float radiusSphere = 6.9999;
 	Ray rayIntersect( glm::vec4( 4.0, 0.0, -5.0, 1.0 ) );
 	//rayIntersect.normalize();
 	float a = pow( rayIntersect.getX(), 2 );
@@ -123,17 +123,22 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	    			  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) + \
 					  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) - \
 					  pow ( radiusSphere, 2 );
-	    	float intersectionX = pow ( b, 2 ) - 4 * c;
-	    	//intersectionX > 0 ? intersectionX = widthImgPlane : intersectionX = 0;
+	    	float intersection = pow ( b, 2 ) - 4 * c;
+	    	//if( intersection < 0 ) intersection = 0;
 
-	    	stringstream sstr;
-	    	sstr << int( intersectionX ) << " " << int ( intersectionX ) << " " << int ( intersectionX ) << "   ";
-	    	string intersections = sstr.str();
+	    	if( intersection >= 0 ) {
+		    	stringstream sstr;
+		    	sstr << int( intersection ) << " " << int ( intersection ) << " " << int ( intersection ) << "   ";
+		    	string intersections = sstr.str();
+	    		contentImgPlane.at( i ).push_back( intersections );
+	    		cout << "intersects: " << intersections << endl;
+	    	}else{
+	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
+	    	}
 
-	    	contentImgPlane.at( i ).push_back( intersections ); // Add column to every rows
 
 			//Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ) );
-	    	//contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " ); // Add column to every rows
+	    	//contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
 	    }
     	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every rows
 	}
