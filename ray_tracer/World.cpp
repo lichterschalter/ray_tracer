@@ -71,9 +71,9 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
-	glm::vec3 posSphere( 1.0, 0.0, -7.0 );
+	glm::vec3 posSphere( 2.0, 0.0, -7.0 );
 	float radiusSphere = 1;
-	Ray rayIntersect( glm::vec4( 1.0, 0.0, -5.0, 1.0 ) );
+	Ray rayIntersect( glm::vec4( 4.0, 0.0, -5.0, 1.0 ) );
 	//rayIntersect.normalize();
 	float a = pow( rayIntersect.getX(), 2 );
 	float b = 2 * posCamera[ 0 ] * rayIntersect.getX() - 2 * posSphere[ 0 ] * rayIntersect.getX();
@@ -83,7 +83,6 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	cout << "a: " << a << endl;
 	cout << "b: " << b << endl;
 	cout << "c: " << c << endl;
-	cout << "posCamera[ 0 ]: " << posCamera[ 0 ] << endl;
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
@@ -103,7 +102,34 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    for (int j = 0; j < widthImgPlane; j++) {
 			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ) );
-	    	contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " ); // Add column to every rows
+			ray.normalize();
+
+	    	float aX = pow( ray.getX(), 2 );
+	    	float bX = 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX();
+	    	float cX = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
+	    	float intersectionX = pow ( bX, 2 ) - 4 * aX * cX;
+	    	intersectionX > 0 ? intersectionX = widthImgPlane : intersectionX = 0;
+
+	    	float aY = pow( ray.getX(), 2 );
+	    	float bY = 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX();
+	    	float cY = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
+	    	float intersectionY = pow ( bY, 2 ) - 4 * aY * cY;
+	    	intersectionY > 0 ? intersectionY = widthImgPlane : intersectionY = 0;
+
+	    	float aZ = pow( ray.getX(), 2 );
+	    	float bZ = 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX();
+	    	float cZ = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
+	    	float intersectionZ = pow ( bZ, 2 ) - 4 * aZ * cZ;
+	    	intersectionZ > 0 ? intersectionZ = widthImgPlane : intersectionZ = 0;
+
+	    	stringstream sstr;
+	    	sstr << int( intersectionX ) << " " << int ( intersectionY ) << " " << int ( intersectionZ ) << "   ";
+	    	string intersections = sstr.str();
+
+	    	contentImgPlane.at( i ).push_back( intersections ); // Add column to every rows
+
+			//Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ) );
+	    	//contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " ); // Add column to every rows
 	    }
     	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every rows
 	}
