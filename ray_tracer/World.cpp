@@ -71,8 +71,8 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
-	glm::vec3 posSphere( 2.0, 0.0, -7.0 );
-	float radiusSphere = 1;
+	glm::vec3 posSphere( 1.0, 0.0, -7.0 );
+	float radiusSphere = 0.25;
 	Ray rayIntersect( glm::vec4( 4.0, 0.0, -5.0, 1.0 ) );
 	//rayIntersect.normalize();
 	float a = pow( rayIntersect.getX(), 2 );
@@ -104,22 +104,19 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ) );
 			ray.normalize();
 
-	    	float aX = pow( ray.getX(), 2 );
 	    	float bX = 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX();
 	    	float cX = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
-	    	float intersectionX = pow ( bX, 2 ) - 4 * aX * cX;
+	    	float intersectionX = pow ( bX, 2 ) - 4 * cX;
 	    	intersectionX > 0 ? intersectionX = widthImgPlane : intersectionX = 0;
 
-	    	float aY = pow( ray.getX(), 2 );
 	    	float bY = 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX();
 	    	float cY = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
-	    	float intersectionY = pow ( bY, 2 ) - 4 * aY * cY;
+	    	float intersectionY = pow ( bY, 2 ) - 4 * cY;
 	    	intersectionY > 0 ? intersectionY = widthImgPlane : intersectionY = 0;
 
-	    	float aZ = pow( ray.getX(), 2 );
 	    	float bZ = 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX();
 	    	float cZ = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
-	    	float intersectionZ = pow ( bZ, 2 ) - 4 * aZ * cZ;
+	    	float intersectionZ = pow ( bZ, 2 ) - 4 * cZ;
 	    	intersectionZ > 0 ? intersectionZ = widthImgPlane : intersectionZ = 0;
 
 	    	stringstream sstr;
