@@ -12,13 +12,23 @@
 
 class XMLParser{
 	std::string inputFilePath;
+	std::string outputFileName;
+	glm::vec4 posCamera;
+	glm::vec4 upCamera;
+	glm::vec4 lookAtCamera;
+	double horizontal_fov;
+	int maxBounces;
+	int heightImgPlane;
+	int widthImgPlane;
+	glm::vec3 bgcolor;
 
-	XMLParser( const XMLParser& XMLParser );
-	XMLParser& operator=( const XMLParser& XMLParser );
+	XMLParser( const XMLParser& xmlParser );
+	XMLParser& operator=( const XMLParser& xmlParser );
 public:
 	XMLParser( std::string inputFilePath );
 	~XMLParser( );
 	void loadScene( );
+	void print( );
 };
 
 

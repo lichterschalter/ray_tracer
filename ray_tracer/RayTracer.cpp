@@ -34,13 +34,13 @@ void RayTracer::main() {
 
 
 	//PARSING THE INPUT FROM XML FILE
-	string inputFileName = "";
-	cout << "Type in the name of the input file (f.e.: 'example1.xml' ): ";
-	cin >> inputFileName;
-	//string inputFileName = "example1.xml";
+	//string inputFileName = "";
+	//cout << "Type in the name of the input file (f.e.: 'example1.xml' ): ";
+	//cin >> inputFileName;
+	string inputFileName = "example1.xml";
 
 	XMLParser xmlParser( "../scenes/" + inputFileName );
-	xmlParser.loadScene();
+	xmlParser.print();
 
 	string outputFileName = "example";
 	glm::vec4 posCamera = glm::vec4 ( -1.0, 1.0, 0.188, 1.0 );
