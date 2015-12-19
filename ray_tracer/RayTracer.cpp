@@ -40,7 +40,7 @@ void RayTracer::main() {
 	string inputFileName = "example1.xml";
 
 	XMLParser xmlParser( "../scenes/" + inputFileName );
-	xmlParser.print();
+	//xmlParser.print();
 	xmlParser.dataSpheres();
 
 	string outputFileName = "example";
@@ -74,8 +74,6 @@ void RayTracer::main() {
 	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
 	Sphere sphere( posSphere, 1.0 );
 	//sphere.print();
-	cout << width << height << endl;
-
 
 }
 

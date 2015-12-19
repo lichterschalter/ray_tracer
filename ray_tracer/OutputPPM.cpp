@@ -20,7 +20,6 @@ OutputPPM& OutputPPM::operator=( const OutputPPM& ){ return *this; };
 
 
 void OutputPPM::createOutput( string fileName, string content, string maxValueColor, int width, int height ){
-	cout << "OutputPPM.createOutput()"<<endl;
 	string fName = fileName + ".ppm";
 	const char * fNameConst = fName.c_str();
 	ofstream myfile;
@@ -46,5 +45,6 @@ void OutputPPM::createOutput( string fileName, string content, string maxValueCo
 		cerr << "Exception writing PPM file!" << endl;
 	}
 	myfile.close();
+	cout << "Saved results to \"" << fileName << ".ppm\"." << endl;
 }
 

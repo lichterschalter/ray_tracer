@@ -28,13 +28,13 @@ XMLParser::XMLParser( string inputFilePath ){
 
 	if (result)
 	{
-		std::cout << "Load result: " << result.description() << ", output file: " << doc.child("scene").attribute("output_file").value() << std::endl;	}
+		cout << "XML load result: " << result.description() << ", loaded file: \"" << inputFilePath << "\"." << endl;	}
 	else
 	{
 		outputFileName = "example0";
-	    std::cout << "XML [" << inputFilePathPointer << "] parsed with errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n";
-	    std::cout << "Error description: " << result.description() << "\n";
-	    std::cout << "Error offset: " << result.offset << " (error at [..." << (inputFilePathPointer + result.offset) << "]\n\n";
+	    cout << "XML [" << inputFilePathPointer << "] parsed with errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n";
+	    cout << "Error description: " << result.description() << "\n";
+	    cout << "Error offset: " << result.offset << " (error at [..." << (inputFilePathPointer + result.offset) << "]\n\n";
 	}
 
 	//READ NODES
@@ -117,7 +117,7 @@ vector< vector<float> > XMLParser::dataSpheres( ){
 		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("transmittance").attribute("t").as_float() );
 		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("refraction").attribute("iof").as_float() );
 	}
-
+/*
 	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
 		for( unsigned int j = 0; j < dataSpheres.at( i ).size(); ++j ){
 			stringstream sstr;
@@ -126,6 +126,7 @@ vector< vector<float> > XMLParser::dataSpheres( ){
 		}
 		cout << endl;
 	}
+*/
 	return dataSpheres;
 }
 
