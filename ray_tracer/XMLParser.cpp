@@ -38,7 +38,7 @@ XMLParser::XMLParser( string inputFilePath ){
 	}
 
 	//READ NODES
-	string outputFN = doc.child("scene").child("camera").child("horizontal_fov").attribute("angle").value();
+	string outputFN = doc.child("scene").attribute("output_file").value();
 	outputFileName = outputFN.substr(0, outputFN.size() - 4);
 	bgcolor = glm::vec3(
 			doc.child("scene").child("background_color").attribute("r").as_float(),
@@ -128,5 +128,36 @@ vector< vector<float> > XMLParser::dataSpheres( ){
 	}
 */
 	return dataSpheres;
+}
+
+string XMLParser::get_inputFilePath(){
+	return inputFilePath;
+}
+string XMLParser::get_outputFileName(){
+	return outputFileName;
+}
+glm::vec4 XMLParser::get_posCamera(){
+	return posCamera;
+}
+glm::vec4 XMLParser::get_upCamera(){
+	return upCamera;
+}
+glm::vec4 XMLParser::get_lookAtCamera(){
+	return lookAtCamera;
+}
+double XMLParser::get_horizontal_fov(){
+	return horizontal_fov;
+}
+int XMLParser::get_maxBounces(){
+	return maxBounces;
+}
+int XMLParser::get_heightImgPlane(){
+	return heightImgPlane;
+}
+int XMLParser::get_widthImgPlane(){
+	return widthImgPlane;
+}
+glm::vec3 XMLParser::get_bgcolor(){
+	return bgcolor;
 }
 

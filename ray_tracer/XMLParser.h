@@ -30,7 +30,22 @@ class XMLParser{
 public:
 	XMLParser( std::string inputFilePath );
 	~XMLParser( );
+
+	std::vector< std::vector<float> > get_dataSpheres( );
+	std::string get_inputFilePath();
+	std::string get_outputFileName();
+	glm::vec4 get_posCamera();
+	glm::vec4 get_upCamera();
+	glm::vec4 get_lookAtCamera();
+	double get_horizontal_fov();
+	int get_maxBounces();
+	int get_heightImgPlane();
+	int get_widthImgPlane();
+	glm::vec3 get_bgcolor();
+	pugi::xml_document get_doc();
+
 	std::vector< std::vector<float> > dataSpheres( );
+
 	void print( );
 };
 

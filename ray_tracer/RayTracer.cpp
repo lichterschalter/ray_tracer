@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
@@ -29,21 +30,22 @@ int main() {
 }
 
 void RayTracer::main() {
+
+	//USER INTERFACE
 	cout << "RayTracer is activated!" << endl;
 	cout << "This RayTracer was created by Fabian Türk." << endl;
-
-
-	//PARSING THE INPUT FROM XML FILE
 	//string inputFileName = "";
 	//cout << "Type in the name of the input file (f.e.: 'example1.xml' ): ";
 	//cin >> inputFileName;
 	string inputFileName = "example1.xml";
 
+
+	//PARSING THE INPUT FROM XML FILE
 	XMLParser xmlParser( "../scenes/" + inputFileName );
 	//xmlParser.print();
-	xmlParser.dataSpheres();
+	vector< vector<float> > dataSpheres = xmlParser.dataSpheres();
 
-	string outputFileName = "example";
+	string outputFileName = xmlParser.get_outputFileName();
 	glm::vec4 posCamera = glm::vec4 ( -1.0, 1.0, 0.188, 1.0 );
 	glm::vec4 upCamera = glm::vec4 ( 0.0, 1.0, 0.0, 1.0 );
 	glm::vec4 lookAtCamera = glm::vec4 ( 0.0, 0.0, -2.5, 1.0 );
