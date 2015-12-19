@@ -29,12 +29,20 @@ int main() {
 }
 
 void RayTracer::main() {
-	cout<<"RayTracer.main()" << endl;
+	cout << "RayTracer is activated!" << endl;
+	cout << "This RayTracer was created by Fabian Türk." << endl;
 
-	string inputFileName = "example1";
-	XMLParser xmlParser( "../scenes/" + inputFileName + ".xml" );
+
+	//PARSING THE INPUT FROM XML FILE
+	string inputFileName = "";
+	cout << "Type in the name of the input file (f.e.: 'example1.xml' ): ";
+	cin >> inputFileName;
+	//string inputFileName = "example1.xml";
+
+	XMLParser xmlParser( "../scenes/" + inputFileName );
 	xmlParser.loadScene();
 
+	string outputFileName = "example";
 	glm::vec4 posCamera = glm::vec4 ( -1.0, 1.0, 0.188, 1.0 );
 	glm::vec4 upCamera = glm::vec4 ( 0.0, 1.0, 0.0, 1.0 );
 	glm::vec4 lookAtCamera = glm::vec4 ( 0.0, 0.0, -2.5, 1.0 );
@@ -45,18 +53,23 @@ void RayTracer::main() {
 	int widthImgPlane = 512;
 	glm::vec3 bgcolor = glm::vec3( 0.0, 0.0, 0.0 );
 
+
+	//CREATING THE WORLD
 	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
 	//world.print();
 	//world.printContentImgPlane();
+
+
+	//CREATE OUTPUT
 	string ppmOutput;
 	int width = world.getWidthImgPlane();
 	int height = world.getHeightImgPlane();
 	ppmOutput = world.contentImgPlaneToString();
-
-	string outputFileName = "example";
 	OutputImage* outputImage = new OutputPPM();
 	outputImage->createOutput( outputFileName, ppmOutput, "512", height, width );
 
+
+	//OTHER STUFF
 	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
 	Sphere sphere( posSphere, 1.0 );
 	//sphere.print();
