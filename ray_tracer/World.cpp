@@ -24,7 +24,7 @@
 using namespace std;
 
 World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
-		double horizontal_fov, double vertical_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor ){
+		double horizontal_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor ){
 
 
 	//INIT VARS FROM PARAMETERS
@@ -33,7 +33,6 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	this->upCamera = upCamera;
 	this->lookAtCamera = lookAtCamera;
 	this->horizontal_fov = horizontal_fov;
-	this->vertical_fov = vertical_fov;
 	this->heightImgPlane = heightImgPlane;
 	this->widthImgPlane = widthImgPlane;
 	this->maxBounces = maxBounces;
@@ -180,7 +179,6 @@ World::World( const World& world){
 	this->upCamera = world.upCamera;
 	this->lookAtCamera = world.lookAtCamera;
 	this->horizontal_fov = world.horizontal_fov;
-	this->vertical_fov = world.vertical_fov;
 	this->heightImgPlane = world.heightImgPlane;
 	this->widthImgPlane = world.widthImgPlane;
 	this->maxBounces = world.maxBounces;
@@ -249,7 +247,6 @@ void World::print(){
 	cout << "upCamera: " << glm::to_string(upCamera) << endl;
 	cout << "lookAtCamera: " << glm::to_string(lookAtCamera) << endl;
 	cout << "horizontal_fov: " << horizontal_fov << endl;
-	cout << "vertical_fov: " << vertical_fov << endl;
 	cout << "maxBounces: " << maxBounces << endl;
 	cout << "posImgPlaneTopLeft: " << glm::to_string(posImgPlaneTopLeft) << endl;
 	cout << "posImgPlaneBottomRight: " << glm::to_string(posImgPlaneBottomRight) << endl;

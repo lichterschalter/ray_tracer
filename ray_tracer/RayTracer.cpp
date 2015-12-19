@@ -46,19 +46,18 @@ void RayTracer::main() {
 	vector< vector<float> > dataSpheres = xmlParser.dataSpheres();
 
 	string outputFileName = xmlParser.get_outputFileName();
-	glm::vec4 posCamera = glm::vec4 ( -1.0, 1.0, 0.188, 1.0 );
-	glm::vec4 upCamera = glm::vec4 ( 0.0, 1.0, 0.0, 1.0 );
-	glm::vec4 lookAtCamera = glm::vec4 ( 0.0, 0.0, -2.5, 1.0 );
-	double horizontal_fov = 45;
-	double vertical_fov = 45;
-	int maxBounces = 8;
-	int heightImgPlane = 512;
-	int widthImgPlane = 512;
-	glm::vec3 bgcolor = glm::vec3( 0.0, 0.0, 0.0 );
+	glm::vec4 posCamera = xmlParser.get_posCamera();
+	glm::vec4 upCamera = xmlParser.get_upCamera();
+	glm::vec4 lookAtCamera = xmlParser.get_lookAtCamera();
+	double horizontal_fov = xmlParser.get_horizontal_fov();
+	int maxBounces = xmlParser.get_maxBounces();
+	int heightImgPlane = xmlParser.get_heightImgPlane();
+	int widthImgPlane = xmlParser.get_widthImgPlane();
+	glm::vec3 bgcolor = xmlParser.get_bgcolor();
 
 
 	//CREATING THE WORLD
-	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, vertical_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
+	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
 	//world.print();
 	//world.printContentImgPlane();
 

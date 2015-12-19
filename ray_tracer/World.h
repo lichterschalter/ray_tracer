@@ -27,7 +27,6 @@ class World{
 	glm::vec4 upCamera;
 	glm::vec4 lookAtCamera;
 	float horizontal_fov;
-	float vertical_fov;
 	int maxBounces;
 
 	//IMAGE PLANE
@@ -47,7 +46,7 @@ class World{
 	World& operator=( const World& );
 public:
 	World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
-			double horizontal_fov, double vertical_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor );
+			double horizontal_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor );
 	virtual ~World();
 	void createSphere( Sphere sphere );
 	void createMesh( Mesh mesh );
