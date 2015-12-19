@@ -71,7 +71,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
-	glm::vec3 posSphere( 0.0, 0.0, -7.0 );
+	glm::vec3 posSphere( -2.5, 0.0, -7.0 );
 	float radiusSphere = 7.257;
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE

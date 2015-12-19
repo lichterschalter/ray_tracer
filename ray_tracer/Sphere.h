@@ -9,6 +9,7 @@
 #define SPHERE_H_
 
 #include <string>
+#include "../libs/glm/glm/vec4.hpp"
 #include "Surface.h"
 
 class Sphere: public Surface{

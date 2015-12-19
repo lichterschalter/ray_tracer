@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include "../libs/glm/glm/vec4.hpp"
 #include "Sphere.h"
 using namespace std;
 
