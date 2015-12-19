@@ -101,10 +101,21 @@ vector< vector<float> > XMLParser::dataSpheres( ){
 		dataSpheres.push_back(vector<float>()); // Add one empty row
 	}
 	for (unsigned int i = 0; i < dataSpheres.size(); ++i ) {
-		for( int j = 0; j < 14; ++j ){
-			dataSpheres.at( i ).push_back( doc.child("scene").child("surface").child("sphere").attribute("radius").as_float() );
-			cout << doc.child("scene").child("surface").child("sphere").attribute("radius").as_float() << endl;
-		}
+		//radius, posX, posY, posZ, phongKA, phongKD, phongIOF, phongEXP, reflectance, transmittance, refraction
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").attribute("radius").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("position").attribute("x").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("position").attribute("y").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("position").attribute("z").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("color").attribute("r").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("color").attribute("g").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("color").attribute("b").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("phong").attribute("ka").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("phong").attribute("kd").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("phong").attribute("ks").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("phong").attribute("exponent").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("reflectance").attribute("r").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("transmittance").attribute("t").as_float() );
+		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("refraction").attribute("iof").as_float() );
 	}
 
 	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
