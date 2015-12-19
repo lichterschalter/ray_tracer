@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
 #include "../libs/glm/glm/mat4x4.hpp"
@@ -43,7 +44,6 @@ void RayTracer::main() {
 	//PARSING THE INPUT FROM XML FILE
 	XMLParser xmlParser( "../scenes/" + inputFileName );
 	//xmlParser.print();
-	vector< vector<float> > dataSpheres = xmlParser.dataSpheres();
 
 	string outputFileName = xmlParser.get_outputFileName();
 	glm::vec4 posCamera = xmlParser.get_posCamera();
@@ -54,6 +54,13 @@ void RayTracer::main() {
 	int heightImgPlane = xmlParser.get_heightImgPlane();
 	int widthImgPlane = xmlParser.get_widthImgPlane();
 	glm::vec3 bgcolor = xmlParser.get_bgcolor();
+
+	vector<Sphere> spheres;
+	vector< vector<float> > dataSpheres = xmlParser.dataSpheres();
+	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
+		Sphere tempSphere;
+		spheres.push_back( tempSphere );
+	}
 
 
 	//CREATING THE WORLD
