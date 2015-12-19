@@ -11,12 +11,12 @@
 #include <string>
 
 class XMLParser{
-	std::string fileName;
+	std::string inputFilePath;
 
 	XMLParser( const XMLParser& XMLParser );
 	XMLParser& operator=( const XMLParser& XMLParser );
 public:
-	XMLParser( std::string fileName );
+	XMLParser( std::string inputFilePath );
 	~XMLParser( );
 	void loadScene( );
 };

@@ -31,7 +31,8 @@ int main() {
 void RayTracer::main() {
 	cout<<"RayTracer.main()" << endl;
 
-	XMLParser xmlParser( "../scenes/example1.xml" );
+	string inputFileName = "example1";
+	XMLParser xmlParser( "../scenes/" + inputFileName + ".xml" );
 	xmlParser.loadScene();
 
 	glm::vec4 posCamera = glm::vec4 ( -1.0, 1.0, 0.188, 1.0 );
@@ -52,9 +53,9 @@ void RayTracer::main() {
 	int height = world.getHeightImgPlane();
 	ppmOutput = world.contentImgPlaneToString();
 
-	string fileName = "example";
+	string outputFileName = "example";
 	OutputImage* outputImage = new OutputPPM();
-	outputImage->createOutput( fileName, ppmOutput, "512", height, width );
+	outputImage->createOutput( outputFileName, ppmOutput, "512", height, width );
 
 	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
 	Sphere sphere( posSphere, 1.0 );
