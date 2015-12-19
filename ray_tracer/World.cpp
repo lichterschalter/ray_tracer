@@ -72,17 +72,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
 	glm::vec3 posSphere( 0.0, 0.0, -7.0 );
-	float radiusSphere = 6.9999;
-	Ray rayIntersect( glm::vec4( 4.0, 0.0, -5.0, 1.0 ) );
-	//rayIntersect.normalize();
-	float a = pow( rayIntersect.getX(), 2 );
-	float b = 2 * posCamera[ 0 ] * rayIntersect.getX() - 2 * posSphere[ 0 ] * rayIntersect.getX();
-	float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) - pow( radiusSphere, 2 );
-	float intersection = pow ( b, 2 ) - 4 * a * c;
-	cout << "intersection!!! : " << intersection << endl;
-	cout << "a: " << a << endl;
-	cout << "b: " << b << endl;
-	cout << "c: " << c << endl;
+	float radiusSphere = 7.257;
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
@@ -91,10 +81,13 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	glm::vec3 posRayOnPlane = matrixvecmath.vec4ToVec3( posImgPlaneTopLeft ) - matrixvecmath.vec4ToVec3( posCamera );
 	posRayOnPlane[ 0 ] += pixelWidth;
 	posRayOnPlane[ 1 ] -= pixelHeight;
-	cout << glm::to_string(posRayOnPlane) << endl;
+	//cout << glm::to_string(posRayOnPlane) << endl;
 
 	Ray ray( glm::vec4( posRayOnPlane[ 0 ], posRayOnPlane[ 1 ], posRayOnPlane[ 2 ], 1.0 ) );
 	this->ray = ray;
+
+	Ray camToSphere ( glm::vec4 ( posCamera[ 0 ] - posSphere[ 0 ], posCamera[ 1 ] - posSphere[ 1 ], posCamera[ 2 ] - posSphere[ 2 ], 1.0 ) );
+	//camToSphere.normalize();
 
 	for (int i = 0; i < heightImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
@@ -114,6 +107,9 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 			//    (Z0 - Zc)^2 -
 			//    Sr^2
 
+			//float a = pow( ray.getX(), 2 ) + pow( ray.getY(), 2 ) + pow( ray.getZ(), 2 );
+
+			/*
 	    	float b = 2 * \
 	    			( ray.getX() * ( posCamera[ 0 ] - posSphere[ 0 ] ) + \
 					  ray.getY() * ( posCamera[ 1 ] - posSphere[ 1 ] ) + \
@@ -124,15 +120,33 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 					  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) - \
 					  pow ( radiusSphere, 2 );
 	    	float intersection = pow ( b, 2 ) - 4 * c;
+	    	*/
+
+			float a =  ray.getX() * ray.getX() +
+					   ray.getY() * ray.getY() +
+					   ray.getZ() * ray.getZ();
+
+			float b =  pow ( ( 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX() ), 2 ) +
+					   pow ( ( 2 * posCamera[ 1 ] * ray.getY() - 2 * posSphere[ 1 ] * ray.getY() ), 2 ) +
+					   pow ( ( 2 * posCamera[ 2 ] * ray.getZ() - 2 * posSphere[ 2 ] * ray.getZ() ), 2 );
+
+	    	float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) +
+	    			  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) +
+					  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
+					  pow ( radiusSphere, 2 );
+	    	float intersection = b - 4 * a * c;
+
 	    	//if( intersection < 0 ) intersection = 0;
 
 	    	if( intersection >= 0 ) {
 		    	stringstream sstr;
 		    	sstr << int( intersection ) << " " << int ( intersection ) << " " << int ( intersection ) << "   ";
 		    	string intersections = sstr.str();
-	    		contentImgPlane.at( i ).push_back( intersections );
-	    		cout << "intersects: " << intersections << endl;
+	    		//contentImgPlane.at( i ).push_back( intersections );
+		    	contentImgPlane.at( i ).push_back( "512 512 512   " );
+	    		//cout << "intersects: " << intersections << endl;
 	    	}else{
+	    		//cout << "RAYHAII" << endl;
 	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
 	    	}
 
