@@ -17,7 +17,7 @@ class XMLParser{
 	XMLParser& operator=( const XMLParser& XMLParser );
 public:
 	XMLParser( std::string fileName );
-	virtual ~XMLParser( );
+	~XMLParser( );
 	void loadScene( );
 };
 
