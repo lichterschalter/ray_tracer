@@ -101,15 +101,16 @@ vector< vector<float> > XMLParser::dataSpheres( ){
 		dataSpheres.push_back(vector<float>()); // Add one empty row
 	}
 	for (unsigned int i = 0; i < dataSpheres.size(); ++i ) {
-		for( int j = 0; j < 5; ++j ){
-			dataSpheres.at( i ).push_back( 0.0 );
+		for( int j = 0; j < 14; ++j ){
+			dataSpheres.at( i ).push_back( doc.child("scene").child("surface").child("sphere").attribute("radius").as_float() );
+			cout << doc.child("scene").child("surface").child("sphere").attribute("radius").as_float() << endl;
 		}
 	}
 
 	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
 		for( unsigned int j = 0; j < dataSpheres.at( i ).size(); ++j ){
 			stringstream sstr;
-			sstr << dataSpheres.at(i).at(j);
+			sstr << dataSpheres.at( i ).at( j );
 			cout << sstr.str() << " ";
 		}
 		cout << endl;
