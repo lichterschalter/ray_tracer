@@ -44,5 +44,16 @@ void XMLParser::loadScene( ){
 	    std::cout << "Error offset: " << result.offset << " (error at [..." << (inputFilePathPointer + result.offset) << "]\n\n";
 	}
 
+
+
+	for (pugi::xml_node tool = doc.child("scene").child("background_color"); tool; tool = tool.next_sibling("background_color"))
+	{
+	    std::cout << "r: " << tool.attribute("r").as_float() << endl;
+	    std::cout << "g: " << tool.attribute("g").as_float() << endl;
+	    std::cout << "b: " << tool.attribute("b").as_float() << endl;
+	}
+
+
+
 }
 
