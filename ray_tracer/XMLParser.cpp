@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
@@ -23,7 +24,6 @@ XMLParser::XMLParser( string inputFilePath ){
 	std::vector<char> inputFilePathConst(inputFilePath.begin(), inputFilePath.end());
 	inputFilePathConst.push_back('\0');
 	char* inputFilePathPointer = &inputFilePathConst[ 0 ];
-	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file( inputFilePathPointer );
 
 	if (result)
@@ -84,10 +84,6 @@ XMLParser::XMLParser( const XMLParser& xmlParser ){
 }
 XMLParser& XMLParser::operator=( const XMLParser& xmlParser ){ return *this; }
 
-void XMLParser::loadScene( ){
-
-}
-
 void XMLParser::print(){
 	cout << "bgcolor: " << glm::to_string(bgcolor) << endl;
 	cout << "posCamera: " << glm::to_string(posCamera) << endl;
@@ -96,5 +92,28 @@ void XMLParser::print(){
 	cout << "resolution horizontal: " << widthImgPlane << endl;
 	cout << "resolution vertical: " << heightImgPlane << endl;
 	cout << "max_bounces: " << maxBounces << endl;
+}
+
+vector< vector<float> > XMLParser::dataSpheres( ){
+
+	vector< vector<float> > dataSpheres;
+	for (pugi::xml_node tool = doc.child("scene").child("surfaces").child("sphere"); tool; tool = tool.next_sibling("sphere")) {
+		dataSpheres.push_back(vector<float>()); // Add one empty row
+	}
+	for (unsigned int i = 0; i < dataSpheres.size(); ++i ) {
+		for( int j = 0; j < 5; ++j ){
+			dataSpheres.at( i ).push_back( 0.0 );
+		}
+	}
+
+	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
+		for( unsigned int j = 0; j < dataSpheres.at( i ).size(); ++j ){
+			stringstream sstr;
+			sstr << dataSpheres.at(i).at(j);
+			cout << sstr.str() << " ";
+		}
+		cout << endl;
+	}
+	return dataSpheres;
 }
 

@@ -9,6 +9,8 @@
 #define XMLPARSER_H_
 
 #include <string>
+#include <vector>
+#include "../libs/pugixml-1.7/src/pugixml.hpp"
 
 class XMLParser{
 	std::string inputFilePath;
@@ -21,13 +23,14 @@ class XMLParser{
 	int heightImgPlane;
 	int widthImgPlane;
 	glm::vec3 bgcolor;
+	pugi::xml_document doc;
 
 	XMLParser( const XMLParser& xmlParser );
 	XMLParser& operator=( const XMLParser& xmlParser );
 public:
 	XMLParser( std::string inputFilePath );
 	~XMLParser( );
-	void loadScene( );
+	std::vector< std::vector<float> > dataSpheres( );
 	void print( );
 };
 

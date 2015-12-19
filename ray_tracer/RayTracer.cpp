@@ -41,6 +41,7 @@ void RayTracer::main() {
 
 	XMLParser xmlParser( "../scenes/" + inputFileName );
 	xmlParser.print();
+	xmlParser.dataSpheres();
 
 	string outputFileName = "example";
 	glm::vec4 posCamera = glm::vec4 ( -1.0, 1.0, 0.188, 1.0 );
