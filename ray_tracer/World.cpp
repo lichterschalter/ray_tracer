@@ -12,6 +12,7 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <algorithm>
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
 #include "../libs/glm/glm/mat4x4.hpp"
@@ -185,9 +186,8 @@ void World::performRayTracing(){
 	glm::vec3 centerToBottomImgPlane( 0.0, lengthImgPlaneCenterToBottom, 0.0 );
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
-	cout << spheres.at(0).get_radius() << endl;
 	glm::vec3 posSphere( -2.1, 0.0, -7.0 );
-	float radiusSphere = 8;
+	float radiusSphere = 1;
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
@@ -209,52 +209,36 @@ void World::performRayTracing(){
 			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j - widthImgPlane/ 2 + 5, posRayOnPlane[ 1 ] - i + heightImgPlane / 2 - 6, posRayOnPlane[ 2 ], 1.0 ) );
 			ray.normalize();
 
-			//B = 2 * (Xd * (X0 - Xc) +
-			//         Yd * (Y0 - Yc) +
-			//         Zd * (Z0 - Zc)
-			//    )
+			vector< float > intersections;
+			for( unsigned int i = 0; i < spheres.size(); ++i ){
+				//glm::vec4 posSphere( spheres.at( i ).get_position() );
+				float a =  ray.getX() * ray.getX() +
+						   ray.getY() * ray.getY() +
+						   ray.getZ() * ray.getZ();
 
-			//C = (X0 - Xc)^2 +
-			//    (Y0 - Yc)^2 +
-			//    (Z0 - Zc)^2 -
-			//    Sr^2
+				float b =  pow ( ( 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX() ), 2 ) +
+						   pow ( ( 2 * posCamera[ 1 ] * ray.getY() - 2 * posSphere[ 1 ] * ray.getY() ), 2 ) +
+						   pow ( ( 2 * posCamera[ 2 ] * ray.getZ() - 2 * posSphere[ 2 ] * ray.getZ() ), 2 );
 
-			//float a = pow( ray.getX(), 2 ) + pow( ray.getY(), 2 ) + pow( ray.getZ(), 2 );
+				float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) +
+						  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) +
+						  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
+						  pow ( radiusSphere, 2 );
+				float intersection = b - 4 * a * c;
+				intersections.push_back( intersection );
+			}
 
-			/*
-	    	float b = 2 * \
-	    			( ray.getX() * ( posCamera[ 0 ] - posSphere[ 0 ] ) + \
-					  ray.getY() * ( posCamera[ 1 ] - posSphere[ 1 ] ) + \
-					  ray.getZ() * ( posCamera[ 2 ] - posSphere[ 2 ] ) \
-	    			);
-	    	float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) + \
-	    			  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) + \
-					  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) - \
-					  pow ( radiusSphere, 2 );
-	    	float intersection = pow ( b, 2 ) - 4 * c;
-	    	*/
+			sort(intersections.begin(), intersections.end());
+			int sizeIntersect = intersections.size();
+			float intersection = intersections.at( sizeIntersect - 1 );
 
-			float a =  ray.getX() * ray.getX() +
-					   ray.getY() * ray.getY() +
-					   ray.getZ() * ray.getZ();
-
-			float b =  pow ( ( 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX() ), 2 ) +
-					   pow ( ( 2 * posCamera[ 1 ] * ray.getY() - 2 * posSphere[ 1 ] * ray.getY() ), 2 ) +
-					   pow ( ( 2 * posCamera[ 2 ] * ray.getZ() - 2 * posSphere[ 2 ] * ray.getZ() ), 2 );
-
-	    	float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) +
-	    			  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) +
-					  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
-					  pow ( radiusSphere, 2 );
-	    	float intersection = b - 4 * a * c;
-
-	    	//if( intersection < 0 ) intersection = 0;
 
 	    	if( intersection >= 0 ) {
 		    	stringstream sstr;
-		    	sstr << int( intersection ) << " " << int ( intersection ) << " " << int ( intersection ) << "   ";
+		    	//sstr << int( intersections[ 0 ] ) << " " << int ( intersections[ 0 ] ) << " " << int ( intersections[ 0 ] ) << "   ";
 		    	string intersections = sstr.str();
 	    		//contentImgPlane.at( i ).push_back( intersections );
+
 		    	contentImgPlane.at( i ).push_back( "512 512 512   " );
 	    		//cout << "intersects: " << intersections << endl;
 	    	}else{
