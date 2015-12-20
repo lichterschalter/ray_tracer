@@ -170,6 +170,7 @@ int World::getHeightImgPlane(){
 void World::performRayTracing(){
 	Matrix_vec_math matrixvecmath;
 
+
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
 
 	//1. calculate points and vectors to reach topleft and bottomright from poscamera
@@ -185,9 +186,12 @@ void World::performRayTracing(){
 	double lengthImgPlaneCenterToBottom = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * -lengthImgPlaneCenterToRight;
 	glm::vec3 centerToBottomImgPlane( 0.0, lengthImgPlaneCenterToBottom, 0.0 );
 
+
 	//COMPUTE INTERSECTIONS WITH SPHERES
+
 	glm::vec3 posSphere( -2.1, 0.0, -7.0 );
 	float radiusSphere = 4;
+
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
@@ -244,43 +248,25 @@ void World::performRayTracing(){
 					}
 				}
 			}
-			/*
-			for( int i = 0; i < 3; ++i ){
-				cout << intersections.at( i ) << " ";
-			}
-			cout << endl;
-			cout << "indexBiggest: " << indexBiggest << endl;
-			*/
-			//sort(intersections.begin(), intersections.end());
 
-			//find color of intersection
+			//3. find color of intersection
 			int sizeIntersect = intersections.size();
 			float intersection = intersections.at( sizeIntersect - 1 );
 			glm::vec3 colorIntersection = spheres.at( indexBiggest ).get_color();
 			stringstream sstr;
-			sstr << int ( colorIntersection[ 0 ] * 512 ) << " " << int ( colorIntersection[ 1 ] * 512 ) << " " << int ( colorIntersection[ 2 ] * 512 ) << "    ";
+			sstr << int ( colorIntersection[ 0 ] * widthImgPlane ) << " " << int ( colorIntersection[ 1 ] * widthImgPlane ) << " " << int ( colorIntersection[ 2 ] * widthImgPlane ) << "    ";
 			string colorPixel = sstr.str();
 
-
+			//4. save color to imgPlane
 	    	if( intersection >= 0 ) {
-		    	stringstream sstr;
-		    	//sstr << int( intersections[ 0 ] ) << " " << int ( intersections[ 0 ] ) << " " << int ( intersections[ 0 ] ) << "   ";
-		    	string intersections = sstr.str();
-	    		//contentImgPlane.at( i ).push_back( intersections );
-
 		    	contentImgPlane.at( i ).push_back( colorPixel );
-	    		//cout << "intersects: " << intersections << endl;
 	    	}else{
-	    		//cout << "RAYHAII" << endl;
 		    	//contentImgPlane.at( i ).push_back( "0 0 0   " );
 	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
 	    	}
 
-
-			//Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ) );
-	    	//contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
 	    }
-    	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every rows
+    	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every row
 	}
 }
 
