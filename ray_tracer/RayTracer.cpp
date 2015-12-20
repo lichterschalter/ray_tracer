@@ -77,6 +77,10 @@ void RayTracer::main() {
 	}
 	//world.print();
 
+
+	//PERFORM RAY TRACING
+	world.performRayTracing();
+
 	//CREATE OUTPUT
 	string ppmOutput;
 	int width = world.getWidthImgPlane();

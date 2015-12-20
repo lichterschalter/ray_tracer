@@ -55,6 +55,7 @@ public:
 	std::string contentImgPlaneToString();
 	int getWidthImgPlane();
 	int getHeightImgPlane();
+	void performRayTracing();
 };
 
 
