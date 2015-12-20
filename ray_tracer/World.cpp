@@ -70,8 +70,8 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
-	glm::vec3 posSphere( 0.0, 0.0, -7.0 );
-	float radiusSphere = 1;
+	glm::vec3 posSphere( -2.1, 0.0, -7.0 );
+	float radiusSphere = 8;
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
@@ -82,11 +82,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	posRayOnPlane[ 1 ] -= pixelHeight / 2;
 	//cout << glm::to_string(posRayOnPlane) << endl;
 
-	Ray ray( glm::vec4( posRayOnPlane[ 0 ], posRayOnPlane[ 1 ], posRayOnPlane[ 2 ], 1.0 ) );
-	this->ray = ray;
-
-	Ray camToSphere ( glm::vec4 ( posCamera[ 0 ] - posSphere[ 0 ], posCamera[ 1 ] - posSphere[ 1 ], posCamera[ 2 ] - posSphere[ 2 ], 1.0 ) );
-	//camToSphere.normalize();
+	this->ray = Ray( glm::vec4( posRayOnPlane[ 0 ], posRayOnPlane[ 1 ], posRayOnPlane[ 2 ], 1.0 ) );
 
 	for (int i = 0; i < heightImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
@@ -133,7 +129,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	    			  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) +
 					  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
 					  pow ( radiusSphere, 2 );
-	    	float intersection = 100 * b - 4 * a * c;
+	    	float intersection = b - 4 * a * c;
 
 	    	//if( intersection < 0 ) intersection = 0;
 
@@ -146,6 +142,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	    		//cout << "intersects: " << intersections << endl;
 	    	}else{
 	    		//cout << "RAYHAII" << endl;
+		    	//contentImgPlane.at( i ).push_back( "0 0 0   " );
 	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
 	    	}
 
