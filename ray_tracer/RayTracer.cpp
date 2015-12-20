@@ -75,7 +75,7 @@ void RayTracer::main() {
 		const Sphere tempSphere( position, color, phong, reflectance, transmittance, refraction, radius );
 		world.createSphere( tempSphere );
 	}
-	world.print();
+	//world.print();
 
 	//CREATE OUTPUT
 	string ppmOutput;

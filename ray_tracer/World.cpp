@@ -170,7 +170,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 };
 World::~World(){ };
 World::World( const World& world){
-	cerr << "Copy assignment constructor should not be used!" << endl;
+	cerr << "WARNING: Copy constructor should not be used!" << endl;
 
 	//INIT VARS FROM PARAMETERS
 	this->spheres = world.spheres;
@@ -183,54 +183,11 @@ World::World( const World& world){
 	this->maxBounces = world.maxBounces;
 	this->bgcolor = world.bgcolor;
 
-
-	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
-
-	//1. calculate points and vectors to reach topleft and bottomright from poscamera
-	Matrix_vec_math matrixvecmath;
-	glm::vec3 posImgPlaneCenter = matrixvecmath.vec4ToVec3(lookAtCamera) - matrixvecmath.vec4ToVec3(posCamera);
-	double lengthposImgPlaneCenter = matrixvecmath.lengthVec3( posImgPlaneCenter );
-	double lengthImgPlaneCenterToLeft = ( tan ( -horizontal_fov ) ) * lengthposImgPlaneCenter;
-	glm::vec3 centerToLeftImgPlane( lengthImgPlaneCenterToLeft, 0.0, 0.0 );
-	double lengthImgPlaneCenterToTop = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * -lengthImgPlaneCenterToLeft;
-	glm::vec3 centerToUpImgPlane( 0.0, lengthImgPlaneCenterToTop, 0.0 );
-	double lengthImgPlaneCenterToRight = ( tan ( horizontal_fov ) ) * lengthposImgPlaneCenter;
-	glm::vec3 centerToRightImgPlane( lengthImgPlaneCenterToRight, 0.0, 0.0 );
-	double lengthImgPlaneCenterToBottom = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * -lengthImgPlaneCenterToRight;
-	glm::vec3 centerToBottomImgPlane( 0.0, lengthImgPlaneCenterToBottom, 0.0 );
-
-	//2a. matrix multiplications for topleft
-	glm::mat4 transMatrix( 1.0f );
-	transMatrix = translate( transMatrix, centerToUpImgPlane );
-	transMatrix = translate( transMatrix, centerToLeftImgPlane );
-	transMatrix = translate( transMatrix, posImgPlaneCenter );
-	posImgPlaneTopLeft = transMatrix * posCamera;
-
-	//2b. matrix mulitplication for bottom right
-	transMatrix = glm::mat4( 1.0f );
-	transMatrix = translate( transMatrix, centerToBottomImgPlane );
-	transMatrix = translate( transMatrix, centerToRightImgPlane );
-	transMatrix = translate( transMatrix, posImgPlaneCenter );
-	posImgPlaneBottomRight = transMatrix * posCamera;
-
-
-	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
-	Ray ray( glm::vec4( 0.0, 0.0, 0.0, 1.0 ) );
-	this->ray = ray;
-
-
-	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])
-	for (int i = 0; i < heightImgPlane; i++) {
-		contentImgPlane.push_back(vector<string>()); // Add one empty row
-	}
-	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
-	    for (int j = 0; j < widthImgPlane; j++) {
-	    	contentImgPlane.at( i ).push_back( "0 0 0  " ); // Add column to every rows
-	    }
-	}
-
 };
-World& World::operator=( const World& ){ return *this; };
+World& World::operator=( const World& ){
+	cerr << "WARNING: Copy assignment operator should not be used!" << endl;
+	return *this;
+};
 
 void World::createSphere( Sphere sphere ){
 	spheres.push_back( sphere );

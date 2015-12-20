@@ -32,9 +32,9 @@ XMLParser::XMLParser( string inputFilePath ){
 	else
 	{
 		outputFileName = "example0";
-	    cout << "XML [" << inputFilePathPointer << "] parsed with errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n";
-	    cout << "Error description: " << result.description() << "\n";
-	    cout << "Error offset: " << result.offset << " (error at [..." << (inputFilePathPointer + result.offset) << "]\n\n";
+	    cerr << "XML [" << inputFilePathPointer << "] parsed with errors, attr value: [" << doc.child("node").attribute("attr").value() << "]\n";
+	    cerr << "Error description: " << result.description() << "\n";
+	    cerr << "Error offset: " << result.offset << " (error at [..." << (inputFilePathPointer + result.offset) << "]\n\n";
 	}
 
 	//READ NODES
