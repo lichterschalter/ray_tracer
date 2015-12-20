@@ -28,6 +28,9 @@ public:
 	virtual void initTexture();
 
 	void print();
+	glm::vec3 get_color();
+	glm::vec4 get_position();
+	float get_radius();
 };
 
 

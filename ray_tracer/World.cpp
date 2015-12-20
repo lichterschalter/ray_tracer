@@ -185,6 +185,7 @@ void World::performRayTracing(){
 	glm::vec3 centerToBottomImgPlane( 0.0, lengthImgPlaneCenterToBottom, 0.0 );
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
+	cout << spheres.at(0).get_radius() << endl;
 	glm::vec3 posSphere( -2.1, 0.0, -7.0 );
 	float radiusSphere = 8;
 

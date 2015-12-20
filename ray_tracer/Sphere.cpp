@@ -41,4 +41,14 @@ using namespace std;
 
 	}
 
+	glm::vec3 Sphere::get_color(){
+		return color;
+	}
+	glm::vec4 Sphere::get_position(){
+		return position;
+	}
+	float Sphere::get_radius(){
+		return radius;
+	}
+
 
