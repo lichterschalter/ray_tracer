@@ -20,7 +20,7 @@
 class World{
 
 	//World
-	Sphere* spheres;
+	//std::vector<Sphere> spheres;
 
 	//Camera
 	glm::vec4 posCamera;

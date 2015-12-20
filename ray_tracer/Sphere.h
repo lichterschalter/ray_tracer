@@ -9,16 +9,18 @@
 #define SPHERE_H_
 
 #include <string>
+#include <vector>
 #include "../libs/glm/glm/vec4.hpp"
 #include "Surface.h"
 
 class Sphere: public Surface{
 	float radius;
 
+
+public:
+	Sphere( glm::vec4 position, float radius );
 	Sphere( const Sphere& sphere );
 	Sphere& operator=( const Sphere& sphere );
-public:
-	Sphere(glm::vec4 position, float radius );
 	virtual ~Sphere();
 
 	virtual void initPhongIlluModel();

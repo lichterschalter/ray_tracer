@@ -97,27 +97,28 @@ void XMLParser::print(){
 vector< vector<float> > XMLParser::dataSpheres( ){
 
 	vector< vector<float> > dataSpheres;
+	int i = 0;
 	for (pugi::xml_node tool = doc.child("scene").child("surfaces").child("sphere"); tool; tool = tool.next_sibling("sphere")) {
 		dataSpheres.push_back(vector<float>()); // Add one empty row
-	}
-	for (unsigned int i = 0; i < dataSpheres.size(); ++i ) {
+
 		//radius, posX, posY, posZ, phongKA, phongKD, phongIOF, phongEXP, reflectance, transmittance, refraction
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").attribute("radius").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("position").attribute("x").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("position").attribute("y").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("position").attribute("z").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("color").attribute("r").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("color").attribute("g").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("color").attribute("b").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("phong").attribute("ka").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("phong").attribute("kd").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("phong").attribute("ks").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("phong").attribute("exponent").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("reflectance").attribute("r").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("transmittance").attribute("t").as_float() );
-		dataSpheres.at( i ).push_back( doc.child("scene").child("surfaces").child("sphere").child("material_solid").child("refraction").attribute("iof").as_float() );
+		dataSpheres.at( i ).push_back( tool.attribute("radius").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("position").attribute("x").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("position").attribute("y").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("position").attribute("z").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("color").attribute("r").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("color").attribute("g").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("color").attribute("b").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("phong").attribute("ka").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("phong").attribute("kd").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("phong").attribute("ks").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("phong").attribute("exponent").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("reflectance").attribute("r").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("transmittance").attribute("t").as_float() );
+		dataSpheres.at( i ).push_back( tool.child("material_solid").child("refraction").attribute("iof").as_float() );
+		++i;
 	}
-/*
+
 	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
 		for( unsigned int j = 0; j < dataSpheres.at( i ).size(); ++j ){
 			stringstream sstr;
@@ -126,7 +127,7 @@ vector< vector<float> > XMLParser::dataSpheres( ){
 		}
 		cout << endl;
 	}
-*/
+
 	return dataSpheres;
 }
 

@@ -58,8 +58,11 @@ void RayTracer::main() {
 	vector<Sphere> spheres;
 	vector< vector<float> > dataSpheres = xmlParser.dataSpheres();
 	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
-		Sphere tempSphere;
+		float radius = dataSpheres.at( i ).at( 0 );
+		glm::vec4 position( dataSpheres.at( i ).at( 1 ), dataSpheres.at( i ).at( 2 ), dataSpheres.at( i ).at( 3 ), 1.0 );
+		const Sphere tempSphere( position, radius );
 		spheres.push_back( tempSphere );
+		spheres.at( i ).print();
 	}
 
 

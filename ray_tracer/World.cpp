@@ -28,7 +28,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 
 	//INIT VARS FROM PARAMETERS
-	this->spheres = 0;
+	//this->spheres = Sphere tempSphere( );
 	this->posCamera = posCamera;
 	this->upCamera = upCamera;
 	this->lookAtCamera = lookAtCamera;
@@ -174,7 +174,7 @@ World::World( const World& world){
 	cerr << "Copy assignment constructor should not be used!" << endl;
 
 	//INIT VARS FROM PARAMETERS
-	this->spheres = world.spheres;
+	//this->spheres = world.spheres;
 	this->posCamera = world.posCamera;
 	this->upCamera = world.upCamera;
 	this->lookAtCamera = world.lookAtCamera;
