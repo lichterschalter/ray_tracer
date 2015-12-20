@@ -209,6 +209,7 @@ void World::performRayTracing(){
 			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j - widthImgPlane/ 2 + 5, posRayOnPlane[ 1 ] - i + heightImgPlane / 2 - 6, posRayOnPlane[ 2 ], 1.0 ) );
 			ray.normalize();
 
+			//1. perform intersection test ray-sphere
 			vector< float > intersections;
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
 				glm::vec4 posSphere( spheres.at( i ).get_position() );
@@ -228,25 +229,37 @@ void World::performRayTracing(){
 				intersections.push_back( intersection );
 			}
 
+			//2. find biggest delta
+			int indexBiggest = 0;
 			for( unsigned int i = 0; i < intersections.size(); ++i ){
-				float* smallest = &intersections.at( i );
+				float* biggest = &intersections.at( i );
+
 				for( unsigned int j = 1; j < intersections.size() - i; ++j ){
-					float* bigger = &intersections.at( i + j );
-					if( *smallest > *bigger ){
-						float temp = *bigger;
-						*bigger = *smallest;
-						*smallest = temp;
+					float* smaller = &intersections.at( i + j );
+					if( *biggest < *smaller ){
+						indexBiggest = j;
+						float temp = *smaller;
+						*smaller = *biggest;
+						*biggest = temp;
 					}
 				}
 			}
+			/*
 			for( int i = 0; i < 3; ++i ){
 				cout << intersections.at( i ) << " ";
 			}
 			cout << endl;
-
+			cout << "indexBiggest: " << indexBiggest << endl;
+			*/
 			//sort(intersections.begin(), intersections.end());
+
+			//find color of intersection
 			int sizeIntersect = intersections.size();
 			float intersection = intersections.at( sizeIntersect - 1 );
+			glm::vec3 colorIntersection = spheres.at( indexBiggest ).get_color();
+			stringstream sstr;
+			sstr << int ( colorIntersection[ 0 ] * 512 ) << " " << int ( colorIntersection[ 1 ] * 512 ) << " " << int ( colorIntersection[ 2 ] * 512 ) << "    ";
+			string colorPixel = sstr.str();
 
 
 	    	if( intersection >= 0 ) {
@@ -255,7 +268,7 @@ void World::performRayTracing(){
 		    	string intersections = sstr.str();
 	    		//contentImgPlane.at( i ).push_back( intersections );
 
-		    	contentImgPlane.at( i ).push_back( "512 512 512   " );
+		    	contentImgPlane.at( i ).push_back( colorPixel );
 	    		//cout << "intersects: " << intersections << endl;
 	    	}else{
 	    		//cout << "RAYHAII" << endl;
