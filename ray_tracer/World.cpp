@@ -28,7 +28,6 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 
 	//INIT VARS FROM PARAMETERS
-	//this->spheres = Sphere tempSphere( );
 	this->posCamera = posCamera;
 	this->upCamera = upCamera;
 	this->lookAtCamera = lookAtCamera;
@@ -174,7 +173,7 @@ World::World( const World& world){
 	cerr << "Copy assignment constructor should not be used!" << endl;
 
 	//INIT VARS FROM PARAMETERS
-	//this->spheres = world.spheres;
+	this->spheres = world.spheres;
 	this->posCamera = world.posCamera;
 	this->upCamera = world.upCamera;
 	this->lookAtCamera = world.lookAtCamera;
@@ -234,7 +233,7 @@ World::World( const World& world){
 World& World::operator=( const World& ){ return *this; };
 
 void World::createSphere( Sphere sphere ){
-	;
+	spheres.push_back( sphere );
 }
 void World::createMesh( Mesh mesh ){
 	;
@@ -242,7 +241,7 @@ void World::createMesh( Mesh mesh ){
 
 void World::print(){
 	cout << endl;
-	cout << "--begin class World--" << endl;
+	cout << "----begin class World----" << endl;
 	cout << "posCamera: " << glm::to_string(posCamera) << endl;
 	cout << "upCamera: " << glm::to_string(upCamera) << endl;
 	cout << "lookAtCamera: " << glm::to_string(lookAtCamera) << endl;
@@ -254,7 +253,12 @@ void World::print(){
 	cout << "contentImgPlane: [is not printed, use printContentImgPlane() to print it]" << endl;
 	cout << "ray: \n [ " << ray.toString() << " ]"<< endl;
 	cout << "bgcolor: " << glm::to_string(bgcolor) << endl;
-	cout << "--end class World--" << endl << endl;
+
+	for( unsigned int i = 0; i < spheres.size(); ++i ){
+		spheres.at( i ).print();
+	}
+
+	cout << "----end class World----" << endl << endl;
 }
 
 void World::printContentImgPlane(){

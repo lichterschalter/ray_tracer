@@ -118,7 +118,7 @@ vector< vector<float> > XMLParser::dataSpheres( ){
 		dataSpheres.at( i ).push_back( tool.child("material_solid").child("refraction").attribute("iof").as_float() );
 		++i;
 	}
-
+/*
 	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
 		for( unsigned int j = 0; j < dataSpheres.at( i ).size(); ++j ){
 			stringstream sstr;
@@ -127,7 +127,7 @@ vector< vector<float> > XMLParser::dataSpheres( ){
 		}
 		cout << endl;
 	}
-
+*/
 	return dataSpheres;
 }
 

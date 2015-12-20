@@ -17,7 +17,11 @@ using namespace std;
 	Sphere::Sphere( const Sphere& sphere ) : Surface( sphere ) {
 		this->radius = sphere.radius;
 	};
-	Sphere& Sphere::operator=( const Sphere& sphere ){ return *this; };
+	Sphere& Sphere::operator=( const Sphere& sphere ) {
+		Surface::operator=( sphere );
+		this->radius = radius;
+		return *this;
+	};
 	Sphere::~Sphere(){ };
 
 

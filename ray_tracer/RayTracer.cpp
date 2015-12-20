@@ -41,7 +41,7 @@ void RayTracer::main() {
 	string inputFileName = "example1.xml";
 
 
-	//PARSING THE INPUT FROM XML FILE
+	//PARSING GENERAL INPUT FROM XML FILE
 	XMLParser xmlParser( "../scenes/" + inputFileName );
 	//xmlParser.print();
 
@@ -55,7 +55,14 @@ void RayTracer::main() {
 	int widthImgPlane = xmlParser.get_widthImgPlane();
 	glm::vec3 bgcolor = xmlParser.get_bgcolor();
 
-	vector<Sphere> spheres;
+
+	//CREATING THE WORLD
+	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
+	//world.print();
+	//world.printContentImgPlane();
+
+
+	//CREATING OBJECTS FOR THE WOLRD
 	vector< vector<float> > dataSpheres = xmlParser.dataSpheres();
 	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
 		float radius = dataSpheres.at( i ).at( 0 );
@@ -66,16 +73,9 @@ void RayTracer::main() {
 		float transmittance = dataSpheres.at( i ).at( 12 );
 		float refraction = dataSpheres.at( i ).at( 13 );
 		const Sphere tempSphere( position, color, phong, reflectance, transmittance, refraction, radius );
-		spheres.push_back( tempSphere );
-		spheres.at( i ).print();
+		world.createSphere( tempSphere );
 	}
-
-
-	//CREATING THE WORLD
-	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
-	//world.print();
-	//world.printContentImgPlane();
-
+	world.print();
 
 	//CREATE OUTPUT
 	string ppmOutput;
