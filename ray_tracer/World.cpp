@@ -174,7 +174,7 @@ void World::performRayTracing(){
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
 
 	//1. calculate points and vectors to reach topleft and bottomright from poscamera
-	glm::vec3 posImgPlaneCenter = matrixvecmath.vec4ToVec3(lookAtCamera) - matrixvecmath.vec4ToVec3(posCamera);
+	glm::vec3 posImgPlaneCenter =  matrixvecmath.vec4ToVec3(posCamera) - matrixvecmath.vec4ToVec3(lookAtCamera);
 	double lengthposImgPlaneCenter = matrixvecmath.lengthVec3( posImgPlaneCenter );
 	double pi = 3.1415926535897;
 	double lengthImgPlaneCenterToLeft = ( tan ( -horizontal_fov * pi / 180.0 ) ) * lengthposImgPlaneCenter;
@@ -197,7 +197,7 @@ void World::performRayTracing(){
 
 	double pixelWidth = ( 2 * lengthImgPlaneCenterToRight ) / this->widthImgPlane;
 	double pixelHeight = ( 2 * lengthImgPlaneCenterToTop ) / this->heightImgPlane;
-	glm::vec3 posRayOnPlane = matrixvecmath.vec4ToVec3( posImgPlaneTopLeft ) - matrixvecmath.vec4ToVec3( posCamera );
+	glm::vec3 posRayOnPlane = matrixvecmath.vec4ToVec3( posCamera ) - matrixvecmath.vec4ToVec3( posImgPlaneTopLeft );
 	posRayOnPlane[ 0 ] += pixelWidth / 2;
 	posRayOnPlane[ 1 ] -= pixelHeight / 2;
 	//cout << glm::to_string(posRayOnPlane) << endl;
@@ -210,7 +210,7 @@ void World::performRayTracing(){
 	}
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    for (int j = 0; j < widthImgPlane; j++) {
-			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j - widthImgPlane/ 2 + 5, posRayOnPlane[ 1 ] - i + heightImgPlane / 2 - 6, posRayOnPlane[ 2 ], 1.0 ) );
+			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j - widthImgPlane/ 2, posRayOnPlane[ 1 ] - i + heightImgPlane / 2, posRayOnPlane[ 2 ], 1.0 ) );
 			ray.normalize();
 
 			//1. perform intersection test ray-sphere
@@ -232,7 +232,6 @@ void World::performRayTracing(){
 						  pow ( radiusSphere, 2 );
 				float intersection = b - 4 * a * c;
 				intersections.push_back( intersection );
-				cout << intersection << endl;
 			}
 
 			//2. find biggest delta
