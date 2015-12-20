@@ -187,7 +187,7 @@ void World::performRayTracing(){
 
 	//COMPUTE INTERSECTIONS WITH SPHERES
 	glm::vec3 posSphere( -2.1, 0.0, -7.0 );
-	float radiusSphere = 1;
+	float radiusSphere = 4;
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
@@ -211,7 +211,7 @@ void World::performRayTracing(){
 
 			vector< float > intersections;
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
-				//glm::vec4 posSphere( spheres.at( i ).get_position() );
+				glm::vec4 posSphere( spheres.at( i ).get_position() );
 				float a =  ray.getX() * ray.getX() +
 						   ray.getY() * ray.getY() +
 						   ray.getZ() * ray.getZ();
@@ -228,7 +228,23 @@ void World::performRayTracing(){
 				intersections.push_back( intersection );
 			}
 
-			sort(intersections.begin(), intersections.end());
+			for( unsigned int i = 0; i < intersections.size(); ++i ){
+				float* smallest = &intersections.at( i );
+				for( unsigned int j = 1; j < intersections.size() - i; ++j ){
+					float* bigger = &intersections.at( i + j );
+					if( *smallest > *bigger ){
+						float temp = *bigger;
+						*bigger = *smallest;
+						*smallest = temp;
+					}
+				}
+			}
+			for( int i = 0; i < 3; ++i ){
+				cout << intersections.at( i ) << " ";
+			}
+			cout << endl;
+
+			//sort(intersections.begin(), intersections.end());
 			int sizeIntersect = intersections.size();
 			float intersection = intersections.at( sizeIntersect - 1 );
 
