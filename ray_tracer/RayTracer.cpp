@@ -38,7 +38,7 @@ void RayTracer::main() {
 	//string inputFileName = "";
 	//cout << "Type in the name of the input file (f.e.: 'example1.xml' ): ";
 	//cin >> inputFileName;
-	string inputFileName = "example1.xml";
+	string inputFileName = "hitSphere.xml";
 
 
 	//PARSING GENERAL INPUT FROM XML FILE
@@ -94,7 +94,27 @@ void RayTracer::main() {
 	//glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
 	//Sphere sphere( posSphere, 1.0 );
 	//sphere.print();
+/*
+	vector <float> intersections = {-11, -13, -4.3, 0, 0 };
 
+	int indexBiggest = 0;
+	for( unsigned int i = 0; i < intersections.size(); ++i ){
+		float* biggest = &intersections.at( i );
+
+		for( unsigned int j = 1; j < intersections.size() - i; ++j ){
+			float* smaller = &intersections.at( i + j );
+			if( *biggest < *smaller ){
+				indexBiggest = j;
+				float temp = *smaller;
+				*smaller = *biggest;
+				*biggest = temp;
+			}
+		}
+	}
+	for( unsigned int i = 0; i < intersections.size(); ++i ){
+		cout << intersections.at( i );
+	}
+*/
 }
 
 

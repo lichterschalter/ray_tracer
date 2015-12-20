@@ -187,10 +187,10 @@ void World::performRayTracing(){
 	glm::vec3 centerToBottomImgPlane( 0.0, lengthImgPlaneCenterToBottom, 0.0 );
 
 
-	//COMPUTE INTERSECTIONS WITH SPHERES
+	//TEST SPHERE FOR DEBUGGING
 
-	glm::vec3 posSphere( -2.1, 0.0, -7.0 );
-	float radiusSphere = 4;
+	//glm::vec3 posSphere( -2.1, 0.0, -7.0 );
+	//float radiusSphere = 7.5;
 
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
@@ -217,6 +217,7 @@ void World::performRayTracing(){
 			vector< float > intersections;
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
 				glm::vec4 posSphere( spheres.at( i ).get_position() );
+				float radiusSphere = spheres.at( i ).get_radius();
 				float a =  ray.getX() * ray.getX() +
 						   ray.getY() * ray.getY() +
 						   ray.getZ() * ray.getZ();
@@ -231,13 +232,13 @@ void World::performRayTracing(){
 						  pow ( radiusSphere, 2 );
 				float intersection = b - 4 * a * c;
 				intersections.push_back( intersection );
+				cout << intersection << endl;
 			}
 
 			//2. find biggest delta
 			int indexBiggest = 0;
 			for( unsigned int i = 0; i < intersections.size(); ++i ){
 				float* biggest = &intersections.at( i );
-
 				for( unsigned int j = 1; j < intersections.size() - i; ++j ){
 					float* smaller = &intersections.at( i + j );
 					if( *biggest < *smaller ){
@@ -250,8 +251,7 @@ void World::performRayTracing(){
 			}
 
 			//3. find color of intersection
-			int sizeIntersect = intersections.size();
-			float intersection = intersections.at( sizeIntersect - 1 );
+			float intersection = intersections.at( indexBiggest );
 			glm::vec3 colorIntersection = spheres.at( indexBiggest ).get_color();
 			stringstream sstr;
 			sstr << int ( colorIntersection[ 0 ] * widthImgPlane ) << " " << int ( colorIntersection[ 1 ] * widthImgPlane ) << " " << int ( colorIntersection[ 2 ] * widthImgPlane ) << "    ";
