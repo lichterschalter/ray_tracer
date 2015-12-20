@@ -60,7 +60,12 @@ void RayTracer::main() {
 	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
 		float radius = dataSpheres.at( i ).at( 0 );
 		glm::vec4 position( dataSpheres.at( i ).at( 1 ), dataSpheres.at( i ).at( 2 ), dataSpheres.at( i ).at( 3 ), 1.0 );
-		const Sphere tempSphere( position, radius );
+		glm::vec3 color( dataSpheres.at( i ).at( 4 ), dataSpheres.at( i ).at( 5 ), dataSpheres.at( i ).at( 6 ) );
+		glm::vec4 phong( dataSpheres.at( i ).at( 7 ), dataSpheres.at( i ).at( 8 ), dataSpheres.at( i ).at( 9 ), dataSpheres.at( i ).at( 10 ) );
+		float reflectance = dataSpheres.at( i ).at( 11 );
+		float transmittance = dataSpheres.at( i ).at( 12 );
+		float refraction = dataSpheres.at( i ).at( 13 );
+		const Sphere tempSphere( position, color, phong, reflectance, transmittance, refraction, radius );
 		spheres.push_back( tempSphere );
 		spheres.at( i ).print();
 	}
@@ -82,8 +87,8 @@ void RayTracer::main() {
 
 
 	//OTHER STUFF
-	glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
-	Sphere sphere( posSphere, 1.0 );
+	//glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
+	//Sphere sphere( posSphere, 1.0 );
 	//sphere.print();
 
 }

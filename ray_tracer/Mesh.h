@@ -17,7 +17,7 @@ class Mesh: public Surface{
 	Mesh( const Mesh& Mesh );
 	Mesh& operator=( const Mesh& Mesh );
 public:
-	Mesh(glm::vec4 position, std::string srcName );
+	Mesh( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction, std::string srcName );
 	virtual ~Mesh();
 
 	virtual void initPhongIlluModel();

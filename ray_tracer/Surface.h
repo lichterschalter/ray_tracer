@@ -79,24 +79,24 @@ protected:
 	virtual void transform() = 0;
 	virtual void initTexture() = 0;
 public:
-	Surface( glm::vec4 position ) {
+	Surface( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction ) {
 		this->position = position;
 		translate = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		scale = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		rotateX = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		rotateY = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		rotateZ = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-		phong = glm::vec4( 0.3, 0.9, 1.0, 200.0 );
-		reflectance = 1.0;
-		transmittance = 0.0;
-		refraction = 0.0;
+		this->phong = phong;
+		this->reflectance = reflectance;
+		this->transmittance = transmittance;
+		this->refraction = refraction;
 		normalVec = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		lightVec = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		eyeVec = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		reflectanceVec = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		textured = false;
 		texture_name = "";
-		color = glm::vec3( 0.5, 0.17, 0.18 );
+		this->color = color;
 	};
 	virtual ~Surface(){ };
 

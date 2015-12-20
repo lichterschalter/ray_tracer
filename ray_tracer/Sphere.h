@@ -18,7 +18,7 @@ class Sphere: public Surface{
 
 
 public:
-	Sphere( glm::vec4 position, float radius );
+	Sphere( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction, float radius );
 	Sphere( const Sphere& sphere );
 	Sphere& operator=( const Sphere& sphere );
 	virtual ~Sphere();

@@ -10,7 +10,8 @@
 #include "Sphere.h"
 using namespace std;
 
-	Sphere::Sphere( glm::vec4 position, float radius ) : Surface( position ) {
+	Sphere::Sphere( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction, float radius )
+	: Surface( position, color, phong, reflectance, transmittance, refraction ) {
 		this->radius = radius;
 	};
 	Sphere::Sphere( const Sphere& sphere ) : Surface( sphere ) {
