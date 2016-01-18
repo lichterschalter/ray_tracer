@@ -58,6 +58,8 @@ void RayTracer::main() {
 
 
 	//CREATING THE WORLD
+	posCamera[ 2 ] += 8;
+	lookAtCamera[ 2 ] += 8;
 	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
 	//world.print();
 	//world.printContentImgPlane();

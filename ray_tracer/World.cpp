@@ -179,7 +179,6 @@ void World::performRayTracing(){
 	//glm::vec3 posSphere( 0.0, 0.0, -3.0 );
 	//float radiusSphere = 1;
 
-
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
 	contentImgPlane.clear();
