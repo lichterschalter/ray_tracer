@@ -232,7 +232,7 @@ void World::performRayTracing(){
 
 					glm::vec3 colorIntersection = spheres.at( i ).get_color();
 					stringstream sstr;
-					sstr << int ( colorIntersection[ 0 ] * 255 ) << " " << int ( colorIntersection[ 1 ] * 255 ) << " " << int ( colorIntersection[ 2 ] * 255 ) << "    ";
+					sstr << int ( colorIntersection[ 0 ] * 100 ) << " " << int ( colorIntersection[ 1 ] * 100 ) << " " << int ( colorIntersection[ 2 ] * 100 ) << "    ";
 					string colorPixel = sstr.str();
 					intersectColor.push_back( colorPixel );
 				}

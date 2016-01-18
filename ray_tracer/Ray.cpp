@@ -60,8 +60,8 @@ string Ray::posToColorString(){
 
 	stringstream sstrX, sstrY, sstrZ;
 	float x, y, z;
-	x = direction[ 0 ] * 255;
-	y = direction[ 1 ] * 255;
+	x = direction[ 0 ] * 100;
+	y = direction[ 1 ] * 100;
 	z = direction[ 2 ] >= 0 ? direction[ 2 ] : 0;
 	sstrX << abs(int(x));
 	string posX = sstrX.str();
