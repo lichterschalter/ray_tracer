@@ -78,11 +78,16 @@ XMLParser::XMLParser( string inputFilePath ){
 	parallelLightDir[ 2 ] = doc.child("scene").child("lights").child("parallel_light").child("direction").attribute("z").as_float();
 
 	unsigned int i = 0;
-	for (pugi::xml_node tool = doc.child("scene").child("lights"); tool; tool = tool.next_sibling("point_light") ) {
+	for (pugi::xml_node tool = doc.child("scene").child("lights").child("point_light"); tool; tool = tool.next_sibling("point_light") ) {
 		pointLightsCol.push_back( glm::vec3() ); // Add one empty row
 		pointLightsCol.at( i )[ 0 ] = tool.child("color").attribute("r").as_float();
-		pointLightsCol.at( i )[ 0 ] = tool.child("color").attribute("g").as_float();
-		pointLightsCol.at( i )[ 0 ] = tool.child("color").attribute("b").as_float();
+		pointLightsCol.at( i )[ 1 ] = tool.child("color").attribute("g").as_float();
+		pointLightsCol.at( i )[ 2 ] = tool.child("color").attribute("b").as_float();
+
+		pointLightsPos.push_back( glm::vec3() ); // Add one empty row
+		pointLightsPos.at( i )[ 0 ] = tool.child("position").attribute("x").as_float();
+		pointLightsPos.at( i )[ 1 ] = tool.child("position").attribute("y").as_float();
+		pointLightsPos.at( i )[ 2 ] = tool.child("position").attribute("z").as_float();
 		++i;
 	}
 
@@ -121,17 +126,16 @@ void XMLParser::print(){
 	cout << "parallelLightCol: " << to_string( parallelLightCol ) << endl;
 	cout << "parallelLightDir: " << to_string( parallelLightDir ) << endl;
 
-	for( unsigned int i = 0; i < pointLightsCol.size(); ++i ){
+	for( unsigned int i = 0; i < pointLightsCol.size() && i < pointLightsPos.size(); ++i ){
+		cout << "--pointLight Nr. " << i + 1 << "--" << endl;
 		stringstream sstr;
 		sstr << to_string( pointLightsCol.at( i ) );
-		cout << "pointLight" << i + 1 << ": " << sstr.str() << " " << endl;
-	}
+		cout << "pointLightCol: " << sstr.str() << " " << endl;
 
-	for( unsigned int i = 0; i < pointLightsPos.size(); ++i ){
-		stringstream sstr;
-		sstr << to_string( pointLightsPos.at( i ) );
-		cout << sstr.str() << " ";
-		cout << endl;
+		stringstream sstr2;
+		sstr2 << to_string( pointLightsPos.at( i ) );
+		cout << "pointLightPos: " << sstr2.str() << " " << endl;
+		cout << "----" << endl;
 	}
 
 }
