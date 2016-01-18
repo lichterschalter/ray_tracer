@@ -44,32 +44,25 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 	//1. calculate points and vectors to reach topleft and bottomright from poscamera
 	Matrix_vec_math matrixvecmath;
-	glm::vec3 posImgPlaneCenter = matrixvecmath.vec4ToVec3(lookAtCamera) - matrixvecmath.vec4ToVec3(posCamera);
-	double lengthposImgPlaneCenter = matrixvecmath.lengthVec3( posImgPlaneCenter );
+
+	glm::vec4 dir( lookAtCamera[ 0 ] - posCamera[ 0 ], lookAtCamera[ 1 ] - posCamera[ 1 ], lookAtCamera[ 2 ] - posCamera[ 2 ], 1.0 );
+	dir = matrixvecmath.normalize( dir );
+	upCamera = matrixvecmath.normalize( upCamera );
+	glm::vec4 rightVec = matrixvecmath.crossVec4( dir, upCamera );
+	upCamera = matrixvecmath.crossVec4( rightVec, dir );
+
 	double pi = 3.1415926535897;
-	double lengthImgPlaneCenterToLeft = ( tan ( -horizontal_fov * pi / 180.0 ) ) * lengthposImgPlaneCenter;
-	glm::vec3 centerToLeftImgPlane( lengthImgPlaneCenterToLeft, 0.0, 0.0 );
-	double lengthImgPlaneCenterToTop = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * -lengthImgPlaneCenterToLeft;
-	glm::vec3 centerToUpImgPlane( 0.0, lengthImgPlaneCenterToTop, 0.0 );
-	double lengthImgPlaneCenterToRight = ( tan ( horizontal_fov * pi / 180.0 ) ) * lengthposImgPlaneCenter;
-	glm::vec3 centerToRightImgPlane( lengthImgPlaneCenterToRight, 0.0, 0.0 );
-	double lengthImgPlaneCenterToBottom = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * -lengthImgPlaneCenterToRight;
-	glm::vec3 centerToBottomImgPlane( 0.0, lengthImgPlaneCenterToBottom, 0.0 );
+	float width = 2 * ( tan (horizontal_fov * pi / 180.0 ) * matrixvecmath.lengthVec4( dir ) );
+	float height = width / ( widthImgPlane / heightImgPlane );
 
-	//2a. matrix multiplications for topleft
-	glm::mat4 transMatrix( 1.0f );
-	transMatrix = translate( transMatrix, centerToUpImgPlane );
-	transMatrix = translate( transMatrix, centerToLeftImgPlane );
-	transMatrix = translate( transMatrix, posImgPlaneCenter );
-	posImgPlaneTopLeft = transMatrix * posCamera;
+	glm::vec3 halfWidthVec( width / 2, 0, 0 );
+	glm::vec3 halfHeightVec( 0, height / 2, 0 );
+	glm::vec3 lookAtTemp = matrixvecmath.vec4ToVec3( lookAtCamera );
+	glm::vec3 rightVecTemp = matrixvecmath.vec4ToVec3( rightVec );
+	glm::vec3 upCameraTemp = matrixvecmath.vec4ToVec3( upCamera );
 
-	//2b. matrix mulitplication for bottom right
-	transMatrix = glm::mat4( 1.0f );
-	transMatrix = translate( transMatrix, centerToBottomImgPlane );
-	transMatrix = translate( transMatrix, centerToRightImgPlane );
-	transMatrix = translate( transMatrix, posImgPlaneCenter );
-	posImgPlaneBottomRight = transMatrix * posCamera;
-
+	glm::vec3 topLeftTemp = lookAtTemp + ( halfWidthVec * ( -rightVecTemp ) ) + ( halfHeightVec * ( upCameraTemp ) );
+	posImgPlaneTopLeft = matrixvecmath.vec3ToVec4( topLeftTemp );
 
 
 	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])
@@ -97,6 +90,7 @@ World::World( const World& world){
 	this->horizontal_fov = world.horizontal_fov;
 	this->heightImgPlane = world.heightImgPlane;
 	this->widthImgPlane = world.widthImgPlane;
+	this->posImgPlaneTopLeft = world.posImgPlaneTopLeft;
 	this->maxBounces = world.maxBounces;
 	this->bgcolor = world.bgcolor;
 
@@ -122,7 +116,6 @@ void World::print(){
 	cout << "horizontal_fov: " << horizontal_fov << endl;
 	cout << "maxBounces: " << maxBounces << endl;
 	cout << "posImgPlaneTopLeft: " << glm::to_string(posImgPlaneTopLeft) << endl;
-	cout << "posImgPlaneBottomRight: " << glm::to_string(posImgPlaneBottomRight) << endl;
 	cout << "heightImgPlane: " << heightImgPlane << endl;
 	cout << "contentImgPlane: [is not printed, use printContentImgPlane() to print it]" << endl;
 	cout << "ray: \n [ " << ray.toString() << " ]"<< endl;
@@ -172,29 +165,6 @@ int World::getHeightImgPlane(){
 void World::performRayTracing(){
 	Matrix_vec_math matrixvecmath;
 	cout << "Shooting rays into the world..." << endl;
-
-	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
-
-	//1. calculate points and vectors to reach topleft and bottomright from poscamera
-	glm::vec4 dir( lookAtCamera[ 0 ] - posCamera[ 0 ], lookAtCamera[ 1 ] - posCamera[ 1 ], lookAtCamera[ 2 ] - posCamera[ 2 ], 1.0 );
-	dir = matrixvecmath.normalize( dir );
-	upCamera = matrixvecmath.normalize( upCamera );
-	glm::vec4 rightVec = matrixvecmath.crossVec4( dir, upCamera );
-	upCamera = matrixvecmath.crossVec4( rightVec, dir );
-
-	double pi = 3.1415926535897;
-	float width = 2 * ( tan (horizontal_fov * pi / 180.0 ) * matrixvecmath.lengthVec4( dir ) );
-	float height = width / ( widthImgPlane / heightImgPlane );
-
-	glm::vec3 halfWidthVec( width / 2, 0, 0 );
-	glm::vec3 halfHeightVec( 0, height / 2, 0 );
-	glm::vec3 lookAtTemp = matrixvecmath.vec4ToVec3( lookAtCamera );
-	glm::vec3 rightVecTemp = matrixvecmath.vec4ToVec3( rightVec );
-	glm::vec3 upCameraTemp = matrixvecmath.vec4ToVec3( upCamera );
-
-	glm::vec3 topLeftTemp = lookAtTemp + ( halfWidthVec * ( -rightVecTemp ) ) + ( halfHeightVec * ( upCameraTemp ) );
-	cout << glm::to_string( topLeftTemp ) << endl;
-
 
 /*
 

@@ -31,7 +31,6 @@ class World{
 
 	//IMAGE PLANE
 	glm::vec4 posImgPlaneTopLeft;
-	glm::vec4 posImgPlaneBottomRight;
 	int heightImgPlane;
 	int widthImgPlane;
 	std::vector< std::vector<std::string> > contentImgPlane;
