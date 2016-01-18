@@ -176,7 +176,7 @@ void World::performRayTracing(){
 
 	//TEST SPHERE FOR DEBUGGING
 
-	glm::vec3 posSphere( -2.1, 0.0, -13.0 );
+	glm::vec3 posSphere( 0.0, 0.0, -13.0 );
 	float radiusSphere = 3;
 
 
@@ -229,17 +229,19 @@ void World::performRayTracing(){
 						   ray.getY() * ray.getY() +
 						   ray.getZ() * ray.getZ();
 
-				float b =  pow ( ( 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX() ), 2 ) +
-						   pow ( ( 2 * posCamera[ 1 ] * ray.getY() - 2 * posSphere[ 1 ] * ray.getY() ), 2 ) +
-						   pow ( ( 2 * posCamera[ 2 ] * ray.getZ() - 2 * posSphere[ 2 ] * ray.getZ() ), 2 );
+				float b =  ( 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX() ) +
+						   ( 2 * posCamera[ 1 ] * ray.getY() - 2 * posSphere[ 1 ] * ray.getY() ) +
+						   ( 2 * posCamera[ 2 ] * ray.getZ() - 2 * posSphere[ 2 ] * ray.getZ() );
 
 				float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) +
 						  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) +
 						  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
 						  pow ( radiusSphere, 2 );
-				float intersection = b - 4 * a * c;
-
-				intersections.push_back( intersection );
+				float intersection = pow( b, 2 ) - 4 * a * c;
+				float deltaOne = ( -b + intersection ) / 2 * a;
+				float deltaTwo = ( -b - intersection ) / 2 * a;
+				if( deltaOne < deltaTwo ) intersections.push_back( deltaOne );
+				if( deltaOne > deltaTwo ) intersections.push_back( deltaTwo );
 			}
 
 			//2. find biggest lambda
