@@ -42,7 +42,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
 
-	//1. calculate points and vectors to reach topleft and bottomright from poscamera
+	//1. calculate points and vectors to reach topleft from poscamera
 	Matrix_vec_math matrixvecmath;
 
 	glm::vec4 dir( lookAtCamera[ 0 ] - posCamera[ 0 ], lookAtCamera[ 1 ] - posCamera[ 1 ], lookAtCamera[ 2 ] - posCamera[ 2 ], 1.0 );
@@ -232,7 +232,7 @@ void World::performRayTracing(){
 
 					glm::vec3 colorIntersection = spheres.at( i ).get_color();
 					stringstream sstr;
-					sstr << int ( colorIntersection[ 0 ] * 100 ) << " " << int ( colorIntersection[ 1 ] * 100 ) << " " << int ( colorIntersection[ 2 ] * 100 ) << "    ";
+					sstr << int ( colorIntersection[ 0 ] * 75 ) << " " << int ( colorIntersection[ 1 ] * 75 ) << " " << int ( colorIntersection[ 2 ] * 75 ) << "    ";
 					string colorPixel = sstr.str();
 					intersectColor.push_back( colorPixel );
 				}
