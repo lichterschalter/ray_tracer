@@ -30,13 +30,20 @@ class World{
 	float horizontal_fov;
 	int maxBounces;
 
-	//IMAGE PLANE
+	//Image Plane
 	glm::vec4 posImgPlaneTopLeft;
 	int heightImgPlane;
 	int widthImgPlane;
 	double pixelWidth;
 	double pixelHeight;
 	std::vector< std::vector<std::string> > contentImgPlane;
+
+	//Lights
+	glm::vec3 ambientLight;
+	glm::vec3 parallelLightCol;
+	glm::vec3 parallelLightDir;
+	std::vector < glm::vec3 > pointLightsCol;
+	std::vector < glm::vec3 > pointLightsPos;
 
 	//Background color
 	glm::vec3 bgcolor;
@@ -48,7 +55,9 @@ class World{
 	World& operator=( const World& );
 public:
 	World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
-			double horizontal_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor );
+			double horizontal_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor,
+			glm::vec3 ambientLight,	glm::vec3 parallelLightCol,	glm::vec3 parallelLightDir,
+			std::vector < glm::vec3 > pointLightsCol, std::vector < glm::vec3 > pointLightsPos );
 	virtual ~World();
 	void createSphere( Sphere sphere );
 	void createMesh( Mesh mesh );

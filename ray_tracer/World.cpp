@@ -25,7 +25,9 @@
 using namespace std;
 
 World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
-		double horizontal_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor ){
+		double horizontal_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor,
+		glm::vec3 ambientLight,	glm::vec3 parallelLightCol,	glm::vec3 parallelLightDir,
+		std::vector < glm::vec3 > pointLightsCol, std::vector < glm::vec3 > pointLightsPos ){
 
 	cout << "Building the world. ";
 
@@ -38,6 +40,11 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	this->widthImgPlane = widthImgPlane;
 	this->maxBounces = maxBounces;
 	this->bgcolor = bgcolor;
+	this->ambientLight = ambientLight;
+	this->parallelLightCol = parallelLightCol;
+	this->parallelLightDir = parallelLightDir;
+	this->pointLightsCol = pointLightsCol;
+	this->pointLightsPos = pointLightsPos;
 
 
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
@@ -100,6 +107,11 @@ World::World( const World& world){
 	this->bgcolor = world.bgcolor;
 	this->pixelWidth = world.pixelWidth;
 	this->pixelHeight = world.pixelHeight;
+	this->ambientLight = world.ambientLight;
+	this->parallelLightCol = world.parallelLightCol;
+	this->parallelLightDir = world.parallelLightDir;
+	this->pointLightsCol = world.pointLightsCol;
+	this->pointLightsPos = world.pointLightsPos;
 
 };
 World& World::operator=( const World& ){
@@ -127,6 +139,22 @@ void World::print(){
 	cout << "contentImgPlane: [is not printed, use printContentImgPlane() to print it]" << endl;
 	cout << "ray: \n [ " << ray.toString() << " ]"<< endl;
 	cout << "bgcolor: " << glm::to_string(bgcolor) << endl;
+
+	cout << "ambientLight: " << to_string( ambientLight ) << endl;
+	cout << "parallelLightCol: " << to_string( parallelLightCol ) << endl;
+	cout << "parallelLightDir: " << to_string( parallelLightDir ) << endl;
+
+	for( unsigned int i = 0; i < pointLightsCol.size() && i < pointLightsPos.size(); ++i ){
+		cout << "--pointLight Nr. " << i + 1 << "--" << endl;
+		stringstream sstr;
+		sstr << to_string( pointLightsCol.at( i ) );
+		cout << "pointLightCol: " << sstr.str() << " " << endl;
+
+		stringstream sstr2;
+		sstr2 << to_string( pointLightsPos.at( i ) );
+		cout << "pointLightPos: " << sstr2.str() << " " << endl;
+		cout << "----" << endl;
+	}
 
 	for( unsigned int i = 0; i < spheres.size(); ++i ){
 		spheres.at( i ).print();

@@ -44,7 +44,7 @@ void RayTracer::main() {
 	//PARSING GENERAL INPUT FROM XML FILE
 	XMLParser xmlParser( inputFileName );
 	//XMLParser xmlParser( "../scenes/" + inputFileName );
-	xmlParser.print();
+	//xmlParser.print();
 
 	string outputFileName = xmlParser.get_outputFileName();
 	glm::vec4 posCamera = xmlParser.get_posCamera();
@@ -55,12 +55,19 @@ void RayTracer::main() {
 	int heightImgPlane = xmlParser.get_heightImgPlane();
 	int widthImgPlane = xmlParser.get_widthImgPlane();
 	glm::vec3 bgcolor = xmlParser.get_bgcolor();
+	glm::vec3 ambientLight = xmlParser.get_ambientLight();
+	glm::vec3 parallelLightCol = xmlParser.get_parallelLightCol();
+	glm::vec3 parallelLightDir = xmlParser.get_parallelLightDir();
+	std::vector < glm::vec3 > pointLightsCol = xmlParser.get_pointLightsCol();
+	std::vector < glm::vec3 > pointLightsPos = xmlParser.get_pointLightsPos();
 
 
 	//CREATING THE WORLD
 	posCamera[ 2 ] += 9.5;
 	lookAtCamera[ 2 ] += 9.5;
-	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
+	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor,
+			     ambientLight,	parallelLightCol,	parallelLightDir,
+				 pointLightsCol, pointLightsPos );
 	//world.print();
 	//world.printContentImgPlane();
 
@@ -78,7 +85,7 @@ void RayTracer::main() {
 		const Sphere tempSphere( position, color, phong, reflectance, transmittance, refraction, radius );
 		world.createSphere( tempSphere );
 	}
-	//world.print();
+	world.print();
 
 
 	//PERFORM RAY TRACING
