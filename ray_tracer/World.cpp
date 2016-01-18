@@ -183,8 +183,6 @@ void World::performRayTracing(){
 	glm::vec3 posRayOnPlane = matrixvecmath.vec4ToVec3( posImgPlaneTopLeft ) - matrixvecmath.vec4ToVec3( posCamera );
 	posRayOnPlane[ 0 ] += pixelWidth / 2;
 	posRayOnPlane[ 1 ] -= pixelHeight / 2;
-	cout << glm::to_string(posImgPlaneTopLeft) << endl;
-	cout << glm::to_string(posRayOnPlane) << endl;
 
 	this->ray = Ray( glm::vec4( posRayOnPlane[ 0 ], posRayOnPlane[ 1 ], posRayOnPlane[ 2 ], 1.0 ) );
 
@@ -192,9 +190,29 @@ void World::performRayTracing(){
 	for (int i = 0; i < heightImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
 	}
+
+	/*
+	glm::vec4 rayTemp(
+			posRayOnPlane[ 0 ] + 1 * rightVec[ 0 ] * pixelWidth - 1 * (upCamera[ 0 ]) * pixelHeight,
+			posRayOnPlane[ 1 ] + 1 * rightVec[ 1 ] * pixelWidth - 1 * (upCamera[ 1 ]) * pixelHeight,
+			posRayOnPlane[ 2 ] + 1 * rightVec[ 2 ] * pixelWidth - 1 * (upCamera[ 2 ]) * pixelHeight,
+			1.0
+	);
+	cout << pixelWidth << endl;
+	cout << to_string(posRayOnPlane) << endl;
+	cout << to_string(rayTemp) << endl;
+	*/
+
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    for (int j = 0; j < widthImgPlane; j++) {
-			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ) );
+
+	    	glm::vec4 rayTemp(
+	    			posRayOnPlane[ 0 ] + j * rightVec[ 0 ] * pixelWidth - i * (upCamera[ 0 ]) * pixelHeight,
+	    			posRayOnPlane[ 1 ] + j * rightVec[ 1 ] * pixelWidth - i * (upCamera[ 1 ]) * pixelHeight,
+	    			posRayOnPlane[ 2 ] + j * rightVec[ 2 ] * pixelWidth - i * (upCamera[ 2 ]) * pixelHeight,
+	    			1.0
+			);
+			Ray ray( rayTemp );
 			//ray.normalize();
 
 			//1. perform intersection test ray-sphere
@@ -245,6 +263,7 @@ void World::performRayTracing(){
 		    	contentImgPlane.at( i ).push_back( colorPixel );
 	    	}else{
 		    	//contentImgPlane.at( i ).push_back( "0 0 0   " );
+	    		//cout << ray.posToColorString();
 	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
 	    	}
 
