@@ -22,7 +22,9 @@ public:
 	Matrix_vec_math( );
 	virtual ~Matrix_vec_math();
 	glm::vec3 vec4ToVec3( glm::vec4 homogenVector );
+	glm::vec4 vec3ToVec4( glm::vec3 inhomogenVector );
 	float lengthVec3( glm::vec3 Vector3 );
+	float lengthVec4( glm::vec4 vector4 );
 	glm::vec4 crossVec4(glm::vec4 _vec1, glm::vec4 _vec2);
 	glm::vec4 normalize(glm::vec4 vector);
 };

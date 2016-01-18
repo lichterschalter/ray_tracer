@@ -182,6 +182,20 @@ void World::performRayTracing(){
 	glm::vec4 rightVec = matrixvecmath.crossVec4( dir, upCamera );
 	upCamera = matrixvecmath.crossVec4( rightVec, dir );
 
+	double pi = 3.1415926535897;
+	float width = 2 * ( tan (horizontal_fov * pi / 180.0 ) * matrixvecmath.lengthVec4( dir ) );
+	float height = width / ( widthImgPlane / heightImgPlane );
+
+	glm::vec3 halfWidthVec( width / 2, 0, 0 );
+	glm::vec3 halfHeightVec( 0, height / 2, 0 );
+	glm::vec3 lookAtTemp = matrixvecmath.vec4ToVec3( lookAtCamera );
+	glm::vec3 rightVecTemp = matrixvecmath.vec4ToVec3( rightVec );
+	glm::vec3 upCameraTemp = matrixvecmath.vec4ToVec3( upCamera );
+
+	glm::vec3 topLeftTemp = lookAtTemp + ( halfWidthVec * ( -rightVecTemp ) ) + ( halfHeightVec * ( upCameraTemp ) );
+	cout << glm::to_string( topLeftTemp ) << endl;
+
+
 /*
 
 	//1. calculate points and vectors to reach topleft and bottomright from poscamera

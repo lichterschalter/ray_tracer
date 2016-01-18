@@ -28,8 +28,21 @@ glm::vec3 Matrix_vec_math::vec4ToVec3( glm::vec4 homogenVector ){
 	return nothomogenVector;
 }
 
-float Matrix_vec_math::lengthVec3( glm::vec3 Vector3 ){
-	return sqrt( pow( Vector3[ 0 ], 2 ) + pow( Vector3[ 1 ], 2 ) + pow( Vector3[ 2 ], 2 ) );
+glm::vec4 Matrix_vec_math::vec3ToVec4( glm::vec3 inhomogenVector ){
+	glm::vec4 homogenVector;
+	homogenVector[ 0 ] = ( inhomogenVector[ 0 ] );
+	homogenVector[ 1 ] = ( inhomogenVector[ 1 ] );
+	homogenVector[ 2 ] = ( inhomogenVector[ 2 ] );
+	homogenVector[ 3 ] = 1.0;
+	return homogenVector;
+}
+
+float Matrix_vec_math::lengthVec3( glm::vec3 vector3 ){
+	return sqrt( pow( vector3[ 0 ], 2 ) + pow( vector3[ 1 ], 2 ) + pow( vector3[ 2 ], 2 ) );
+}
+
+float Matrix_vec_math::lengthVec4( glm::vec4 vector4 ){
+	return sqrt( pow( vector4[ 0 ], 2 ) + pow( vector4[ 1 ], 2 ) + pow( vector4[ 2 ], 2 ) );
 }
 
 glm::vec4 Matrix_vec_math::crossVec4(glm::vec4 _vec1, glm::vec4 _vec2){
