@@ -176,8 +176,8 @@ void World::performRayTracing(){
 
 	//TEST SPHERE FOR DEBUGGING
 
-	glm::vec3 posSphere( -2.1, 0.0, -3.0 );
-	float radiusSphere = 1;
+	//glm::vec3 posSphere( 0.0, 0.0, -3.0 );
+	//float radiusSphere = 1;
 
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
@@ -223,8 +223,8 @@ void World::performRayTracing(){
 			//1. perform intersection test ray-sphere
 			vector< float > intersections;
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
-				//glm::vec4 posSphere( spheres.at( i ).get_position() );
-				//float radiusSphere = spheres.at( i ).get_radius();
+				glm::vec4 posSphere( spheres.at( i ).get_position() );
+				float radiusSphere = spheres.at( i ).get_radius();
 				float a =  ray.getX() * ray.getX() +
 						   ray.getY() * ray.getY() +
 						   ray.getZ() * ray.getZ();
@@ -238,40 +238,55 @@ void World::performRayTracing(){
 						  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
 						  pow ( radiusSphere, 2 );
 				float intersection = pow( b, 2 ) - 4 * a * c;
-				float deltaOne = ( -b + intersection ) / 2 * a;
-				float deltaTwo = ( -b - intersection ) / 2 * a;
-				if( deltaOne <= deltaTwo ) intersections.push_back( deltaOne );
-				if( deltaOne > deltaTwo ) intersections.push_back( deltaTwo );
-			}
-
-			cout << "INTERSECTIONS: " << endl;
-			for( unsigned int i = 0; i < intersections.size(); ++i ){
-				cout << intersections.at( i ) << endl;
-			}
-
-			//2. find biggest lambda
-			int indexBiggest = 0;
-			for( unsigned int i = 0; i < intersections.size(); ++i ){
-				float* biggest = &intersections.at( i );
-				for( unsigned int j = 1; j < intersections.size() - i; ++j ){
-					float* smaller = &intersections.at( i + j );
-					if( *biggest < *smaller ){
-						indexBiggest = j;
-						//float temp = *smaller;
-						//*smaller = *biggest;
-						*biggest = *smaller;
-					}
+				if( intersection >= 0 ){
+					float deltaOne = ( -b + intersection ) / 2 * a;
+					float deltaTwo = ( -b - intersection ) / 2 * a;
+					if( deltaOne <= deltaTwo ) intersections.push_back( deltaOne );
+					if( deltaOne > deltaTwo ) intersections.push_back( deltaTwo );
 				}
 			}
 
-			//3. find color of intersection
-			float intersection = intersections.at( indexBiggest );
-			glm::vec3 colorIntersection = spheres.at( indexBiggest ).get_color();
-			stringstream sstr;
-			sstr << int ( colorIntersection[ 0 ] * widthImgPlane ) << " " << int ( colorIntersection[ 1 ] * widthImgPlane ) << " " << int ( colorIntersection[ 2 ] * widthImgPlane ) << "    ";
-			string colorPixel = sstr.str();
+		/*	cout << "INTERSECTIONS: " << endl;
+			for( unsigned int i = 0; i < intersections.size(); ++i ){
+				cout << intersections.at( i ) << endl;
+			}*/
 
-			//4. save color to imgPlane
+			//2.1 intersection >= 0
+			if( intersections.size() != 0 ){
+
+				//2.1.1. find biggest lambda
+				int indexBiggest = 0;
+				for( unsigned int i = 0; i < intersections.size(); ++i ){
+					float* biggest = &intersections.at( i );
+					for( unsigned int j = 1; j < intersections.size() - i; ++j ){
+						float* smaller = &intersections.at( i + j );
+						if( *biggest < *smaller ){
+							indexBiggest = j;
+							//float temp = *smaller;
+							//*smaller = *biggest;
+							*biggest = *smaller;
+						}
+					}
+				}
+
+				//2.1.2. find color of intersection
+				//float intersection = intersections.at( indexBiggest );
+				glm::vec3 colorIntersection = spheres.at( indexBiggest ).get_color();
+				stringstream sstr;
+				sstr << int ( colorIntersection[ 0 ] * widthImgPlane ) << " " << int ( colorIntersection[ 1 ] * widthImgPlane ) << " " << int ( colorIntersection[ 2 ] * widthImgPlane ) << "    ";
+				string colorPixel = sstr.str();
+
+				//2.1.3. save color to imgPlane
+				contentImgPlane.at( i ).push_back( colorPixel );
+
+			//2.2. intersection < 0
+			}else{
+		    	//contentImgPlane.at( i ).push_back( "0 0 0   " );
+	    		//cout << ray.posToColorString();
+	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
+			}
+/*
+			//2.2. save color to imgPlane
 	    	if( intersection >= 0 ) {
 	    		//cout << "intersect!!" << endl;
 		    	contentImgPlane.at( i ).push_back( colorPixel );
@@ -280,7 +295,7 @@ void World::performRayTracing(){
 	    		//cout << ray.posToColorString();
 	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
 	    	}
-
+*/
 	    }
     	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every row
 	}
