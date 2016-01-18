@@ -263,6 +263,16 @@ void World::performRayTracing(){
 					}
 				}
 
+				//shading
+
+				glm::vec3 intersectPoint(
+						posCamera[ 0 ] + intersections.at( indexSmallest ) * ray.getX(),
+						posCamera[ 1 ] + intersections.at( indexSmallest ) * ray.getY(),
+						posCamera[ 2 ] + intersections.at( indexSmallest ) * ray.getZ()
+				);
+				glm::vec3 sphereNormal = matrixvecmath.vec4ToVec3( spheres.at( indexSmallest ).get_position() ) - intersectPoint / spheres.at( indexSmallest ).get_radius();
+				//cout << to_string(sphereNormal) << endl;
+
 				//save color to imgPlane
 				const string pixelColor = intersectColor.at( indexSmallest );
 				contentImgPlane.at( i ).push_back( pixelColor );

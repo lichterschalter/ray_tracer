@@ -67,6 +67,26 @@ XMLParser::XMLParser( string inputFilePath ){
 	widthImgPlane = doc.child("scene").child("camera").child("resolution").attribute("horizontal").as_int();
 	heightImgPlane = doc.child("scene").child("camera").child("resolution").attribute("vertical").as_int();
 	maxBounces = doc.child("scene").child("camera").child("max_bounces").attribute("n").as_int();
+	ambientLight[ 0 ] = doc.child("scene").child("lights").child("ambient_light").child("color").attribute("r").as_float();
+	ambientLight[ 1 ] = doc.child("scene").child("lights").child("ambient_light").child("color").attribute("g").as_float();
+	ambientLight[ 2 ] = doc.child("scene").child("lights").child("ambient_light").child("color").attribute("b").as_float();
+	parallelLightCol[ 0 ] = doc.child("scene").child("lights").child("parallel_light").child("color").attribute("r").as_float();
+	parallelLightCol[ 1 ] = doc.child("scene").child("lights").child("parallel_light").child("color").attribute("g").as_float();
+	parallelLightCol[ 2 ] = doc.child("scene").child("lights").child("parallel_light").child("color").attribute("b").as_float();
+	parallelLightDir[ 0 ] = doc.child("scene").child("lights").child("parallel_light").child("direction").attribute("x").as_float();
+	parallelLightDir[ 1 ] = doc.child("scene").child("lights").child("parallel_light").child("direction").attribute("y").as_float();
+	parallelLightDir[ 2 ] = doc.child("scene").child("lights").child("parallel_light").child("direction").attribute("z").as_float();
+
+	unsigned int i = 0;
+	for (pugi::xml_node tool = doc.child("scene").child("lights"); tool; tool = tool.next_sibling("point_light") ) {
+		pointLightsCol.push_back( glm::vec3() ); // Add one empty row
+		pointLightsCol.at( i )[ 0 ] = tool.child("color").attribute("r").as_float();
+		pointLightsCol.at( i )[ 0 ] = tool.child("color").attribute("g").as_float();
+		pointLightsCol.at( i )[ 0 ] = tool.child("color").attribute("b").as_float();
+		++i;
+	}
+
+
 
 }
 XMLParser::~XMLParser( ){ }
@@ -81,6 +101,11 @@ XMLParser::XMLParser( const XMLParser& xmlParser ){
 	this->heightImgPlane = xmlParser.heightImgPlane;
 	this->widthImgPlane = xmlParser.widthImgPlane;
 	this->bgcolor = xmlParser.bgcolor;
+	this->ambientLight = ambientLight;
+	this->parallelLightCol = parallelLightCol;
+	this->parallelLightDir = parallelLightDir;
+	this->pointLightsCol = pointLightsCol;
+	this->pointLightsPos = pointLightsPos;
 }
 XMLParser& XMLParser::operator=( const XMLParser& xmlParser ){ return *this; }
 
@@ -92,6 +117,23 @@ void XMLParser::print(){
 	cout << "resolution horizontal: " << widthImgPlane << endl;
 	cout << "resolution vertical: " << heightImgPlane << endl;
 	cout << "max_bounces: " << maxBounces << endl;
+	cout << "ambientLight: " << to_string( ambientLight ) << endl;
+	cout << "parallelLightCol: " << to_string( parallelLightCol ) << endl;
+	cout << "parallelLightDir: " << to_string( parallelLightDir ) << endl;
+
+	for( unsigned int i = 0; i < pointLightsCol.size(); ++i ){
+		stringstream sstr;
+		sstr << to_string( pointLightsCol.at( i ) );
+		cout << "pointLight" << i + 1 << ": " << sstr.str() << " " << endl;
+	}
+
+	for( unsigned int i = 0; i < pointLightsPos.size(); ++i ){
+		stringstream sstr;
+		sstr << to_string( pointLightsPos.at( i ) );
+		cout << sstr.str() << " ";
+		cout << endl;
+	}
+
 }
 
 vector< vector<float> > XMLParser::dataSpheres( ){
@@ -160,5 +202,20 @@ int XMLParser::get_widthImgPlane(){
 }
 glm::vec3 XMLParser::get_bgcolor(){
 	return bgcolor;
+}
+glm::vec3 XMLParser::get_ambientLight(){
+	return ambientLight;
+}
+glm::vec3 XMLParser::get_parallelLightCol(){
+	return parallelLightCol;
+}
+glm::vec3 XMLParser::get_parallelLightDir(){
+	return parallelLightDir;
+}
+std::vector < glm::vec3 > XMLParser::get_pointLightsCol(){
+	return pointLightsCol;
+}
+std::vector < glm::vec3 > XMLParser::get_pointLightsPos(){
+	return pointLightsPos;
 }
 

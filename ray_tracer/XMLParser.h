@@ -24,6 +24,11 @@ class XMLParser{
 	int widthImgPlane;
 	glm::vec3 bgcolor;
 	pugi::xml_document doc;
+	glm::vec3 ambientLight;
+	glm::vec3 parallelLightCol;
+	glm::vec3 parallelLightDir;
+	std::vector < glm::vec3 > pointLightsCol;
+	std::vector < glm::vec3 > pointLightsPos;
 
 	XMLParser( const XMLParser& xmlParser );
 	XMLParser& operator=( const XMLParser& xmlParser );
@@ -43,6 +48,11 @@ public:
 	int get_widthImgPlane();
 	glm::vec3 get_bgcolor();
 	pugi::xml_document get_doc();
+	glm::vec3 get_ambientLight();
+	glm::vec3 get_parallelLightCol();
+	glm::vec3 get_parallelLightDir();
+	std::vector < glm::vec3 > get_pointLightsCol();
+	std::vector < glm::vec3 > get_pointLightsPos();
 
 	std::vector< std::vector<float> > dataSpheres( );
 

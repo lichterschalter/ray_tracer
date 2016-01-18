@@ -92,4 +92,8 @@ float Ray::getZ(){
 	return direction[ 2 ];
 }
 
+glm::vec4 Ray::getDirection(){
+	return direction;
+}
+
 

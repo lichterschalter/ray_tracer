@@ -29,6 +29,7 @@ public:
 	float getX();
 	float getY();
 	float getZ();
+	glm::vec4 getDirection();
 };
 
 
