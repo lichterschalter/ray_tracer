@@ -58,8 +58,9 @@ void RayTracer::main() {
 
 
 	//CREATING THE WORLD
-	//posCamera[ 2 ] += 8;
-	//lookAtCamera[ 2 ] += 8;
+	posCamera[ 0 ] = -8;
+	posCamera[ 2 ] = -1;
+	lookAtCamera[ 0 ] = -6;
 	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor );
 	//world.print();
 	//world.printContentImgPlane();
@@ -69,7 +70,7 @@ void RayTracer::main() {
 	vector< vector<float> > dataSpheres = xmlParser.dataSpheres();
 	for( unsigned int i = 0; i < dataSpheres.size(); ++i ){
 		float radius = dataSpheres.at( i ).at( 0 );
-		glm::vec4 position( dataSpheres.at( i ).at( 1 ), dataSpheres.at( i ).at( 2 ), dataSpheres.at( i ).at( 3 ), 1.0 );
+		glm::vec4 position( dataSpheres.at( i ).at( 1 ), dataSpheres.at( i ).at( 2 ), dataSpheres.at( i ).at( 3 ) - 6, 1.0 );
 		glm::vec3 color( dataSpheres.at( i ).at( 4 ), dataSpheres.at( i ).at( 5 ), dataSpheres.at( i ).at( 6 ) );
 		glm::vec4 phong( dataSpheres.at( i ).at( 7 ), dataSpheres.at( i ).at( 8 ), dataSpheres.at( i ).at( 9 ), dataSpheres.at( i ).at( 10 ) );
 		float reflectance = dataSpheres.at( i ).at( 11 );

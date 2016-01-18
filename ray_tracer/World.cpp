@@ -249,22 +249,22 @@ void World::performRayTracing(){
 			if( intersections.size() != 0 ){
 
 				//find biggest lambda
-				int indexBiggest = 0;
+				int indexSmallest = 0;
 				for( unsigned int i = 0; i < intersections.size(); ++i ){
-					float* biggest = &intersections.at( i );
+					float* smallest = &intersections.at( i );
 					for( unsigned int j = 1; j < intersections.size() - i; ++j ){
 						float* smaller = &intersections.at( i + j );
-						if( *biggest < *smaller ){
-							indexBiggest = j;
+						if( *smallest > *smaller ){
+							indexSmallest = j;
 							//float temp = *smaller;
 							//*smaller = *biggest;
-							*biggest = *smaller;
+							*smallest = *smaller;
 						}
 					}
 				}
 
 				//save color to imgPlane
-				const string pixelColor = intersectColor.at( indexBiggest );
+				const string pixelColor = intersectColor.at( indexSmallest );
 				contentImgPlane.at( i ).push_back( pixelColor );
 
 			//2.b no intersection --> bgcolor
