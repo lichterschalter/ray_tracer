@@ -226,28 +226,30 @@ void World::performRayTracing(){
 						  pow ( radiusSphere, 2 );
 				float intersection = pow( b, 2 ) - 4 * a * c;
 				if( intersection >= 0 ){
-					float deltaOne = ( -b + intersection ) / 2 * a;
-					float deltaTwo = ( -b - intersection ) / 2 * a;
+					float deltaOne = ( -b + sqrt( intersection ) ) / 2 * a;
+					float deltaTwo = ( -b - sqrt( intersection ) ) / 2 * a;
 					if( deltaOne <= deltaTwo ) intersections.push_back( deltaOne );
 					if( deltaOne > deltaTwo ) intersections.push_back( deltaTwo );
 
 					glm::vec3 colorIntersection = spheres.at( i ).get_color();
 					stringstream sstr;
-					sstr << int ( colorIntersection[ 0 ] * widthImgPlane ) << " " << int ( colorIntersection[ 1 ] * widthImgPlane ) << " " << int ( colorIntersection[ 2 ] * widthImgPlane ) << "    ";
+					sstr << int ( colorIntersection[ 0 ] * 255 ) << " " << int ( colorIntersection[ 1 ] * 255 ) << " " << int ( colorIntersection[ 2 ] * 255 ) << "    ";
 					string colorPixel = sstr.str();
 					intersectColor.push_back( colorPixel );
 				}
 			}
 
+			/*
 			cout << "INTERSECTIONS: " << endl;
 			for( unsigned int i = 0; i < intersections.size(); ++i ){
 				cout << intersections.at( i ) << endl;
 			}
+			*/
 
-			//2.1 intersection >= 0
+			//2.a there is an intersection
 			if( intersections.size() != 0 ){
 
-				//2.1.1. find biggest lambda
+				//find biggest lambda
 				int indexBiggest = 0;
 				for( unsigned int i = 0; i < intersections.size(); ++i ){
 					float* biggest = &intersections.at( i );
@@ -261,22 +263,16 @@ void World::performRayTracing(){
 						}
 					}
 				}
-/*
-				//2.1.2. find color of intersection
-				glm::vec3 colorIntersection = spheres.at( indexBiggest ).get_color();
-				stringstream sstr;
-				sstr << int ( colorIntersection[ 0 ] * widthImgPlane ) << " " << int ( colorIntersection[ 1 ] * widthImgPlane ) << " " << int ( colorIntersection[ 2 ] * widthImgPlane ) << "    ";
-				string colorPixel = sstr.str();
-*/
-				//2.1.3. save color to imgPlane
+
+				//save color to imgPlane
 				const string pixelColor = intersectColor.at( indexBiggest );
 				contentImgPlane.at( i ).push_back( pixelColor );
 
-			//2.2. intersection < 0
+			//2.b no intersection --> bgcolor
 			}else{
-		    	//contentImgPlane.at( i ).push_back( "0 0 0   " );
+		    	contentImgPlane.at( i ).push_back( "0 0 0   " );
 	    		//cout << ray.posToColorString();
-	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
+	    		//contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
 			}
 
 	    }
