@@ -3,7 +3,7 @@ simple ray tracer for my computer science class at uni wien
 
 HOW TO BUILD MY RAY TRACER
 1. enter the folder "ray_tracer/Debug/"
-2. run "make"
+2. run "make all"
 3. run "./ray_tracer"
 
 LIBRARIES AND SOURCES

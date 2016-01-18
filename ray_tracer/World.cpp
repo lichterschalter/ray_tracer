@@ -27,6 +27,7 @@ using namespace std;
 World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 		double horizontal_fov, int maxBounces, int heightImgPlane, int widthImgPlane, glm::vec3 bgcolor ){
 
+	cout << "Building the world. ";
 
 	//INIT VARS FROM PARAMETERS
 	this->posCamera = posCamera;
@@ -81,6 +82,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	    }
 	}
 
+	cout << "World creation was successfull." << endl;
 
 };
 World::~World(){ };
@@ -169,9 +171,18 @@ int World::getHeightImgPlane(){
 
 void World::performRayTracing(){
 	Matrix_vec_math matrixvecmath;
-
+	cout << "Shooting rays into the world..." << endl;
 
 	//COMPUTE TOPLEFT AND BOTTOMRIGHT OF IMGPLANE
+
+	//1. calculate points and vectors to reach topleft and bottomright from poscamera
+	glm::vec4 dir( lookAtCamera[ 0 ] - posCamera[ 0 ], lookAtCamera[ 1 ] - posCamera[ 1 ], lookAtCamera[ 2 ] - posCamera[ 2 ], 1.0 );
+	dir = matrixvecmath.normalize( dir );
+	upCamera = matrixvecmath.normalize( upCamera );
+	glm::vec4 rightVec = matrixvecmath.crossVec4( dir, upCamera );
+	upCamera = matrixvecmath.crossVec4( rightVec, dir );
+
+/*
 
 	//1. calculate points and vectors to reach topleft and bottomright from poscamera
 	glm::vec3 posImgPlaneCenter =  matrixvecmath.vec4ToVec3(posCamera) - matrixvecmath.vec4ToVec3(lookAtCamera);
@@ -210,8 +221,8 @@ void World::performRayTracing(){
 	}
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    for (int j = 0; j < widthImgPlane; j++) {
-			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j - widthImgPlane/ 2, posRayOnPlane[ 1 ] - i + heightImgPlane / 2, posRayOnPlane[ 2 ], 1.0 ) );
-			ray.normalize();
+			Ray ray( glm::vec4( posRayOnPlane[ 0 ] + j, posRayOnPlane[ 1 ] - i, posRayOnPlane[ 2 ], 1.0 ) );
+			//ray.normalize();
 
 			//1. perform intersection test ray-sphere
 			vector< float > intersections;
@@ -267,6 +278,8 @@ void World::performRayTracing(){
 	    }
     	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every row
 	}
+	*/
+	cout << "Ray tracing was successfull!" << endl;
 }
 
 

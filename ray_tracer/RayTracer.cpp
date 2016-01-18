@@ -36,13 +36,14 @@ void RayTracer::main() {
 	cout << "RayTracer is activated!" << endl;
 	cout << "This RayTracer was created by Fabian Türk." << endl;
 	//string inputFileName = "";
-	//cout << "Type in the name of the input file (f.e.: 'example1.xml' ): ";
+	//cout << "Type in the name of the input file (f.e.: '../scenes/example1.xml' ): ";
 	//cin >> inputFileName;
-	string inputFileName = "hitSphere.xml";
+	string inputFileName = "../scenes/example1.xml";
 
 
 	//PARSING GENERAL INPUT FROM XML FILE
-	XMLParser xmlParser( "../scenes/" + inputFileName );
+	XMLParser xmlParser( inputFileName );
+	//XMLParser xmlParser( "../scenes/" + inputFileName );
 	//xmlParser.print();
 
 	string outputFileName = xmlParser.get_outputFileName();
