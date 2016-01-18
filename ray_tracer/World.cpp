@@ -49,14 +49,14 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	dir = matrixvecmath.normalize( dir );
 	upCamera = matrixvecmath.normalize( upCamera );
 	rightVec = matrixvecmath.crossVec4( dir, upCamera );
+	rightVec = matrixvecmath.normalize( rightVec );
 	upCamera = matrixvecmath.crossVec4( rightVec, dir );
+	upCamera = matrixvecmath.normalize( upCamera );
 
 	double pi = 3.1415926535897;
 	float width = 2 * ( tan (horizontal_fov * pi / 180.0 ) * matrixvecmath.lengthVec4( dir ) );
 	float height = width / ( widthImgPlane / heightImgPlane );
 
-	glm::vec3 halfWidthVec( width / 2, 0, 0 );
-	glm::vec3 halfHeightVec( 0, height / 2, 0 );
 	glm::vec3 lookAtTemp = matrixvecmath.vec4ToVec3( lookAtCamera );
 	glm::vec3 rightVecTemp = matrixvecmath.vec4ToVec3( rightVec );
 	glm::vec3 upCameraTemp = matrixvecmath.vec4ToVec3( upCamera );
@@ -64,8 +64,10 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	pixelWidth = ( width / widthImgPlane );
 	pixelHeight = ( height / heightImgPlane );
 
-	glm::vec3 topLeftTemp = lookAtTemp + ( halfWidthVec * ( -rightVecTemp ) ) + ( halfHeightVec * ( upCameraTemp ) );
+	glm::vec3 topLeftTemp = lookAtTemp + ( width / 2 * ( -rightVecTemp ) ) + ( height / 2 * ( upCameraTemp ) );
 	posImgPlaneTopLeft = matrixvecmath.vec3ToVec4( topLeftTemp );
+	posImgPlaneTopLeft[ 0 ] += pixelWidth / 2;
+	posImgPlaneTopLeft[ 1 ] -= pixelHeight / 2;
 
 
 	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])
@@ -174,17 +176,11 @@ void World::performRayTracing(){
 
 	//TEST SPHERE FOR DEBUGGING
 
-	glm::vec3 posSphere( -2.0, 0.0, -3.0 );
-	float radiusSphere = 2.2;
+	glm::vec3 posSphere( -2.1, 0.0, -13.0 );
+	float radiusSphere = 3;
 
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
-
-	glm::vec3 posRayOnPlane = matrixvecmath.vec4ToVec3( posImgPlaneTopLeft ) - matrixvecmath.vec4ToVec3( posCamera );
-	posRayOnPlane[ 0 ] += pixelWidth / 2;
-	posRayOnPlane[ 1 ] -= pixelHeight / 2;
-
-	this->ray = Ray( glm::vec4( posRayOnPlane[ 0 ], posRayOnPlane[ 1 ], posRayOnPlane[ 2 ], 1.0 ) );
 
 	contentImgPlane.clear();
 	for (int i = 0; i < heightImgPlane; i++) {
@@ -202,20 +198,27 @@ void World::performRayTracing(){
 	cout << to_string(posRayOnPlane) << endl;
 	cout << to_string(rayTemp) << endl;
 	*/
-	cout << to_string(posRayOnPlane) << endl;
+	cout << pixelWidth << endl;
 
 
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    for (int j = 0; j < widthImgPlane; j++) {
 
-	    	glm::vec4 rayTemp(
-	    			posRayOnPlane[ 0 ] + j * rightVec[ 0 ] * pixelWidth - i * (upCamera[ 0 ]) * pixelHeight,
-	    			posRayOnPlane[ 1 ] + j * rightVec[ 1 ] * pixelWidth - i * (upCamera[ 1 ]) * pixelHeight,
-	    			posRayOnPlane[ 2 ] + j * rightVec[ 2 ] * pixelWidth - i * (upCamera[ 2 ]) * pixelHeight,
-	    			1.0
+	    	//0. calculate direction of ray
+	    	glm::vec4 posRayOnPlane = posImgPlaneTopLeft;
+			posRayOnPlane[ 0 ] = posRayOnPlane[ 0 ] + j * rightVec[ 0 ] * pixelWidth - i * (upCamera[ 0 ]) * pixelHeight;
+			posRayOnPlane[ 1 ] = posRayOnPlane[ 1 ] + j * rightVec[ 1 ] * pixelWidth - i * (upCamera[ 1 ]) * pixelHeight;
+			posRayOnPlane[ 2 ] = posRayOnPlane[ 2 ] + j * rightVec[ 2 ] * pixelWidth - i * (upCamera[ 2 ]) * pixelHeight;
+	    	this->ray = Ray( glm::vec4(
+	    			posRayOnPlane[ 0 ] - posCamera[ 0 ],
+					posRayOnPlane[ 1 ] - posCamera[ 1 ],
+					posRayOnPlane[ 2 ] - posCamera[ 2 ],
+					1.0 )
 			);
-			Ray ray( rayTemp );
-			//ray.normalize();
+			//cout << "i: " << i << " j: " << j << endl;
+	    	//cout << ray.toString() << endl;
+			ray.normalize();
+
 
 			//1. perform intersection test ray-sphere
 			vector< float > intersections;
@@ -235,10 +238,11 @@ void World::performRayTracing(){
 						  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
 						  pow ( radiusSphere, 2 );
 				float intersection = b - 4 * a * c;
+
 				intersections.push_back( intersection );
 			}
 
-			//2. find biggest delta
+			//2. find biggest lambda
 			int indexBiggest = 0;
 			for( unsigned int i = 0; i < intersections.size(); ++i ){
 				float* biggest = &intersections.at( i );
@@ -262,6 +266,7 @@ void World::performRayTracing(){
 
 			//4. save color to imgPlane
 	    	if( intersection >= 0 ) {
+	    		//cout << "intersect!!" << endl;
 		    	contentImgPlane.at( i ).push_back( colorPixel );
 	    	}else{
 		    	//contentImgPlane.at( i ).push_back( "0 0 0   " );

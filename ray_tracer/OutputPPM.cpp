@@ -29,7 +29,7 @@ void OutputPPM::createOutput( string fileName, string content, string maxValueCo
 		myfile << "P3 \n \
 			# sample.ppm \n" << \
 			height << " " << width << " \n " << \
-			maxValueColor << "\n";
+			255 << "\n";
 		myfile << content;
 		/*
 		while( height > 0 ){
