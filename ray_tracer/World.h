@@ -26,6 +26,7 @@ class World{
 	glm::vec4 posCamera;
 	glm::vec4 upCamera;
 	glm::vec4 lookAtCamera;
+	glm::vec4 rightVec;
 	float horizontal_fov;
 	int maxBounces;
 
@@ -33,6 +34,8 @@ class World{
 	glm::vec4 posImgPlaneTopLeft;
 	int heightImgPlane;
 	int widthImgPlane;
+	double pixelWidth;
+	double pixelHeight;
 	std::vector< std::vector<std::string> > contentImgPlane;
 
 	//Background color

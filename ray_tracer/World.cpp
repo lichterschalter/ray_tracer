@@ -48,7 +48,7 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	glm::vec4 dir( lookAtCamera[ 0 ] - posCamera[ 0 ], lookAtCamera[ 1 ] - posCamera[ 1 ], lookAtCamera[ 2 ] - posCamera[ 2 ], 1.0 );
 	dir = matrixvecmath.normalize( dir );
 	upCamera = matrixvecmath.normalize( upCamera );
-	glm::vec4 rightVec = matrixvecmath.crossVec4( dir, upCamera );
+	rightVec = matrixvecmath.crossVec4( dir, upCamera );
 	upCamera = matrixvecmath.crossVec4( rightVec, dir );
 
 	double pi = 3.1415926535897;
@@ -60,6 +60,9 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	glm::vec3 lookAtTemp = matrixvecmath.vec4ToVec3( lookAtCamera );
 	glm::vec3 rightVecTemp = matrixvecmath.vec4ToVec3( rightVec );
 	glm::vec3 upCameraTemp = matrixvecmath.vec4ToVec3( upCamera );
+
+	pixelWidth = ( width / widthImgPlane );
+	pixelHeight = ( height / heightImgPlane );
 
 	glm::vec3 topLeftTemp = lookAtTemp + ( halfWidthVec * ( -rightVecTemp ) ) + ( halfHeightVec * ( upCameraTemp ) );
 	posImgPlaneTopLeft = matrixvecmath.vec3ToVec4( topLeftTemp );
@@ -93,6 +96,8 @@ World::World( const World& world){
 	this->posImgPlaneTopLeft = world.posImgPlaneTopLeft;
 	this->maxBounces = world.maxBounces;
 	this->bgcolor = world.bgcolor;
+	this->pixelWidth = world.pixelWidth;
+	this->pixelHeight = world.pixelHeight;
 
 };
 World& World::operator=( const World& ){
@@ -166,21 +171,6 @@ void World::performRayTracing(){
 	Matrix_vec_math matrixvecmath;
 	cout << "Shooting rays into the world..." << endl;
 
-/*
-
-	//1. calculate points and vectors to reach topleft and bottomright from poscamera
-	glm::vec3 posImgPlaneCenter =  matrixvecmath.vec4ToVec3(posCamera) - matrixvecmath.vec4ToVec3(lookAtCamera);
-	double lengthposImgPlaneCenter = matrixvecmath.lengthVec3( posImgPlaneCenter );
-	double pi = 3.1415926535897;
-	double lengthImgPlaneCenterToLeft = ( tan ( -horizontal_fov * pi / 180.0 ) ) * lengthposImgPlaneCenter;
-	glm::vec3 centerToLeftImgPlane( lengthImgPlaneCenterToLeft, 0.0, 0.0 );
-	double lengthImgPlaneCenterToTop = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * -lengthImgPlaneCenterToLeft;
-	glm::vec3 centerToUpImgPlane( 0.0, lengthImgPlaneCenterToTop, 0.0 );
-	double lengthImgPlaneCenterToRight = ( tan ( horizontal_fov * pi / 180.0 ) ) * lengthposImgPlaneCenter;
-	glm::vec3 centerToRightImgPlane( lengthImgPlaneCenterToRight, 0.0, 0.0 );
-	double lengthImgPlaneCenterToBottom = ( ( double(heightImgPlane) / 2)  / ( double(widthImgPlane) / 2 ) ) * -lengthImgPlaneCenterToRight;
-	glm::vec3 centerToBottomImgPlane( 0.0, lengthImgPlaneCenterToBottom, 0.0 );
-
 
 	//TEST SPHERE FOR DEBUGGING
 
@@ -190,12 +180,11 @@ void World::performRayTracing(){
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
-	double pixelWidth = ( 2 * lengthImgPlaneCenterToRight ) / this->widthImgPlane;
-	double pixelHeight = ( 2 * lengthImgPlaneCenterToTop ) / this->heightImgPlane;
-	glm::vec3 posRayOnPlane = matrixvecmath.vec4ToVec3( posCamera ) - matrixvecmath.vec4ToVec3( posImgPlaneTopLeft );
+	glm::vec3 posRayOnPlane = matrixvecmath.vec4ToVec3( posImgPlaneTopLeft ) - matrixvecmath.vec4ToVec3( posCamera );
 	posRayOnPlane[ 0 ] += pixelWidth / 2;
 	posRayOnPlane[ 1 ] -= pixelHeight / 2;
-	//cout << glm::to_string(posRayOnPlane) << endl;
+	cout << glm::to_string(posImgPlaneTopLeft) << endl;
+	cout << glm::to_string(posRayOnPlane) << endl;
 
 	this->ray = Ray( glm::vec4( posRayOnPlane[ 0 ], posRayOnPlane[ 1 ], posRayOnPlane[ 2 ], 1.0 ) );
 
@@ -262,7 +251,7 @@ void World::performRayTracing(){
 	    }
     	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every row
 	}
-	*/
+
 	cout << "Ray tracing was successfull!" << endl;
 }
 
