@@ -187,20 +187,6 @@ void World::performRayTracing(){
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
 	}
 
-	/*
-	glm::vec4 rayTemp(
-			posRayOnPlane[ 0 ] + 1 * rightVec[ 0 ] * pixelWidth - 1 * (upCamera[ 0 ]) * pixelHeight,
-			posRayOnPlane[ 1 ] + 1 * rightVec[ 1 ] * pixelWidth - 1 * (upCamera[ 1 ]) * pixelHeight,
-			posRayOnPlane[ 2 ] + 1 * rightVec[ 2 ] * pixelWidth - 1 * (upCamera[ 2 ]) * pixelHeight,
-			1.0
-	);
-	cout << pixelWidth << endl;
-	cout << to_string(posRayOnPlane) << endl;
-	cout << to_string(rayTemp) << endl;
-	*/
-	cout << pixelWidth << endl;
-
-
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    for (int j = 0; j < widthImgPlane; j++) {
 
@@ -222,6 +208,7 @@ void World::performRayTracing(){
 
 			//1. perform intersection test ray-sphere
 			vector< float > intersections;
+			vector< string > intersectColor;
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
 				glm::vec4 posSphere( spheres.at( i ).get_position() );
 				float radiusSphere = spheres.at( i ).get_radius();
@@ -243,13 +230,19 @@ void World::performRayTracing(){
 					float deltaTwo = ( -b - intersection ) / 2 * a;
 					if( deltaOne <= deltaTwo ) intersections.push_back( deltaOne );
 					if( deltaOne > deltaTwo ) intersections.push_back( deltaTwo );
+
+					glm::vec3 colorIntersection = spheres.at( i ).get_color();
+					stringstream sstr;
+					sstr << int ( colorIntersection[ 0 ] * widthImgPlane ) << " " << int ( colorIntersection[ 1 ] * widthImgPlane ) << " " << int ( colorIntersection[ 2 ] * widthImgPlane ) << "    ";
+					string colorPixel = sstr.str();
+					intersectColor.push_back( colorPixel );
 				}
 			}
 
-		/*	cout << "INTERSECTIONS: " << endl;
+			cout << "INTERSECTIONS: " << endl;
 			for( unsigned int i = 0; i < intersections.size(); ++i ){
 				cout << intersections.at( i ) << endl;
-			}*/
+			}
 
 			//2.1 intersection >= 0
 			if( intersections.size() != 0 ){
@@ -268,16 +261,16 @@ void World::performRayTracing(){
 						}
 					}
 				}
-
+/*
 				//2.1.2. find color of intersection
-				//float intersection = intersections.at( indexBiggest );
 				glm::vec3 colorIntersection = spheres.at( indexBiggest ).get_color();
 				stringstream sstr;
 				sstr << int ( colorIntersection[ 0 ] * widthImgPlane ) << " " << int ( colorIntersection[ 1 ] * widthImgPlane ) << " " << int ( colorIntersection[ 2 ] * widthImgPlane ) << "    ";
 				string colorPixel = sstr.str();
-
+*/
 				//2.1.3. save color to imgPlane
-				contentImgPlane.at( i ).push_back( colorPixel );
+				const string pixelColor = intersectColor.at( indexBiggest );
+				contentImgPlane.at( i ).push_back( pixelColor );
 
 			//2.2. intersection < 0
 			}else{
@@ -285,17 +278,7 @@ void World::performRayTracing(){
 	    		//cout << ray.posToColorString();
 	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
 			}
-/*
-			//2.2. save color to imgPlane
-	    	if( intersection >= 0 ) {
-	    		//cout << "intersect!!" << endl;
-		    	contentImgPlane.at( i ).push_back( colorPixel );
-	    	}else{
-		    	//contentImgPlane.at( i ).push_back( "0 0 0   " );
-	    		//cout << ray.posToColorString();
-	    		contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
-	    	}
-*/
+
 	    }
     	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every row
 	}
