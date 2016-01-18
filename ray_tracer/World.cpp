@@ -176,8 +176,8 @@ void World::performRayTracing(){
 
 	//TEST SPHERE FOR DEBUGGING
 
-	glm::vec3 posSphere( 0.0, 0.0, -13.0 );
-	float radiusSphere = 3;
+	glm::vec3 posSphere( -2.1, 0.0, -3.0 );
+	float radiusSphere = 1;
 
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
@@ -240,8 +240,13 @@ void World::performRayTracing(){
 				float intersection = pow( b, 2 ) - 4 * a * c;
 				float deltaOne = ( -b + intersection ) / 2 * a;
 				float deltaTwo = ( -b - intersection ) / 2 * a;
-				if( deltaOne < deltaTwo ) intersections.push_back( deltaOne );
+				if( deltaOne <= deltaTwo ) intersections.push_back( deltaOne );
 				if( deltaOne > deltaTwo ) intersections.push_back( deltaTwo );
+			}
+
+			cout << "INTERSECTIONS: " << endl;
+			for( unsigned int i = 0; i < intersections.size(); ++i ){
+				cout << intersections.at( i ) << endl;
 			}
 
 			//2. find biggest lambda
@@ -252,9 +257,9 @@ void World::performRayTracing(){
 					float* smaller = &intersections.at( i + j );
 					if( *biggest < *smaller ){
 						indexBiggest = j;
-						float temp = *smaller;
-						*smaller = *biggest;
-						*biggest = temp;
+						//float temp = *smaller;
+						//*smaller = *biggest;
+						*biggest = *smaller;
 					}
 				}
 			}
