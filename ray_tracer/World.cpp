@@ -174,8 +174,8 @@ void World::performRayTracing(){
 
 	//TEST SPHERE FOR DEBUGGING
 
-	//glm::vec3 posSphere( -2.1, 0.0, -7.0 );
-	//float radiusSphere = 7.5;
+	glm::vec3 posSphere( -2.0, 0.0, -3.0 );
+	float radiusSphere = 2.2;
 
 
 	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
@@ -202,6 +202,8 @@ void World::performRayTracing(){
 	cout << to_string(posRayOnPlane) << endl;
 	cout << to_string(rayTemp) << endl;
 	*/
+	cout << to_string(posRayOnPlane) << endl;
+
 
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    for (int j = 0; j < widthImgPlane; j++) {
@@ -218,8 +220,8 @@ void World::performRayTracing(){
 			//1. perform intersection test ray-sphere
 			vector< float > intersections;
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
-				glm::vec4 posSphere( spheres.at( i ).get_position() );
-				float radiusSphere = spheres.at( i ).get_radius();
+				//glm::vec4 posSphere( spheres.at( i ).get_position() );
+				//float radiusSphere = spheres.at( i ).get_radius();
 				float a =  ray.getX() * ray.getX() +
 						   ray.getY() * ray.getY() +
 						   ray.getZ() * ray.getZ();
