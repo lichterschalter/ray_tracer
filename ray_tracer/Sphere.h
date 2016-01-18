@@ -31,6 +31,7 @@ public:
 	glm::vec3 get_color();
 	glm::vec4 get_position();
 	float get_radius();
+	glm::vec4 get_phong();
 };
 
 

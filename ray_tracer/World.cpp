@@ -292,14 +292,26 @@ void World::performRayTracing(){
 				}
 
 				//shading
-
 				glm::vec3 intersectPoint(
 						posCamera[ 0 ] + intersections.at( indexSmallest ) * ray.getX(),
 						posCamera[ 1 ] + intersections.at( indexSmallest ) * ray.getY(),
 						posCamera[ 2 ] + intersections.at( indexSmallest ) * ray.getZ()
 				);
 				glm::vec3 sphereNormal = matrixvecmath.vec4ToVec3( spheres.at( indexSmallest ).get_position() ) - intersectPoint / spheres.at( indexSmallest ).get_radius();
-				//cout << to_string(sphereNormal) << endl;
+				glm::vec3 lightVec = intersectPoint + parallelLightDir;
+				glm::vec4 phong = spheres.at( indexSmallest ).get_phong();
+				glm::vec3 view = matrixvecmath.vec4ToVec3( posCamera ) - intersectPoint;
+				glm::vec3 reflectVec(
+						2 * (sphereNormal[ 0 ] * lightVec[ 0 ]) * sphereNormal[ 0 ] - lightVec[ 0 ],
+						2 * (sphereNormal[ 1 ] * lightVec[ 1 ]) * sphereNormal[ 1 ] - lightVec[ 1 ],
+						2 * (sphereNormal[ 2 ] * lightVec[ 2 ]) * sphereNormal[ 2 ] - lightVec[ 2 ]
+				);
+				glm::vec3 colorPixel(
+						phong[ 0 ] * ambientLight[ 0 ] + phong[ 1 ] * parallelLightCol[ 0 ] * ( lightVec[ 0 ] * sphereNormal[ 0 ] ) + phong[ 2 ] * parallelLightCol[ 0 ] * (reflectVec[ 0 ] * view[ 0 ]),
+						phong[ 0 ] * ambientLight[ 1 ] + phong[ 1 ] * parallelLightCol[ 1 ] * ( lightVec[ 1 ] * sphereNormal[ 1 ] ) + phong[ 2 ] * parallelLightCol[ 1 ] * (reflectVec[ 1 ] * view[ 2 ]),
+						phong[ 0 ] * ambientLight[ 2 ] + phong[ 1 ] * parallelLightCol[ 2 ] * ( lightVec[ 2 ] * sphereNormal[ 2 ] ) + phong[ 2 ] * parallelLightCol[ 2 ] * (reflectVec[ 1 ] * view[ 2 ])
+				);
+
 
 				//save color to imgPlane
 				const string pixelColor = intersectColor.at( indexSmallest );

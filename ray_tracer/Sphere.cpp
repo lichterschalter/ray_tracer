@@ -50,5 +50,8 @@ using namespace std;
 	float Sphere::get_radius(){
 		return radius;
 	}
+	glm::vec4 Sphere::get_phong(){
+		return phong;
+	}
 
 
