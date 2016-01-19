@@ -291,34 +291,44 @@ void World::performRayTracing(){
 					}
 				}
 
-				//shading
+				//phong illumination model
+				double pi = 3.1415926535897;
 				glm::vec3 intersectPoint(
 						posCamera[ 0 ] + intersections.at( indexSmallest ) * ray.getX(),
 						posCamera[ 1 ] + intersections.at( indexSmallest ) * ray.getY(),
 						posCamera[ 2 ] + intersections.at( indexSmallest ) * ray.getZ()
 				);
-				glm::vec3 sphereNormal = matrixvecmath.vec4ToVec3( spheres.at( indexSmallest ).get_position() ) - intersectPoint / spheres.at( indexSmallest ).get_radius();
-				glm::vec3 lightVec = intersectPoint + parallelLightDir;
-				glm::vec4 phong = spheres.at( indexSmallest ).get_phong();
-				glm::vec3 view = matrixvecmath.vec4ToVec3( posCamera ) - intersectPoint;
-				glm::vec3 reflectVec(
-						2 * (sphereNormal[ 0 ] * lightVec[ 0 ]) * sphereNormal[ 0 ] - lightVec[ 0 ],
-						2 * (sphereNormal[ 1 ] * lightVec[ 1 ]) * sphereNormal[ 1 ] - lightVec[ 1 ],
-						2 * (sphereNormal[ 2 ] * lightVec[ 2 ]) * sphereNormal[ 2 ] - lightVec[ 2 ]
+				glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( spheres.at( indexSmallest ).get_position() ) / spheres.at( indexSmallest ).get_radius() );
+				sphereNormal = matrixvecmath.normalize( sphereNormal );
+				glm::vec4 lightVec = matrixvecmath.vec3ToVec4( parallelLightDir ); //turn it
+				lightVec = matrixvecmath.normalize( lightVec );
+				glm::vec4 view = matrixvecmath.vec3ToVec4( matrixvecmath.vec4ToVec3( posCamera ) - intersectPoint );
+				view = matrixvecmath.normalize( view );
+				float skalarNL = sphereNormal[ 0 ] * lightVec[ 0 ] + sphereNormal[ 1 ] * lightVec[ 1 ] + sphereNormal[ 2 ] * lightVec[ 2 ];
+				glm::vec4 reflectVec(
+						2 * skalarNL * sphereNormal[ 0 ] - lightVec[ 0 ],
+						2 * skalarNL * sphereNormal[ 1 ] - lightVec[ 1 ],
+						2 * skalarNL * sphereNormal[ 2 ] - lightVec[ 2 ],
+						1.0
 				);
+				reflectVec = matrixvecmath.normalize( reflectVec );
+
+				//phong shading
+				glm::vec4 phong = spheres.at( indexSmallest ).get_phong();
+				float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
 				glm::vec3 phongPixel(
-						phong[ 0 ] * ambientLight[ 0 ] + phong[ 1 ] * parallelLightCol[ 0 ] * ( lightVec[ 0 ] * sphereNormal[ 0 ] ) + phong[ 2 ] * parallelLightCol[ 0 ] * pow( (reflectVec[ 0 ] * view[ 0 ]), phong[ 3 ] ),
-						phong[ 0 ] * ambientLight[ 1 ] + phong[ 1 ] * parallelLightCol[ 1 ] * ( lightVec[ 1 ] * sphereNormal[ 1 ] ) + phong[ 2 ] * parallelLightCol[ 1 ] * pow( (reflectVec[ 1 ] * view[ 2 ]), phong[ 3 ] ),
-						phong[ 0 ] * ambientLight[ 2 ] + phong[ 1 ] * parallelLightCol[ 2 ] * ( lightVec[ 2 ] * sphereNormal[ 2 ] ) + phong[ 2 ] * parallelLightCol[ 2 ] * pow( (reflectVec[ 1 ] * view[ 2 ]), phong[ 3 ] )
+						phong[ 0 ] * ambientLight[ 0 ] + phong[ 1 ] * parallelLightCol[ 0 ] * skalarNL + phong[ 2 ] * parallelLightCol[ 0 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
+						phong[ 0 ] * ambientLight[ 1 ] + phong[ 1 ] * parallelLightCol[ 1 ] * skalarNL + phong[ 2 ] * parallelLightCol[ 1 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
+						phong[ 0 ] * ambientLight[ 2 ] + phong[ 1 ] * parallelLightCol[ 2 ] * skalarNL + phong[ 2 ] * parallelLightCol[ 2 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] )
 				);
 				glm::vec3 pixelCol( spheres.at( indexSmallest ).get_color() * phongPixel );
 				cout << to_string( pixelCol ) << endl;
 
 
 				//save color to imgPlane
-				const string pixelColor = intersectColor.at( indexSmallest );
-				contentImgPlane.at( i ).push_back( pixelColor );
-				//contentImgPlane.at( i ).push_back( glm::to_string( pixelColor ) );
+				//const string pixelColor = intersectColor.at( indexSmallest );
+				//contentImgPlane.at( i ).push_back( pixelColor );
+				contentImgPlane.at( i ).push_back( glm::to_string( pixelCol ) );
 
 			//2.b no intersection --> bgcolor
 			}else{
