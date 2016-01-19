@@ -306,16 +306,19 @@ void World::performRayTracing(){
 						2 * (sphereNormal[ 1 ] * lightVec[ 1 ]) * sphereNormal[ 1 ] - lightVec[ 1 ],
 						2 * (sphereNormal[ 2 ] * lightVec[ 2 ]) * sphereNormal[ 2 ] - lightVec[ 2 ]
 				);
-				glm::vec3 colorPixel(
-						phong[ 0 ] * ambientLight[ 0 ] + phong[ 1 ] * parallelLightCol[ 0 ] * ( lightVec[ 0 ] * sphereNormal[ 0 ] ) + phong[ 2 ] * parallelLightCol[ 0 ] * (reflectVec[ 0 ] * view[ 0 ]),
-						phong[ 0 ] * ambientLight[ 1 ] + phong[ 1 ] * parallelLightCol[ 1 ] * ( lightVec[ 1 ] * sphereNormal[ 1 ] ) + phong[ 2 ] * parallelLightCol[ 1 ] * (reflectVec[ 1 ] * view[ 2 ]),
-						phong[ 0 ] * ambientLight[ 2 ] + phong[ 1 ] * parallelLightCol[ 2 ] * ( lightVec[ 2 ] * sphereNormal[ 2 ] ) + phong[ 2 ] * parallelLightCol[ 2 ] * (reflectVec[ 1 ] * view[ 2 ])
+				glm::vec3 phongPixel(
+						phong[ 0 ] * ambientLight[ 0 ] + phong[ 1 ] * parallelLightCol[ 0 ] * ( lightVec[ 0 ] * sphereNormal[ 0 ] ) + phong[ 2 ] * parallelLightCol[ 0 ] * pow( (reflectVec[ 0 ] * view[ 0 ]), phong[ 3 ] ),
+						phong[ 0 ] * ambientLight[ 1 ] + phong[ 1 ] * parallelLightCol[ 1 ] * ( lightVec[ 1 ] * sphereNormal[ 1 ] ) + phong[ 2 ] * parallelLightCol[ 1 ] * pow( (reflectVec[ 1 ] * view[ 2 ]), phong[ 3 ] ),
+						phong[ 0 ] * ambientLight[ 2 ] + phong[ 1 ] * parallelLightCol[ 2 ] * ( lightVec[ 2 ] * sphereNormal[ 2 ] ) + phong[ 2 ] * parallelLightCol[ 2 ] * pow( (reflectVec[ 1 ] * view[ 2 ]), phong[ 3 ] )
 				);
+				glm::vec3 pixelCol( spheres.at( indexSmallest ).get_color() * phongPixel );
+				cout << to_string( pixelCol ) << endl;
 
 
 				//save color to imgPlane
 				const string pixelColor = intersectColor.at( indexSmallest );
 				contentImgPlane.at( i ).push_back( pixelColor );
+				//contentImgPlane.at( i ).push_back( glm::to_string( pixelColor ) );
 
 			//2.b no intersection --> bgcolor
 			}else{
