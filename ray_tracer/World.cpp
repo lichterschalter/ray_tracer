@@ -235,7 +235,7 @@ void World::performRayTracing(){
 
 			//1. perform intersection test ray-sphere
 			vector< float > intersections;
-			vector< string > intersectColor;
+			vector< glm::vec3 > intersectColor;
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
 				glm::vec4 posSphere( spheres.at( i ).get_position() );
 				float radiusSphere = spheres.at( i ).get_radius();
@@ -258,11 +258,7 @@ void World::performRayTracing(){
 					if( deltaOne <= deltaTwo ) intersections.push_back( deltaOne );
 					if( deltaOne > deltaTwo ) intersections.push_back( deltaTwo );
 
-					glm::vec3 colorIntersection = spheres.at( i ).get_color();
-					stringstream sstr;
-					sstr << int ( colorIntersection[ 0 ] * 75 ) << " " << int ( colorIntersection[ 1 ] * 75 ) << " " << int ( colorIntersection[ 2 ] * 75 ) << "    ";
-					string colorPixel = sstr.str();
-					intersectColor.push_back( colorPixel );
+					intersectColor.push_back( spheres.at( i ).get_color() );
 				}
 			}
 
@@ -316,16 +312,16 @@ void World::performRayTracing(){
 				//phong shading
 				glm::vec4 phong = spheres.at( indexSmallest ).get_phong();
 				float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
-				glm::vec3 colorSurface = spheres.at( indexSmallest ).get_color();
+				glm::vec3 colorSurface = intersectColor.at( indexSmallest );
 				glm::vec3 phongPixel(
 					phong[ 0 ] * ambientLight[ 0 ] * colorSurface[ 0 ] + phong[ 1 ] * parallelLightCol[ 0 ] * skalarNL * colorSurface[ 0 ] + phong[ 2 ] * parallelLightCol[ 0 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
 					phong[ 0 ] * ambientLight[ 1 ] * colorSurface[ 1 ] + phong[ 1 ] * parallelLightCol[ 1 ] * skalarNL * colorSurface[ 1 ] + phong[ 2 ] * parallelLightCol[ 1 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
 					phong[ 0 ] * ambientLight[ 2 ] * colorSurface[ 2 ] + phong[ 1 ] * parallelLightCol[ 2 ] * skalarNL * colorSurface[ 2 ] + phong[ 2 ] * parallelLightCol[ 2 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] )
 				);
 				glm::vec3 pixelCol(
-					abs( colorSurface[ 0 ] * phongPixel[ 0 ] * 255 ),
-					abs( colorSurface[ 1 ] * phongPixel[ 1 ] * 255 ),
-					abs( colorSurface[ 2 ] * phongPixel[ 2 ] * 255 )
+					( colorSurface[ 0 ] + phongPixel[ 0 ] ) * 255 ,
+					( colorSurface[ 1 ] + phongPixel[ 1 ] ) * 255 ,
+					( colorSurface[ 2 ] + phongPixel[ 2 ] ) * 255
 				);
 				cout << to_string( pixelCol ) << endl;
 
@@ -333,8 +329,13 @@ void World::performRayTracing(){
 				//save color to imgPlane
 				//const string pixelColor = intersectColor.at( indexSmallest );
 				//contentImgPlane.at( i ).push_back( pixelColor );
-				stringstream sstr;
+	/*			stringstream sstr;
 				sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
+				string colorPixel = sstr.str();
+				contentImgPlane.at( i ).push_back( colorPixel );
+    */
+				stringstream sstr;
+				sstr << int ( abs( sphereNormal[ 0 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 1 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 2 ] * 255 ) ) << "    ";
 				string colorPixel = sstr.str();
 				contentImgPlane.at( i ).push_back( colorPixel );
 
