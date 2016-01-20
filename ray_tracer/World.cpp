@@ -326,19 +326,22 @@ void World::performRayTracing(){
 				cout << to_string( pixelCol ) << endl;
 
 
-				//save color to imgPlane
+				//SAVE JUST COLOR
 				//const string pixelColor = intersectColor.at( indexSmallest );
 				//contentImgPlane.at( i ).push_back( pixelColor );
-	/*			stringstream sstr;
+
+				//SAVE PHONG + COLOR
+				stringstream sstr;
 				sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
 				string colorPixel = sstr.str();
 				contentImgPlane.at( i ).push_back( colorPixel );
-    */
+    /*
+				//SAVE NORMAL
 				stringstream sstr;
 				sstr << int ( abs( sphereNormal[ 0 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 1 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 2 ] * 255 ) ) << "    ";
 				string colorPixel = sstr.str();
 				contentImgPlane.at( i ).push_back( colorPixel );
-
+	*/
 			//2.b no intersection --> bgcolor
 			}else{
 		    	contentImgPlane.at( i ).push_back( "0 0 0   " );
@@ -354,3 +357,30 @@ void World::performRayTracing(){
 }
 
 
+glm::vec3 World::phongAmbient( glm::vec4 phong, glm::vec3 colorSurface ){
+	glm::vec3 res(
+		phong[ 0 ] * ambientLight[ 0 ] * colorSurface[ 0 ],
+		phong[ 0 ] * ambientLight[ 1 ] * colorSurface[ 1 ],
+		phong[ 0 ] * ambientLight[ 2 ] * colorSurface[ 2 ]
+	);
+	return res;
+}
+
+glm::vec3 World::phongDiffuse( glm::vec4 phong, float skalarNL, glm::vec3 colorSurface ){
+	glm::vec3 res(
+		phong[ 1 ] * parallelLightCol[ 0 ] * skalarNL * colorSurface[ 0 ],
+		phong[ 1 ] * parallelLightCol[ 1 ] * skalarNL * colorSurface[ 1 ],
+		phong[ 1 ] * parallelLightCol[ 2 ] * skalarNL * colorSurface[ 2 ]
+	);
+	return res;
+}
+
+glm::vec3 World::phongSpecular( glm::vec4 phong, float skalarRV ){
+	double pi = 3.1415926535897;
+	glm::vec3 res(
+		phong[ 2 ] * parallelLightCol[ 0 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
+		phong[ 2 ] * parallelLightCol[ 1 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
+		phong[ 2 ] * parallelLightCol[ 2 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] )
+	);
+	return res;
+}

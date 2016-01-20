@@ -67,6 +67,9 @@ public:
 	int getWidthImgPlane();
 	int getHeightImgPlane();
 	void performRayTracing();
+	glm::vec3 phongAmbient( glm::vec4 phong, glm::vec3 colorSurface );
+	glm::vec3 phongDiffuse( glm::vec4 phong, float skalarNL, glm::vec3 colorSurface );
+	glm::vec3 phongSpecular( glm::vec4 phong, float skalarRV );
 };
 
 
