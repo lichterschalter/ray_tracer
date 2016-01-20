@@ -353,13 +353,17 @@ void World::performRayTracing(){
 
 				}
 
+				if ( phongPixel[ 0 ] > 1 ) phongPixel[ 0 ] = 1;
+				if ( phongPixel[ 1 ] > 1 ) phongPixel[ 1 ] = 1;
+				if ( phongPixel[ 2 ] > 1 ) phongPixel[ 2 ] = 1;
+
 				//cout << endl << "skalarNL: " << skalarNL << " normal: " << glm::to_string( sphereNormal ) << " light: " << glm::to_string( lightVec ) << endl;
 				//cout << "ka: " << glm::to_string( phong_ka ) << " kd: " << glm::to_string( phong_kd ) << " ks: " << glm::to_string( phong_ks ) << " sum: " << glm::to_string( phongPixel ) << endl;
 
 				glm::vec3 pixelCol(
-					abs( phongPixel[ 0 ] ) * 255,
-					abs( phongPixel[ 1 ] ) * 255,
-					abs( phongPixel[ 2 ] ) * 255
+					( phongPixel[ 0 ] ) * 255,
+					( phongPixel[ 1 ] ) * 255,
+					( phongPixel[ 2 ] ) * 255
 				);
 				//cout << to_string( pixelCol ) << endl;
 
@@ -418,11 +422,10 @@ glm::vec3 World::phongDiffuse( glm::vec4 phong, glm::vec3 colorSurface, glm::vec
 
 glm::vec3 World::phongSpecular( glm::vec4 phong, float skalarRV, glm::vec3 lightColor ){
 	if( skalarRV > 0 ){
-		double pi = 3.1415926535897;
 		glm::vec3 res(
-			phong[ 2 ] * lightColor[ 0 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
-			phong[ 2 ] * lightColor[ 1 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
-			phong[ 2 ] * lightColor[ 2 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] )
+			phong[ 2 ] * lightColor[ 0 ] * pow( skalarRV, phong[ 3 ] ),
+			phong[ 2 ] * lightColor[ 1 ] * pow( skalarRV, phong[ 3 ] ),
+			phong[ 2 ] * lightColor[ 2 ] * pow( skalarRV, phong[ 3 ] )
 		);
 		return res;
 	}else{
