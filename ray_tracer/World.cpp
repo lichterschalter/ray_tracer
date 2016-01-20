@@ -322,8 +322,8 @@ void World::performRayTracing(){
 					reflectVec = matrixvecmath.normalize( reflectVec );
 					float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
 
-					phong_kd = phongDiffuse( phong, colorSurface, skalarNL );
-					phong_ks = phongSpecular( phong, skalarRV );
+					phong_kd = phongDiffuse( phong, colorSurface, parallelLightCol, skalarNL );
+					phong_ks = phongSpecular( phong, skalarRV, parallelLightCol );
 					phongPixel += phong_kd + phong_ks;
 				}
 
@@ -347,9 +347,11 @@ void World::performRayTracing(){
 					reflectVec = matrixvecmath.normalize( reflectVec );
 					float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
 
-					phong_kd = phongDiffuse( phong, colorSurface, skalarNL );
-					phong_ks = phongSpecular( phong, skalarRV );
+					phong_kd = phongDiffuse( phong, colorSurface, pointLightsCol.at( i ), skalarNL );
+					phong_ks = phongSpecular( phong, skalarRV, pointLightsCol.at( i ) );
 					phongPixel += phong_kd + phong_ks;
+
+
 				}
 
 				//cout << endl << "skalarNL: " << skalarNL << " normal: " << glm::to_string( sphereNormal ) << " light: " << glm::to_string( lightVec ) << endl;
@@ -403,11 +405,11 @@ glm::vec3 World::phongAmbient( glm::vec4 phong, glm::vec3 colorSurface ){
 	return res;
 }
 
-glm::vec3 World::phongDiffuse( glm::vec4 phong, glm::vec3 colorSurface, float skalarNL ){
+glm::vec3 World::phongDiffuse( glm::vec4 phong, glm::vec3 colorSurface, glm::vec3 lightColor, float skalarNL ){
 	glm::vec3 res(
-		phong[ 1 ] * parallelLightCol[ 0 ] * skalarNL * colorSurface[ 0 ],
-		phong[ 1 ] * parallelLightCol[ 1 ] * skalarNL * colorSurface[ 1 ],
-		phong[ 1 ] * parallelLightCol[ 2 ] * skalarNL * colorSurface[ 2 ]
+		phong[ 1 ] * lightColor[ 0 ] * skalarNL * colorSurface[ 0 ],
+		phong[ 1 ] * lightColor[ 1 ] * skalarNL * colorSurface[ 1 ],
+		phong[ 1 ] * lightColor[ 2 ] * skalarNL * colorSurface[ 2 ]
 	);
 	if( res[ 0 ] < 0 ) res[ 0 ] = 0;
 	if( res[ 1 ] < 0 ) res[ 1 ] = 0;
@@ -415,13 +417,13 @@ glm::vec3 World::phongDiffuse( glm::vec4 phong, glm::vec3 colorSurface, float sk
 	return res;
 }
 
-glm::vec3 World::phongSpecular( glm::vec4 phong, float skalarRV ){
+glm::vec3 World::phongSpecular( glm::vec4 phong, float skalarRV, glm::vec3 lightColor ){
 	if( skalarRV > 0 ){
 		double pi = 3.1415926535897;
 		glm::vec3 res(
-			phong[ 2 ] * parallelLightCol[ 0 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
-			phong[ 2 ] * parallelLightCol[ 1 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
-			phong[ 2 ] * parallelLightCol[ 2 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] )
+			phong[ 2 ] * lightColor[ 0 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
+			phong[ 2 ] * lightColor[ 1 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
+			phong[ 2 ] * lightColor[ 2 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] )
 		);
 		return res;
 	}else{
