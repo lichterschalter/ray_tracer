@@ -72,8 +72,8 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 	glm::vec3 topLeftTemp = lookAtTemp + ( width / 2 * ( -rightVecTemp ) ) + ( height / 2 * ( upCameraTemp ) );
 	posImgPlaneTopLeft = matrixvecmath.vec3ToVec4( topLeftTemp );
-	posImgPlaneTopLeft[ 0 ] += pixelWidth / 2;
-	posImgPlaneTopLeft[ 1 ] -= pixelHeight / 2;
+	//posImgPlaneTopLeft[ 0 ] += pixelWidth;
+	posImgPlaneTopLeft[ 1 ] -= pixelHeight;
 
 
 	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])
