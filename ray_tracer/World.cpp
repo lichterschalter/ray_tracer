@@ -287,6 +287,7 @@ void World::performRayTracing(){
 					}
 				}
 
+
 				//phong illumination model
 				glm::vec3 intersectPoint(
 						posCamera[ 0 ] + intersections.at( indexSmallest ) * ray.getX(),
@@ -308,6 +309,7 @@ void World::performRayTracing(){
 				);
 				reflectVec = matrixvecmath.normalize( reflectVec );
 
+
 				//phong shading
 				glm::vec4 phong = intersectedSpheres.at( indexSmallest ).get_phong();
 				float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
@@ -319,12 +321,15 @@ void World::performRayTracing(){
 
 				glm::vec3 phongPixel( phong_ka + phong_kd + phong_ks );
 
+				cout << endl << "skalarNL: " << skalarNL << " normal: " << glm::to_string( sphereNormal ) << " light: " << glm::to_string( lightVec ) << endl;
+				cout << "ka: " << glm::to_string( phong_ka ) << " kd: " << glm::to_string( phong_kd ) << " ks: " << glm::to_string( phong_ks ) << " sum: " << glm::to_string( phongPixel ) << endl;
+
 				glm::vec3 pixelCol(
-					( colorSurface[ 0 ] + phongPixel[ 0 ] ) * 255 ,
-					( colorSurface[ 1 ] + phongPixel[ 1 ] ) * 255 ,
-					( colorSurface[ 2 ] + phongPixel[ 2 ] ) * 255
+					abs( phongPixel[ 0 ] ) * 255,
+					abs( phongPixel[ 1 ] ) * 255,
+					abs( phongPixel[ 2 ] ) * 255
 				);
-				cout << to_string( pixelCol ) << endl;
+				//cout << to_string( pixelCol ) << endl;
 
 
 				//SAVE JUST COLOR
@@ -336,13 +341,13 @@ void World::performRayTracing(){
 				sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
 				string colorPixel = sstr.str();
 				contentImgPlane.at( i ).push_back( colorPixel );
-    /*
+    			/*
 				//SAVE NORMAL
 				stringstream sstr;
 				sstr << int ( abs( sphereNormal[ 0 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 1 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 2 ] * 255 ) ) << "    ";
 				string colorPixel = sstr.str();
 				contentImgPlane.at( i ).push_back( colorPixel );
-	*/
+				*/
 			//2.b no intersection --> bgcolor
 			}else{
 		    	contentImgPlane.at( i ).push_back( "0 0 0   " );
@@ -373,6 +378,9 @@ glm::vec3 World::phongDiffuse( glm::vec4 phong, glm::vec3 colorSurface, float sk
 		phong[ 1 ] * parallelLightCol[ 1 ] * skalarNL * colorSurface[ 1 ],
 		phong[ 1 ] * parallelLightCol[ 2 ] * skalarNL * colorSurface[ 2 ]
 	);
+	if( res[ 0 ] < 0 ) res[ 0 ] = 0;
+	if( res[ 1 ] < 0 ) res[ 1 ] = 0;
+	if( res[ 2 ] < 0 ) res[ 2 ] = 0;
 	return res;
 }
 
