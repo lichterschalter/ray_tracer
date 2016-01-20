@@ -21,6 +21,7 @@
 #include "Mesh.h"
 #include "World.h"
 #include "XMLParser.h"
+#include "ObjLoader.h"
 
 using namespace std;
 
@@ -62,6 +63,10 @@ void RayTracer::main() {
 	std::vector < glm::vec3 > pointLightsPos = xmlParser.get_pointLightsPos();
 
 
+	//READING IN THE OBJECT FILE
+	ObjLoader objLoader( "../scenes/open_room.obj" );
+
+
 	//CREATING THE WORLD
 	//posCamera[ 2 ] += 9.5;
 	//lookAtCamera[ 2 ] += 9.5;
@@ -97,7 +102,7 @@ void RayTracer::main() {
 		const Mesh tempMesh( position, color, phong, reflectance, transmittance, refraction, srcName );
 		world.createMesh( tempMesh );
 	}
-	world.print();
+	//world.print();
 
 
 	//PERFORM RAY TRACING

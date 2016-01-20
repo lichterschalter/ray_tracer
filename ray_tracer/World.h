@@ -13,7 +13,6 @@
 #include "../libs/glm/glm/fwd.hpp"
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
-#include "Ray.h"
 #include "Sphere.h"
 #include "Mesh.h"
 

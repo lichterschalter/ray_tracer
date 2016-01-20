@@ -15,8 +15,8 @@ class Mesh: public Surface{
 	std::string srcName;
 
 public:
-	Mesh( const Mesh& Mesh );
-	Mesh& operator=( const Mesh& Mesh );
+	Mesh( const Mesh& mesh );
+	Mesh& operator=( const Mesh& mesh );
 	Mesh( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction, std::string srcName );
 	virtual ~Mesh();
 
