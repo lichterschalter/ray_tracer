@@ -19,14 +19,6 @@ using namespace std;
 	Mesh& Mesh::operator=( const Mesh& Mesh ){ return *this; };
 	Mesh::~Mesh(){ };
 
-
-	void Mesh::initPhongIlluModel(){
-	}
-	void Mesh::transform(){
-	}
-	void Mesh::initTexture(){
-	}
-
 	void Mesh::print(){
 		cout << endl << "--Mesh--" << endl;
 		Surface::print();

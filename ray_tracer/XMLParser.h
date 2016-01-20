@@ -36,7 +36,6 @@ public:
 	XMLParser( std::string inputFilePath );
 	~XMLParser( );
 
-	std::vector< std::vector<float> > get_dataSpheres( );
 	std::string get_inputFilePath();
 	std::string get_outputFileName();
 	glm::vec4 get_posCamera();
@@ -55,6 +54,8 @@ public:
 	std::vector < glm::vec3 > get_pointLightsPos();
 
 	std::vector< std::vector<float> > dataSpheres( );
+	std::vector< std::vector<float> > dataMeshes( );
+	std::vector< std::string > get_meshNames();
 
 	void print( );
 };

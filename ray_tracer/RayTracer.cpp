@@ -85,7 +85,19 @@ void RayTracer::main() {
 		const Sphere tempSphere( position, color, phong, reflectance, transmittance, refraction, radius );
 		world.createSphere( tempSphere );
 	}
-	//world.print();
+	vector< vector<float> > dataMeshes = xmlParser.dataMeshes();
+	for( unsigned int i = 0; i < dataMeshes.size(); ++i ){
+		string srcName = xmlParser.get_meshNames().at( i );
+		glm::vec4 position( dataMeshes.at( i ).at( 0 ), dataMeshes.at( i ).at( 1 ), dataMeshes.at( i ).at( 2 ), 1.0 );
+		glm::vec3 color( dataMeshes.at( i ).at( 3 ), dataMeshes.at( i ).at( 4 ), dataMeshes.at( i ).at( 5 ) );
+		glm::vec4 phong( dataMeshes.at( i ).at( 6 ), dataMeshes.at( i ).at( 7 ), dataMeshes.at( i ).at( 8 ), dataMeshes.at( i ).at( 9 ) );
+		float reflectance = dataMeshes.at( i ).at( 10 );
+		float transmittance = dataMeshes.at( i ).at( 11 );
+		float refraction = dataMeshes.at( i ).at( 12 );
+		const Mesh tempMesh( position, color, phong, reflectance, transmittance, refraction, srcName );
+		world.createMesh( tempMesh );
+	}
+	world.print();
 
 
 	//PERFORM RAY TRACING

@@ -177,6 +177,54 @@ vector< vector<float> > XMLParser::dataSpheres( ){
 	return dataSpheres;
 }
 
+vector< vector<float> > XMLParser::dataMeshes( ){
+
+	vector< vector<float> > dataMeshes;
+	int i = 0;
+	for (pugi::xml_node tool = doc.child("scene").child("surfaces").child("mesh"); tool; tool = tool.next_sibling("mesh")) {
+		dataMeshes.push_back(vector<float>()); // Add one empty row
+
+		//posX, posY, posZ, phongKA, phongKD, phongIOF, phongEXP, reflectance, transmittance, refraction
+		dataMeshes.at( i ).push_back( tool.child("position").attribute("x").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("position").attribute("y").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("position").attribute("z").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("color").attribute("r").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("color").attribute("g").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("color").attribute("b").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("phong").attribute("ka").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("phong").attribute("kd").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("phong").attribute("ks").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("phong").attribute("exponent").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("reflectance").attribute("r").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("transmittance").attribute("t").as_float() );
+		dataMeshes.at( i ).push_back( tool.child("material_solid").child("refraction").attribute("iof").as_float() );
+		++i;
+	}
+/*
+	for( unsigned int i = 0; i < dataMeshes.size(); ++i ){
+		for( unsigned int j = 0; j < dataMeshes.at( i ).size(); ++j ){
+			stringstream sstr;
+			sstr << dataMeshes.at( i ).at( j );
+			cout << sstr.str() << " ";
+		}
+		cout << endl;
+	}
+*/
+	return dataMeshes;
+}
+
+vector< string > XMLParser::get_meshNames(){
+	vector< string > meshNames;
+	int i = 0;
+	for (pugi::xml_node tool = doc.child("scene").child("surfaces").child("mesh"); tool; tool = tool.next_sibling("mesh")) {
+
+		//radius, posX, posY, posZ, phongKA, phongKD, phongIOF, phongEXP, reflectance, transmittance, refraction
+		meshNames.push_back( tool.attribute("name").as_string() );
+		++i;
+	}
+	return meshNames;
+}
+
 string XMLParser::get_inputFilePath(){
 	return inputFilePath;
 }

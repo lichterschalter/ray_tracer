@@ -24,14 +24,6 @@ using namespace std;
 	};
 	Sphere::~Sphere(){ };
 
-
-	void Sphere::initPhongIlluModel(){
-	}
-	void Sphere::transform(){
-	}
-	void Sphere::initTexture(){
-	}
-
 	void Sphere::print(){
 		cout << endl << "--sphere--" << endl;
 		Surface::print();

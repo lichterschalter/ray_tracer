@@ -27,10 +27,6 @@ protected:
 	float reflectance;
 	float transmittance;
 	float refraction;
-	glm::vec4 normalVec;
-	glm::vec4 lightVec;
-	glm::vec4 eyeVec;
-	glm::vec4 reflectanceVec;
 	bool textured;
 	std::string texture_name;
 	glm::vec3 color;
@@ -46,10 +42,6 @@ protected:
 		reflectance = surface.reflectance;
 		transmittance = surface.transmittance;
 		refraction = surface.refraction;
-		normalVec = surface.normalVec;
-		lightVec = surface.lightVec;
-		eyeVec = surface.eyeVec;
-		reflectanceVec = surface.reflectanceVec;
 		textured = surface.textured;
 		texture_name = surface.texture_name;
 		color = surface.color;
@@ -65,19 +57,12 @@ protected:
 		reflectance = surface.reflectance;
 		transmittance = surface.transmittance;
 		refraction = surface.refraction;
-		normalVec = surface.normalVec;
-		lightVec = surface.lightVec;
-		eyeVec = surface.eyeVec;
-		reflectanceVec = surface.reflectanceVec;
 		textured = surface.textured;
 		texture_name = surface.texture_name;
 		color = surface.color;
 		return *this;
 	};
 
-	virtual void initPhongIlluModel()= 0;
-	virtual void transform() = 0;
-	virtual void initTexture() = 0;
 public:
 	Surface( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction ) {
 		this->position = position;
@@ -90,10 +75,6 @@ public:
 		this->reflectance = reflectance;
 		this->transmittance = transmittance;
 		this->refraction = refraction;
-		normalVec = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-		lightVec = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-		eyeVec = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-		reflectanceVec = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		textured = false;
 		texture_name = "";
 		this->color = color;
@@ -111,10 +92,6 @@ public:
 		std::cout << "reflectance: " << reflectance << std::endl;
 		std::cout << "transmittance: " << transmittance << std::endl;
 		std::cout << "refraction: " << refraction << std::endl;
-		std::cout << "normalVec: " << glm::to_string(normalVec) << std::endl;
-		std::cout << "lightVec: " << glm::to_string(lightVec) << std::endl;
-		std::cout << "eyeVec: " << glm::to_string(eyeVec) << std::endl;
-		std::cout << "reflectanceVec: " << glm::to_string(reflectanceVec) << std::endl;
 		std::cout << "textured: " << textured << std::endl;
 		std::cout << "texture_name: " << texture_name << std::endl;
 		std::cout << "color: " << glm::to_string(color) << std::endl;

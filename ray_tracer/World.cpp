@@ -122,7 +122,7 @@ void World::createSphere( Sphere sphere ){
 	spheres.push_back( sphere );
 }
 void World::createMesh( Mesh mesh ){
-	;
+	meshes.push_back( mesh);
 }
 
 void World::print(){
@@ -136,7 +136,6 @@ void World::print(){
 	cout << "posImgPlaneTopLeft: " << glm::to_string(posImgPlaneTopLeft) << endl;
 	cout << "heightImgPlane: " << heightImgPlane << endl;
 	cout << "contentImgPlane: [is not printed, use printContentImgPlane() to print it]" << endl;
-	cout << "ray: \n [ " << ray.toString() << " ]"<< endl;
 	cout << "bgcolor: " << glm::to_string(bgcolor) << endl;
 
 	cout << "ambientLight: " << to_string( ambientLight ) << endl;
@@ -157,6 +156,10 @@ void World::print(){
 
 	for( unsigned int i = 0; i < spheres.size(); ++i ){
 		spheres.at( i ).print();
+	}
+
+	for( unsigned int i = 0; i < meshes.size(); ++i ){
+		meshes.at( i ).print();
 	}
 
 	cout << "----end class World----" << endl << endl;
@@ -221,15 +224,14 @@ void World::performRayTracing(){
 			posRayOnPlane[ 0 ] = posRayOnPlane[ 0 ] + j * rightVec[ 0 ] * pixelWidth - i * (upCamera[ 0 ]) * pixelHeight;
 			posRayOnPlane[ 1 ] = posRayOnPlane[ 1 ] + j * rightVec[ 1 ] * pixelWidth - i * (upCamera[ 1 ]) * pixelHeight;
 			posRayOnPlane[ 2 ] = posRayOnPlane[ 2 ] + j * rightVec[ 2 ] * pixelWidth - i * (upCamera[ 2 ]) * pixelHeight;
-	    	this->ray = Ray( glm::vec4(
+	    	glm::vec4 ray(
 	    			posRayOnPlane[ 0 ] - posCamera[ 0 ],
 					posRayOnPlane[ 1 ] - posCamera[ 1 ],
 					posRayOnPlane[ 2 ] - posCamera[ 2 ],
-					1.0 )
-			);
+					1.0 );
 			//cout << "i: " << i << " j: " << j << endl;
 	    	//cout << ray.toString() << endl;
-			ray.normalize();
+			ray = matrixvecmath.normalize( ray );
 
 
 			//1. perform intersection test ray-sphere
@@ -238,13 +240,13 @@ void World::performRayTracing(){
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
 				glm::vec4 posSphere( spheres.at( i ).get_position() );
 				float radiusSphere = spheres.at( i ).get_radius();
-				float a =  ray.getX() * ray.getX() +
-						   ray.getY() * ray.getY() +
-						   ray.getZ() * ray.getZ();
+				float a =  ray[ 0 ] * ray[ 0 ] +
+						   ray[ 1 ] * ray[ 1 ] +
+						   ray[ 2 ] * ray[ 2 ];
 
-				float b =  ( 2 * posCamera[ 0 ] * ray.getX() - 2 * posSphere[ 0 ] * ray.getX() ) +
-						   ( 2 * posCamera[ 1 ] * ray.getY() - 2 * posSphere[ 1 ] * ray.getY() ) +
-						   ( 2 * posCamera[ 2 ] * ray.getZ() - 2 * posSphere[ 2 ] * ray.getZ() );
+				float b =  ( 2 * posCamera[ 0 ] * ray[ 0 ] - 2 * posSphere[ 0 ] * ray[ 0 ] ) +
+						   ( 2 * posCamera[ 1 ] * ray[ 1 ] - 2 * posSphere[ 1 ] * ray[ 1 ] ) +
+						   ( 2 * posCamera[ 2 ] * ray[ 2 ] - 2 * posSphere[ 2 ] * ray[ 2 ] );
 
 				float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) +
 						  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) +
@@ -298,9 +300,9 @@ void World::performRayTracing(){
 				glm::vec3 phongPixel = phong_ka; //the sum of all shading therms
 
 				glm::vec3 intersectPoint(
-						posCamera[ 0 ] + intersections.at( indexSmallest ) * ray.getX(),
-						posCamera[ 1 ] + intersections.at( indexSmallest ) * ray.getY(),
-						posCamera[ 2 ] + intersections.at( indexSmallest ) * ray.getZ()
+						posCamera[ 0 ] + intersections.at( indexSmallest ) * ray[ 0 ],
+						posCamera[ 1 ] + intersections.at( indexSmallest ) * ray[ 1 ],
+						posCamera[ 2 ] + intersections.at( indexSmallest ) * ray[ 2 ]
 				);
 				glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
 				sphereNormal = matrixvecmath.normalize( sphereNormal );
@@ -387,8 +389,8 @@ void World::performRayTracing(){
 			//2.b no intersection --> bgcolor
 			}else{
 		    	contentImgPlane.at( i ).push_back( "0 0 0   " );
-	    		//cout << ray.posToColorString();
-	    		//contentImgPlane.at( i ).push_back( ray.posToColorString() + "  " );
+	    		//cout << posRayToString( ray );
+	    		//contentImgPlane.at( i ).push_back( posRayToString( ray ) + "  " );
 			}
 
 	    }
@@ -432,4 +434,20 @@ glm::vec3 World::phongSpecular( glm::vec4 phong, float skalarRV, glm::vec3 light
 		return glm::vec3( 0, 0, 0 );
 	}
 
+}
+
+string World::posRayToString( glm::vec4 ray ){
+	stringstream sstrX, sstrY, sstrZ;
+	float x, y, z;
+	x = ray[ 0 ] * 100;
+	y = ray[ 1 ] * 100;
+	z = ray[ 2 ] >= 0 ? ray[ 2 ] : 0;
+	sstrX << abs(int(x));
+	string posX = sstrX.str();
+	sstrY << abs(int(y));
+	string posY = sstrY.str();
+	sstrZ << abs(int(z));
+	string posZ = sstrZ.str();
+	//cout << x << " " << direction[ 0 ] << " " << abs(int(x))<< endl;
+	return posX + " " + posY + " " + posZ;
 }

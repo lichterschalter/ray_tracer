@@ -16,16 +16,11 @@
 class Sphere: public Surface{
 	float radius;
 
-
 public:
 	Sphere( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction, float radius );
 	Sphere( const Sphere& sphere );
 	Sphere& operator=( const Sphere& sphere );
 	virtual ~Sphere();
-
-	virtual void initPhongIlluModel();
-	virtual void transform();
-	virtual void initTexture();
 
 	void print();
 	glm::vec3 get_color();

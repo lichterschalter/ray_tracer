@@ -21,6 +21,7 @@ class World{
 
 	//World
 	std::vector<Sphere> spheres;
+	std::vector<Mesh> meshes;
 
 	//Camera
 	glm::vec4 posCamera;
@@ -48,9 +49,6 @@ class World{
 	//Background color
 	glm::vec3 bgcolor;
 
-	//Ray
-	Ray ray;
-
 	World( const World& );
 	World& operator=( const World& );
 public:
@@ -59,14 +57,17 @@ public:
 			glm::vec3 ambientLight,	glm::vec3 parallelLightCol,	glm::vec3 parallelLightDir,
 			std::vector < glm::vec3 > pointLightsCol, std::vector < glm::vec3 > pointLightsPos );
 	virtual ~World();
+
 	void createSphere( Sphere sphere );
 	void createMesh( Mesh mesh );
 	void print();
 	void printContentImgPlane();
 	std::string contentImgPlaneToString();
+	std::string posRayToString( glm::vec4 ray );
 	int getWidthImgPlane();
 	int getHeightImgPlane();
 	void performRayTracing();
+private:
 	glm::vec3 phongAmbient( glm::vec4 phong, glm::vec3 colorSurface );
 	glm::vec3 phongDiffuse( glm::vec4 phong, glm::vec3 colorSurface, glm::vec3 lightColor, float skalarNL );
 	glm::vec3 phongSpecular( glm::vec4 phong, float skalarRV, glm::vec3 lightColor );
