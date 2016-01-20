@@ -288,7 +288,6 @@ void World::performRayTracing(){
 				}
 
 				//phong illumination model
-				double pi = 3.1415926535897;
 				glm::vec3 intersectPoint(
 						posCamera[ 0 ] + intersections.at( indexSmallest ) * ray.getX(),
 						posCamera[ 1 ] + intersections.at( indexSmallest ) * ray.getY(),
@@ -313,11 +312,13 @@ void World::performRayTracing(){
 				glm::vec4 phong = intersectedSpheres.at( indexSmallest ).get_phong();
 				float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
 				glm::vec3 colorSurface = intersectedSpheres.at( indexSmallest ).get_color();
-				glm::vec3 phongPixel(
-					phong[ 0 ] * ambientLight[ 0 ] * colorSurface[ 0 ] + phong[ 1 ] * parallelLightCol[ 0 ] * skalarNL * colorSurface[ 0 ] + phong[ 2 ] * parallelLightCol[ 0 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
-					phong[ 0 ] * ambientLight[ 1 ] * colorSurface[ 1 ] + phong[ 1 ] * parallelLightCol[ 1 ] * skalarNL * colorSurface[ 1 ] + phong[ 2 ] * parallelLightCol[ 1 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
-					phong[ 0 ] * ambientLight[ 2 ] * colorSurface[ 2 ] + phong[ 1 ] * parallelLightCol[ 2 ] * skalarNL * colorSurface[ 2 ] + phong[ 2 ] * parallelLightCol[ 2 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] )
-				);
+
+				glm::vec3 phong_ka = phongAmbient( phong, colorSurface );
+				glm::vec3 phong_kd = phongDiffuse( phong, colorSurface, skalarNL );
+				glm::vec3 phong_ks = phongSpecular( phong, skalarRV );
+
+				glm::vec3 phongPixel( phong_ka + phong_kd + phong_ks );
+
 				glm::vec3 pixelCol(
 					( colorSurface[ 0 ] + phongPixel[ 0 ] ) * 255 ,
 					( colorSurface[ 1 ] + phongPixel[ 1 ] ) * 255 ,
@@ -366,7 +367,7 @@ glm::vec3 World::phongAmbient( glm::vec4 phong, glm::vec3 colorSurface ){
 	return res;
 }
 
-glm::vec3 World::phongDiffuse( glm::vec4 phong, float skalarNL, glm::vec3 colorSurface ){
+glm::vec3 World::phongDiffuse( glm::vec4 phong, glm::vec3 colorSurface, float skalarNL ){
 	glm::vec3 res(
 		phong[ 1 ] * parallelLightCol[ 0 ] * skalarNL * colorSurface[ 0 ],
 		phong[ 1 ] * parallelLightCol[ 1 ] * skalarNL * colorSurface[ 1 ],
