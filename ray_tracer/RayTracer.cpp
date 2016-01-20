@@ -38,7 +38,7 @@ void RayTracer::main() {
 	//string inputFileName = "";
 	//cout << "Type in the name of the input file (f.e.: '../scenes/example1.xml' ): ";
 	//cin >> inputFileName;
-	string inputFileName = "../scenes/example2.xml";
+	string inputFileName = "../scenes/example4.xml";
 
 
 	//PARSING GENERAL INPUT FROM XML FILE
@@ -63,8 +63,8 @@ void RayTracer::main() {
 
 
 	//CREATING THE WORLD
-	posCamera[ 2 ] += 9.5;
-	lookAtCamera[ 2 ] += 9.5;
+	//posCamera[ 2 ] += 9.5;
+	//lookAtCamera[ 2 ] += 9.5;
 	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor,
 			     ambientLight,	parallelLightCol,	parallelLightDir,
 				 pointLightsCol, pointLightsPos );
@@ -85,7 +85,7 @@ void RayTracer::main() {
 		const Sphere tempSphere( position, color, phong, reflectance, transmittance, refraction, radius );
 		world.createSphere( tempSphere );
 	}
-	world.print();
+	//world.print();
 
 
 	//PERFORM RAY TRACING

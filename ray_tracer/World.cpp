@@ -53,7 +53,6 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 	Matrix_vec_math matrixvecmath;
 
 	glm::vec4 dir( lookAtCamera[ 0 ] - posCamera[ 0 ], lookAtCamera[ 1 ] - posCamera[ 1 ], lookAtCamera[ 2 ] - posCamera[ 2 ], 1.0 );
-	dir = matrixvecmath.normalize( dir );
 	upCamera = matrixvecmath.normalize( upCamera );
 	rightVec = matrixvecmath.crossVec4( dir, upCamera );
 	rightVec = matrixvecmath.normalize( rightVec );
