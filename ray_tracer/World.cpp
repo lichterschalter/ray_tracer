@@ -235,7 +235,7 @@ void World::performRayTracing(){
 
 			//1. perform intersection test ray-sphere
 			vector< float > intersections;
-			vector< glm::vec3 > intersectColor;
+			vector< Sphere > intersectedSpheres;
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
 				glm::vec4 posSphere( spheres.at( i ).get_position() );
 				float radiusSphere = spheres.at( i ).get_radius();
@@ -258,7 +258,7 @@ void World::performRayTracing(){
 					if( deltaOne <= deltaTwo ) intersections.push_back( deltaOne );
 					if( deltaOne > deltaTwo ) intersections.push_back( deltaTwo );
 
-					intersectColor.push_back( spheres.at( i ).get_color() );
+					intersectedSpheres.push_back( spheres.at( i ) );
 				}
 			}
 
@@ -294,7 +294,7 @@ void World::performRayTracing(){
 						posCamera[ 1 ] + intersections.at( indexSmallest ) * ray.getY(),
 						posCamera[ 2 ] + intersections.at( indexSmallest ) * ray.getZ()
 				);
-				glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( spheres.at( indexSmallest ).get_position() ) / spheres.at( indexSmallest ).get_radius() );
+				glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
 				sphereNormal = matrixvecmath.normalize( sphereNormal );
 				glm::vec4 lightVec( -parallelLightDir[ 0 ], -parallelLightDir[ 1 ], -parallelLightDir[ 2 ], 1.0 );
 				lightVec = matrixvecmath.normalize( lightVec );
@@ -310,9 +310,9 @@ void World::performRayTracing(){
 				reflectVec = matrixvecmath.normalize( reflectVec );
 
 				//phong shading
-				glm::vec4 phong = spheres.at( indexSmallest ).get_phong();
+				glm::vec4 phong = intersectedSpheres.at( indexSmallest ).get_phong();
 				float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
-				glm::vec3 colorSurface = intersectColor.at( indexSmallest );
+				glm::vec3 colorSurface = intersectedSpheres.at( indexSmallest ).get_color();
 				glm::vec3 phongPixel(
 					phong[ 0 ] * ambientLight[ 0 ] * colorSurface[ 0 ] + phong[ 1 ] * parallelLightCol[ 0 ] * skalarNL * colorSurface[ 0 ] + phong[ 2 ] * parallelLightCol[ 0 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
 					phong[ 0 ] * ambientLight[ 1 ] * colorSurface[ 1 ] + phong[ 1 ] * parallelLightCol[ 1 ] * skalarNL * colorSurface[ 1 ] + phong[ 2 ] * parallelLightCol[ 1 ] * ( ( phong[ 3 ] + 2 ) / 2 * pi ) * pow( skalarRV, phong[ 3 ] ),
