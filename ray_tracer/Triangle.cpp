@@ -11,6 +11,7 @@
 #include "../libs/glm/glm/mat4x4.hpp"
 #include "../libs/glm/glm/gtc/matrix_transform.hpp"
 #include "../libs/glm/glm/gtx/string_cast.hpp"
+#include "../libs/glm/glm/geometric.hpp"
 #include "Triangle.h"
 using namespace std;
 
@@ -23,6 +24,7 @@ Triangle::Triangle( std::vector< glm::vec3 > v, std::vector< glm::vec3 > vt, glm
 
 	e12 = v.at( 0 ) - v.at( 1 );
 	e13 = v.at( 0 ) - v.at( 2 );
+	n = glm::normalize( glm::cross( e12, e13 ) );
 
 }
 Triangle::Triangle( const Triangle& triangle ){
@@ -33,6 +35,7 @@ Triangle::Triangle( const Triangle& triangle ){
 	this->s = triangle.s;
 	this->e12 = triangle.e12;
 	this->e13 = triangle.e13;
+	this->n = triangle.n;
 }
 Triangle& Triangle::operator=( const Triangle& ){
 	return *this;
@@ -61,6 +64,7 @@ void Triangle::print() {
 	cout << "s: " << s << endl;
 	cout << "e12: " << glm::to_string( e12 ) << endl;
 	cout << "e13: " << glm::to_string( e13 ) << endl;
+	cout << "n: " << glm::to_string( n ) << endl;
 	cout << "___________" << endl << endl;
 }
 
@@ -78,6 +82,9 @@ std::string Triangle::get_usemtl(){
 }
 int Triangle::get_s(){
 	return s;
+}
+glm::vec3 Triangle::get_n(){
+	return n;
 }
 
 

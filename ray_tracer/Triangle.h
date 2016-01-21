@@ -20,6 +20,7 @@ class Triangle{
 	int s;
 	glm::vec3 e12;
 	glm::vec3 e13;
+	glm::vec3 n; //(e12 x e13 / ||e12 x e13|| )
 public:
 	Triangle( std::vector< glm::vec3 > v, std::vector< glm::vec3 > vt, glm::vec3 vn, std::string usemtl, int s );
 	Triangle( const Triangle& );
@@ -34,6 +35,7 @@ public:
 	int get_s();
 	glm::vec3 get_e12();
 	glm::vec3 get_e13();
+	glm::vec3 get_n();
 };
 
 
