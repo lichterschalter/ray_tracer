@@ -270,10 +270,17 @@ void World::performRayTracing(){
 			}
 			*/
 
-			//2.a there is an intersection
+			//2. perform intersection test ray-triangle
+			for( unsigned int i = 0; i < meshes.size(); ++i ){
+				for( unsigned int j = 0; j < meshes.at( i ).get_triangles().size(); ++j ){
+
+				}
+			}
+
+			//3. there is an intersection
 			if( intersections.size() != 0 ){
 
-				//find biggest lambda
+				//4.find biggest lambda
 				int indexSmallest = 0;
 				for( unsigned int i = 0; i < intersections.size(); ++i ){
 					float* smallest = &intersections.at( i );
@@ -289,7 +296,7 @@ void World::performRayTracing(){
 				}
 
 
-				//phong shading
+				//5.phong shading
 				glm::vec4 phong = intersectedSpheres.at( indexSmallest ).get_phong();
 				glm::vec3 colorSurface = intersectedSpheres.at( indexSmallest ).get_color();
 
@@ -370,23 +377,24 @@ void World::performRayTracing(){
 				//cout << to_string( pixelCol ) << endl;
 
 
-				//SAVE JUST COLOR
+				//6. SAVE JUST COLOR
 				//const string pixelColor = intersectColor.at( indexSmallest );
 				//contentImgPlane.at( i ).push_back( pixelColor );
 
-				//SAVE PHONG + COLOR
+				//6. SAVE PHONG + COLOR
 				stringstream sstr;
 				sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
 				string colorPixel = sstr.str();
 				contentImgPlane.at( i ).push_back( colorPixel );
     			/*
-				//SAVE NORMAL
+				//6. SAVE NORMAL
 				stringstream sstr;
 				sstr << int ( abs( sphereNormal[ 0 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 1 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 2 ] * 255 ) ) << "    ";
 				string colorPixel = sstr.str();
 				contentImgPlane.at( i ).push_back( colorPixel );
 				*/
-			//2.b no intersection --> bgcolor
+
+			//3.b. no intersection --> bgcolor
 			}else{
 		    	contentImgPlane.at( i ).push_back( "0 0 0   " );
 	    		//cout << posRayToString( ray );

@@ -21,6 +21,9 @@ Triangle::Triangle( std::vector< glm::vec3 > v, std::vector< glm::vec3 > vt, glm
 	this->usemtl = usemtl;
 	this->s = s;
 
+	e12 = v.at( 0 ) - v.at( 1 );
+	e13 = v.at( 0 ) - v.at( 2 );
+
 }
 Triangle::Triangle( const Triangle& triangle ){
 	this->v = triangle.v;
@@ -28,6 +31,8 @@ Triangle::Triangle( const Triangle& triangle ){
 	this->vn = triangle.vn;
 	this->usemtl = triangle.usemtl;
 	this->s = triangle.s;
+	this->e12 = triangle.e12;
+	this->e13 = triangle.e13;
 }
 Triangle& Triangle::operator=( const Triangle& ){
 	return *this;
@@ -54,6 +59,8 @@ void Triangle::print() {
 
 	cout << "usemtl: " << usemtl << endl;
 	cout << "s: " << s << endl;
+	cout << "e12: " << glm::to_string( e12 ) << endl;
+	cout << "e13: " << glm::to_string( e13 ) << endl;
 	cout << "___________" << endl << endl;
 }
 
