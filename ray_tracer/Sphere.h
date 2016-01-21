@@ -15,6 +15,7 @@
 
 class Sphere: public Surface{
 	float radius;
+	glm::vec4 position;
 
 public:
 	Sphere( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction, float radius );

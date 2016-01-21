@@ -15,7 +15,7 @@ using namespace std;
 	Mesh::Mesh( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction, string srcName,
 			vector < glm::vec3 > v, vector < glm::vec3 > vt, vector < glm::vec3 > vn, string usemtl,
 			int s, vector < vector < glm::vec3 > > f )
-	: Surface( position, color, phong, reflectance, transmittance, refraction ) {
+	: Surface( color, phong, reflectance, transmittance, refraction ) {
 		this->srcName = srcName;
 		this->v = v;
 		this->vt = vt;

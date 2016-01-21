@@ -17,7 +17,6 @@
 
 class Surface{
 protected:
-	glm::vec4 position;
 	glm::vec4 translate;
 	glm::vec4 scale;
 	glm::vec4 rotateX;
@@ -32,7 +31,6 @@ protected:
 	glm::vec3 color;
 
 	Surface( const Surface& surface ){
-		position = surface.position;
 		translate = surface.translate;
 		scale = surface.scale;
 		rotateX = surface.rotateX;
@@ -47,7 +45,6 @@ protected:
 		color = surface.color;
 	};
 	Surface& operator=( const Surface& surface ){
-		position = surface.position;
 		translate = surface.translate;
 		scale = surface.scale;
 		rotateX = surface.rotateX;
@@ -64,8 +61,7 @@ protected:
 	};
 
 public:
-	Surface( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction ) {
-		this->position = position;
+	Surface( glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction ) {
 		translate = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		scale = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 		rotateX = glm::vec4( 0.0, 0.0, 0.0, 1.0 );
@@ -82,7 +78,6 @@ public:
 	virtual ~Surface(){ };
 
 	void print(){
-		std::cout << "position: " << glm::to_string(position) << std::endl;
 		std::cout << "translate: " << glm::to_string(translate) << std::endl;
 		std::cout << "scale: " << glm::to_string(scale) << std::endl;
 		std::cout << "rotateX: " << glm::to_string(rotateX) << std::endl;
