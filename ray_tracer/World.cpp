@@ -235,7 +235,7 @@ void World::performRayTracing(){
 
 
 			//1. perform intersection test ray-sphere
-			vector< float > intersections;
+			vector< float > lambdaSpheres;
 			vector< Sphere > intersectedSpheres;
 			for( unsigned int i = 0; i < spheres.size(); ++i ){
 				glm::vec4 posSphere( spheres.at( i ).get_position() );
@@ -254,10 +254,10 @@ void World::performRayTracing(){
 						  pow ( radiusSphere, 2 );
 				float intersection = pow( b, 2 ) - 4 * a * c;
 				if( intersection >= 0 ){
-					float deltaOne = ( -b + sqrt( intersection ) ) / 2 * a;
-					float deltaTwo = ( -b - sqrt( intersection ) ) / 2 * a;
-					if( deltaOne <= deltaTwo ) intersections.push_back( deltaOne );
-					if( deltaOne > deltaTwo ) intersections.push_back( deltaTwo );
+					float lambdaOne = ( -b + sqrt( intersection ) ) / 2 * a;
+					float lambdaTwo = ( -b - sqrt( intersection ) ) / 2 * a;
+					if( lambdaOne <= lambdaTwo ) lambdaSpheres.push_back( lambdaOne );
+					if( lambdaOne > lambdaTwo ) lambdaSpheres.push_back( lambdaTwo );
 
 					intersectedSpheres.push_back( spheres.at( i ) );
 				}
@@ -265,12 +265,13 @@ void World::performRayTracing(){
 
 			/*
 			cout << "INTERSECTIONS: " << endl;
-			for( unsigned int i = 0; i < intersections.size(); ++i ){
-				cout << intersections.at( i ) << endl;
+			for( unsigned int i = 0; i < lambdaSpheres.size(); ++i ){
+				cout << lambdaSpheres.at( i ) << endl;
 			}
 			*/
 
 			//2. perform intersection test ray-triangle
+			vector< float > lambdaTriangles;
 			for( unsigned int i = 0; i < meshes.size(); ++i ){
 				std::vector < Triangle > triangles = meshes.at( i ).get_triangles();
 				for( unsigned int j = 0; j < triangles.size(); ++j ){
@@ -294,20 +295,20 @@ void World::performRayTracing(){
 					barycentricPos[ 2 ] = f * glm::dot( triangles.at( j ).get_e2(), q );
 					if( barycentricPos[ 2 ] < 0 ) break;
 
-					intersections.push_back( barycentricPos[ 2 ] );
+					lambdaTriangles.push_back( barycentricPos[ 2 ] );
 
 				}
 			}
 
 			//3. there is an intersection
-			if( intersections.size() != 0 ){
+			if( lambdaSpheres.size() != 0 || lambdaTriangles.size() != 0){
 
-				//4.find biggest lambda
+				//4.a. find biggest lambda spheres
 				int indexSmallest = 0;
-				for( unsigned int i = 0; i < intersections.size(); ++i ){
-					float* smallest = &intersections.at( i );
-					for( unsigned int j = 1; j < intersections.size() - i; ++j ){
-						float* smaller = &intersections.at( i + j );
+				for( unsigned int i = 0; i < lambdaSpheres.size(); ++i ){
+					float* smallest = &lambdaSpheres.at( i );
+					for( unsigned int j = 1; j < lambdaSpheres.size() - i; ++j ){
+						float* smaller = &lambdaSpheres.at( i + j );
 						if( *smallest > *smaller ){
 							indexSmallest = j;
 							//float temp = *smaller;
@@ -317,104 +318,134 @@ void World::performRayTracing(){
 					}
 				}
 
+				//4.b. find biggest lambda triangles
+				int indexSmallestTri = 0;
+				for( unsigned int i = 0; i < lambdaTriangles.size(); ++i ){
+					float* smallest = &lambdaTriangles.at( i );
+					for( unsigned int j = 1; j < lambdaTriangles.size() - i; ++j ){
+						float* smaller = &lambdaTriangles.at( i + j );
+						if( *smallest > *smaller ){
+							indexSmallestTri = j;
+							//float temp = *smaller;
+							//*smaller = *biggest;
+							*smallest = *smaller;
+						}
+					}
+				}
+
+				//4.c. check if sphere or triangle is in the front
+		    	string intersectedObjType;
+		    	if( lambdaSpheres.size() != 0 ) intersectedObjType = "sphere";
+		    	if( lambdaTriangles.size() != 0 ) intersectedObjType = "triangle";
+		    	if( lambdaSpheres.size() != 0 && lambdaTriangles.size() != 0){
+					if( lambdaSpheres.at( indexSmallest ) <= lambdaTriangles.at( indexSmallestTri ) ) intersectedObjType = "sphere";
+					if( lambdaSpheres.at( indexSmallest ) > lambdaTriangles.at( indexSmallestTri ) ) intersectedObjType = "triangle";
+		    	}
+
 
 				//5.phong shading
-				glm::vec4 phong = intersectedSpheres.at( indexSmallest ).get_phong();
-				glm::vec3 colorSurface = intersectedSpheres.at( indexSmallest ).get_color();
+		    	if( intersectedObjType == "sphere" ){
+					glm::vec4 phong = intersectedSpheres.at( indexSmallest ).get_phong();
+					glm::vec3 colorSurface = intersectedSpheres.at( indexSmallest ).get_color();
 
-				glm::vec3 phong_ka = phongAmbient( phong, colorSurface );
-				glm::vec3 phong_kd( 0.0, 0.0, 0.0 );
-				glm::vec3 phong_ks( 0.0, 0.0, 0.0 );
+					glm::vec3 phong_ka = phongAmbient( phong, colorSurface );
+					glm::vec3 phong_kd( 0.0, 0.0, 0.0 );
+					glm::vec3 phong_ks( 0.0, 0.0, 0.0 );
 
-				glm::vec3 phongPixel = phong_ka; //the sum of all shading therms
+					glm::vec3 phongPixel = phong_ka; //the sum of all shading therms
 
-				glm::vec3 intersectPoint(
-						posCamera[ 0 ] + intersections.at( indexSmallest ) * ray[ 0 ],
-						posCamera[ 1 ] + intersections.at( indexSmallest ) * ray[ 1 ],
-						posCamera[ 2 ] + intersections.at( indexSmallest ) * ray[ 2 ]
-				);
-				glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
-				sphereNormal = matrixvecmath.normalize( sphereNormal );
-				glm::vec4 view = matrixvecmath.vec3ToVec4( matrixvecmath.vec4ToVec3( posCamera ) - intersectPoint );
-				view = matrixvecmath.normalize( view );
-
-				//phong_kd, phong_ks for parallel light
-				if( parallelLightDir[ 0 ] != 0 || parallelLightDir[ 1 ] != 0 || parallelLightDir[ 2 ] != 0 ){
-					glm::vec4 lightVec( -parallelLightDir[ 0 ], -parallelLightDir[ 1 ], -parallelLightDir[ 2 ], 1.0 );
-					lightVec = matrixvecmath.normalize( lightVec );
-					float skalarNL = sphereNormal[ 0 ] * lightVec[ 0 ] + sphereNormal[ 1 ] * lightVec[ 1 ] + sphereNormal[ 2 ] * lightVec[ 2 ];
-					glm::vec4 reflectVec(
-							2 * skalarNL * sphereNormal[ 0 ] - lightVec[ 0 ],
-							2 * skalarNL * sphereNormal[ 1 ] - lightVec[ 1 ],
-							2 * skalarNL * sphereNormal[ 2 ] - lightVec[ 2 ],
-							1.0
+					glm::vec3 intersectPoint(
+							posCamera[ 0 ] + lambdaSpheres.at( indexSmallest ) * ray[ 0 ],
+							posCamera[ 1 ] + lambdaSpheres.at( indexSmallest ) * ray[ 1 ],
+							posCamera[ 2 ] + lambdaSpheres.at( indexSmallest ) * ray[ 2 ]
 					);
-					reflectVec = matrixvecmath.normalize( reflectVec );
-					float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
+					glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
+					sphereNormal = matrixvecmath.normalize( sphereNormal );
+					glm::vec4 view = matrixvecmath.vec3ToVec4( matrixvecmath.vec4ToVec3( posCamera ) - intersectPoint );
+					view = matrixvecmath.normalize( view );
 
-					phong_kd = phongDiffuse( phong, colorSurface, parallelLightCol, skalarNL );
-					phong_ks = phongSpecular( phong, skalarRV, parallelLightCol );
-					phongPixel += phong_kd + phong_ks;
-				}
+					//phong_kd, phong_ks for parallel light
+					if( parallelLightDir[ 0 ] != 0 || parallelLightDir[ 1 ] != 0 || parallelLightDir[ 2 ] != 0 ){
+						glm::vec4 lightVec( -parallelLightDir[ 0 ], -parallelLightDir[ 1 ], -parallelLightDir[ 2 ], 1.0 );
+						lightVec = matrixvecmath.normalize( lightVec );
+						float skalarNL = sphereNormal[ 0 ] * lightVec[ 0 ] + sphereNormal[ 1 ] * lightVec[ 1 ] + sphereNormal[ 2 ] * lightVec[ 2 ];
+						glm::vec4 reflectVec(
+								2 * skalarNL * sphereNormal[ 0 ] - lightVec[ 0 ],
+								2 * skalarNL * sphereNormal[ 1 ] - lightVec[ 1 ],
+								2 * skalarNL * sphereNormal[ 2 ] - lightVec[ 2 ],
+								1.0
+						);
+						reflectVec = matrixvecmath.normalize( reflectVec );
+						float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
 
-				//phong_kd, phong_ks for point light(s)
-				for( unsigned int i = 0; i < pointLightsCol.size(); ++i ){
-					glm::vec3 lightPos = pointLightsPos.at( i );
-					glm::vec4 lightVec(
-							lightPos[ 0 ] - intersectPoint[ 0 ],
-							lightPos[ 1 ] - intersectPoint[ 1 ],
-							lightPos[ 2 ] - intersectPoint[ 2 ],
-							1.0
+						phong_kd = phongDiffuse( phong, colorSurface, parallelLightCol, skalarNL );
+						phong_ks = phongSpecular( phong, skalarRV, parallelLightCol );
+						phongPixel += phong_kd + phong_ks;
+					}
+
+					//phong_kd, phong_ks for point light(s)
+					for( unsigned int i = 0; i < pointLightsCol.size(); ++i ){
+						glm::vec3 lightPos = pointLightsPos.at( i );
+						glm::vec4 lightVec(
+								lightPos[ 0 ] - intersectPoint[ 0 ],
+								lightPos[ 1 ] - intersectPoint[ 1 ],
+								lightPos[ 2 ] - intersectPoint[ 2 ],
+								1.0
+						);
+						lightVec = matrixvecmath.normalize( lightVec );
+						float skalarNL = sphereNormal[ 0 ] * lightVec[ 0 ] + sphereNormal[ 1 ] * lightVec[ 1 ] + sphereNormal[ 2 ] * lightVec[ 2 ];
+						glm::vec4 reflectVec(
+								2 * skalarNL * sphereNormal[ 0 ] - lightVec[ 0 ],
+								2 * skalarNL * sphereNormal[ 1 ] - lightVec[ 1 ],
+								2 * skalarNL * sphereNormal[ 2 ] - lightVec[ 2 ],
+								1.0
+						);
+						reflectVec = matrixvecmath.normalize( reflectVec );
+						float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
+
+						phong_kd = phongDiffuse( phong, colorSurface, pointLightsCol.at( i ), skalarNL );
+						phong_ks = phongSpecular( phong, skalarRV, pointLightsCol.at( i ) );
+						phongPixel += phong_kd + phong_ks;
+
+
+					}
+
+					if ( phongPixel[ 0 ] > 1 ) phongPixel[ 0 ] = 1;
+					if ( phongPixel[ 1 ] > 1 ) phongPixel[ 1 ] = 1;
+					if ( phongPixel[ 2 ] > 1 ) phongPixel[ 2 ] = 1;
+
+					//cout << endl << "skalarNL: " << skalarNL << " normal: " << glm::to_string( sphereNormal ) << " light: " << glm::to_string( lightVec ) << endl;
+					//cout << "ka: " << glm::to_string( phong_ka ) << " kd: " << glm::to_string( phong_kd ) << " ks: " << glm::to_string( phong_ks ) << " sum: " << glm::to_string( phongPixel ) << endl;
+
+					glm::vec3 pixelCol(
+						( phongPixel[ 0 ] ) * 255,
+						( phongPixel[ 1 ] ) * 255,
+						( phongPixel[ 2 ] ) * 255
 					);
-					lightVec = matrixvecmath.normalize( lightVec );
-					float skalarNL = sphereNormal[ 0 ] * lightVec[ 0 ] + sphereNormal[ 1 ] * lightVec[ 1 ] + sphereNormal[ 2 ] * lightVec[ 2 ];
-					glm::vec4 reflectVec(
-							2 * skalarNL * sphereNormal[ 0 ] - lightVec[ 0 ],
-							2 * skalarNL * sphereNormal[ 1 ] - lightVec[ 1 ],
-							2 * skalarNL * sphereNormal[ 2 ] - lightVec[ 2 ],
-							1.0
-					);
-					reflectVec = matrixvecmath.normalize( reflectVec );
-					float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
-
-					phong_kd = phongDiffuse( phong, colorSurface, pointLightsCol.at( i ), skalarNL );
-					phong_ks = phongSpecular( phong, skalarRV, pointLightsCol.at( i ) );
-					phongPixel += phong_kd + phong_ks;
+					//cout << to_string( pixelCol ) << endl;
 
 
-				}
+					//6. SAVE JUST COLOR
+					//const string pixelColor = intersectColor.at( indexSmallest );
+					//contentImgPlane.at( i ).push_back( pixelColor );
 
-				if ( phongPixel[ 0 ] > 1 ) phongPixel[ 0 ] = 1;
-				if ( phongPixel[ 1 ] > 1 ) phongPixel[ 1 ] = 1;
-				if ( phongPixel[ 2 ] > 1 ) phongPixel[ 2 ] = 1;
+					//6. SAVE PHONG + COLOR
+					stringstream sstr;
+					sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
+					string colorPixel = sstr.str();
+					contentImgPlane.at( i ).push_back( colorPixel );
+					/*
+					//6. SAVE NORMAL
+					stringstream sstr;
+					sstr << int ( abs( sphereNormal[ 0 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 1 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 2 ] * 255 ) ) << "    ";
+					string colorPixel = sstr.str();
+					contentImgPlane.at( i ).push_back( colorPixel );
+					*/
+		    	}//end if intersectObjType == "sphere"
 
-				//cout << endl << "skalarNL: " << skalarNL << " normal: " << glm::to_string( sphereNormal ) << " light: " << glm::to_string( lightVec ) << endl;
-				//cout << "ka: " << glm::to_string( phong_ka ) << " kd: " << glm::to_string( phong_kd ) << " ks: " << glm::to_string( phong_ks ) << " sum: " << glm::to_string( phongPixel ) << endl;
-
-				glm::vec3 pixelCol(
-					( phongPixel[ 0 ] ) * 255,
-					( phongPixel[ 1 ] ) * 255,
-					( phongPixel[ 2 ] ) * 255
-				);
-				//cout << to_string( pixelCol ) << endl;
-
-
-				//6. SAVE JUST COLOR
-				//const string pixelColor = intersectColor.at( indexSmallest );
-				//contentImgPlane.at( i ).push_back( pixelColor );
-
-				//6. SAVE PHONG + COLOR
-				stringstream sstr;
-				sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
-				string colorPixel = sstr.str();
-				contentImgPlane.at( i ).push_back( colorPixel );
-    			/*
-				//6. SAVE NORMAL
-				stringstream sstr;
-				sstr << int ( abs( sphereNormal[ 0 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 1 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 2 ] * 255 ) ) << "    ";
-				string colorPixel = sstr.str();
-				contentImgPlane.at( i ).push_back( colorPixel );
-				*/
+		    	if( intersectedObjType == "triangle" ){
+		    		contentImgPlane.at( i ).push_back( "255 255 255   " );
+		    	}
 
 			//3.b. no intersection --> bgcolor
 			}else{
