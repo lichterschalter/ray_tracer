@@ -203,19 +203,17 @@ void World::performRayTracing(){
 	Matrix_vec_math matrixvecmath;
 	cout << "Shooting rays into the world..." << endl;
 
-
 	//TEST SPHERE FOR DEBUGGING
 
 	//glm::vec3 posSphere( 0.0, 0.0, -3.0 );
 	//float radiusSphere = 1;
-
-	//SHOOT RAYS TO THE CENTER OF EVERY PIXEL ON THE IMAGE PLANE
 
 	contentImgPlane.clear();
 	for (int i = 0; i < heightImgPlane; i++) {
 		contentImgPlane.push_back(vector<string>()); // Add one empty row
 	}
 
+	//FOR EVERY PIXEL
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    for (int j = 0; j < widthImgPlane; j++) {
 
@@ -274,28 +272,35 @@ void World::performRayTracing(){
 			vector< float > lambdaTriangles;
 			for( unsigned int i = 0; i < meshes.size(); ++i ){
 				std::vector < Triangle > triangles = meshes.at( i ).get_triangles();
-				for( unsigned int j = 0; j < triangles.size(); ++j ){
+				unsigned int j = 0;
+				for( ; j < triangles.size(); ++j ){
+					//if( j > 0 ) cout << "BINGO" << endl;
 					glm::vec3 barycentricPos;
 
 					glm::vec3 p = glm::cross( matrixvecmath.vec4ToVec3( ray ), triangles.at( j ).get_e2() );
 					float a = glm::dot( triangles.at( j ).get_e1(), p );
-					if( a < 0 ) break;
-					float f = 1.0 / a;
-					glm::vec3 s = matrixvecmath.vec4ToVec3( posCamera ) - triangles.at( j ).get_v().at( 0 );
+					if( a >= 0 ){
 
-					barycentricPos[ 0 ] = f * glm::dot( s, p );
-					if( barycentricPos[ 0 ] < 0.0 )break;
-					if( barycentricPos[ 0 ] > 1.0 )break;
+						float f = 1.0 / a;
+						glm::vec3 s = matrixvecmath.vec4ToVec3( posCamera ) - triangles.at( j ).get_v().at( 0 );
 
-					glm::vec3 q = glm::cross( s, triangles.at( j ).get_e1() );
-					barycentricPos[ 1 ] = f * glm::dot( matrixvecmath.vec4ToVec3( ray ), q );
-					if( barycentricPos[ 1 ] < 0.0 )break;
-					if( ( barycentricPos[ 0 ] + barycentricPos[ 1 ] ) > 1.0 )break;
+						barycentricPos[ 0 ] = f * glm::dot( s, p );
+						if( barycentricPos[ 0 ] > 0.0 && barycentricPos[ 0 ] < 1.0 ){
 
-					barycentricPos[ 2 ] = f * glm::dot( triangles.at( j ).get_e2(), q );
-					if( barycentricPos[ 2 ] < 0 ) break;
+							glm::vec3 q = glm::cross( s, triangles.at( j ).get_e1() );
+							barycentricPos[ 1 ] = f * glm::dot( matrixvecmath.vec4ToVec3( ray ), q );
+							if( barycentricPos[ 1 ] >= 0.0 && ( barycentricPos[ 0 ] + barycentricPos[ 1 ] ) <= 1.0 ){
 
-					lambdaTriangles.push_back( barycentricPos[ 2 ] );
+								barycentricPos[ 2 ] = f * glm::dot( triangles.at( j ).get_e2(), q );
+								if( barycentricPos[ 2 ] >= 0 ){
+
+									lambdaTriangles.push_back( barycentricPos[ 2 ] );
+								}
+
+							}
+
+						}
+					}
 
 				}
 			}

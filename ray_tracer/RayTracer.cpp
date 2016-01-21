@@ -74,8 +74,10 @@ void RayTracer::main() {
 
 
 	//CREATING THE WORLD
-	//posCamera[ 2 ] += 9.5;
-	//lookAtCamera[ 2 ] += 9.5;
+	//posCamera[ 0 ] = -4.0;
+	//lookAtCamera[ 0 ] = -4.0;
+	//posCamera[ 2 ] += 100;
+	//lookAtCamera[ 2 ] += 100;
 	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor,
 			     ambientLight,	parallelLightCol,	parallelLightDir,
 				 pointLightsCol, pointLightsPos );
