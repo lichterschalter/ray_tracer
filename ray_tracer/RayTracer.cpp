@@ -39,7 +39,7 @@ void RayTracer::main() {
 	//string inputFileName = "";
 	//cout << "Type in the name of the input file (f.e.: '../scenes/example1.xml' ): ";
 	//cin >> inputFileName;
-	string inputFileName = "../scenes/example3.xml";
+	string inputFileName = "../scenes/example5.xml";
 
 
 	//PARSING GENERAL INPUT FROM XML FILE
