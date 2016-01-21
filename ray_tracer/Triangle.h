@@ -18,9 +18,9 @@ class Triangle{
 	glm::vec3 vn;
 	std::string usemtl;
 	int s;
-	glm::vec3 e12;
-	glm::vec3 e13;
-	glm::vec3 n; //(e12 x e13 / ||e12 x e13|| )
+	glm::vec3 e1;
+	glm::vec3 e2;
+	glm::vec3 n; //(e1 x e2 / ||e1 x e2|| )
 public:
 	Triangle( std::vector< glm::vec3 > v, std::vector< glm::vec3 > vt, glm::vec3 vn, std::string usemtl, int s );
 	Triangle( const Triangle& );
@@ -33,8 +33,8 @@ public:
 	glm::vec3 get_vn();
 	std::string get_usemtl();
 	int get_s();
-	glm::vec3 get_e12();
-	glm::vec3 get_e13();
+	glm::vec3 get_e1();
+	glm::vec3 get_e2();
 	glm::vec3 get_n();
 };
 

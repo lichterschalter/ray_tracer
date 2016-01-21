@@ -274,13 +274,28 @@ void World::performRayTracing(){
 			for( unsigned int i = 0; i < meshes.size(); ++i ){
 				std::vector < Triangle > triangles = meshes.at( i ).get_triangles();
 				for( unsigned int j = 0; j < triangles.size(); ++j ){
-					glm::vec3 n = triangles.at( j ).get_n();
-					float nd = glm::dot( matrixvecmath.vec4ToVec3( ray ), n );
-					if( nd != 0 ){
-						glm::vec3 v1 = triangles.at( j ).get_v().at( 0 );
-						float lambda = ( glm::dot( n, v1 ) - glm::dot( n, matrixvecmath.vec4ToVec3( posCamera ) ) ) / nd;
-						cout << lambda << endl;
-					}
+					glm::vec3 barycentricPos;
+
+					glm::vec3 p = glm::cross( matrixvecmath.vec4ToVec3( ray ), triangles.at( j ).get_e2() );
+					float a = glm::dot( triangles.at( j ).get_e1(), p );
+					if( a < 0 ) break;
+					float f = 1.0 / a;
+					glm::vec3 s = matrixvecmath.vec4ToVec3( posCamera ) - triangles.at( j ).get_v().at( 0 );
+
+					barycentricPos[ 0 ] = f * glm::dot( s, p );
+					if( barycentricPos[ 0 ] < 0.0 )break;
+					if( barycentricPos[ 0 ] > 1.0 )break;
+
+					glm::vec3 q = glm::cross( s, triangles.at( j ).get_e1() );
+					barycentricPos[ 1 ] = f * glm::dot( matrixvecmath.vec4ToVec3( ray ), q );
+					if( barycentricPos[ 1 ] < 0.0 )break;
+					if( ( barycentricPos[ 0 ] + barycentricPos[ 1 ] ) > 1.0 )break;
+
+					barycentricPos[ 2 ] = f * glm::dot( triangles.at( j ).get_e2(), q );
+					if( barycentricPos[ 2 ] < 0 ) break;
+
+					intersections.push_back( barycentricPos[ 2 ] );
+
 				}
 			}
 

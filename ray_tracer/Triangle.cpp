@@ -22,9 +22,9 @@ Triangle::Triangle( std::vector< glm::vec3 > v, std::vector< glm::vec3 > vt, glm
 	this->usemtl = usemtl;
 	this->s = s;
 
-	e12 = v.at( 0 ) - v.at( 1 );
-	e13 = v.at( 0 ) - v.at( 2 );
-	n = glm::normalize( glm::cross( e12, e13 ) );
+	e1 = v.at( 1 ) - v.at( 0 );
+	e2 = v.at( 2 ) - v.at( 0 );
+	n = glm::normalize( glm::cross( e1, e2 ) );
 
 }
 Triangle::Triangle( const Triangle& triangle ){
@@ -33,8 +33,8 @@ Triangle::Triangle( const Triangle& triangle ){
 	this->vn = triangle.vn;
 	this->usemtl = triangle.usemtl;
 	this->s = triangle.s;
-	this->e12 = triangle.e12;
-	this->e13 = triangle.e13;
+	this->e1 = triangle.e1;
+	this->e2 = triangle.e2;
 	this->n = triangle.n;
 }
 Triangle& Triangle::operator=( const Triangle& ){
@@ -62,8 +62,8 @@ void Triangle::print() {
 
 	cout << "usemtl: " << usemtl << endl;
 	cout << "s: " << s << endl;
-	cout << "e12: " << glm::to_string( e12 ) << endl;
-	cout << "e13: " << glm::to_string( e13 ) << endl;
+	cout << "e12: " << glm::to_string( e1 ) << endl;
+	cout << "e13: " << glm::to_string( e2 ) << endl;
 	cout << "n: " << glm::to_string( n ) << endl;
 	cout << "___________" << endl << endl;
 }
@@ -82,6 +82,12 @@ std::string Triangle::get_usemtl(){
 }
 int Triangle::get_s(){
 	return s;
+}
+glm::vec3 Triangle::get_e1(){
+	return e1;
+}
+glm::vec3 Triangle::get_e2(){
+	return e2;
 }
 glm::vec3 Triangle::get_n(){
 	return n;
