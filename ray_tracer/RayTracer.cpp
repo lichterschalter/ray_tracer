@@ -65,6 +65,12 @@ void RayTracer::main() {
 
 	//READING IN THE OBJECT FILE
 	ObjLoader objLoader( "../scenes/open_room.obj" );
+	std::vector < glm::vec3 > v = objLoader.get_v();
+	std::vector < glm::vec3 > vt = objLoader.get_vt();
+	std::vector < glm::vec3 > vn = objLoader.get_vn();
+	std::string usemtl = objLoader.get_usemtl();
+	int s = objLoader.get_s();
+	std::vector < std::vector < glm::vec3 > > f = objLoader.get_f();
 
 
 	//CREATING THE WORLD
@@ -99,7 +105,7 @@ void RayTracer::main() {
 		float reflectance = dataMeshes.at( i ).at( 10 );
 		float transmittance = dataMeshes.at( i ).at( 11 );
 		float refraction = dataMeshes.at( i ).at( 12 );
-		const Mesh tempMesh( position, color, phong, reflectance, transmittance, refraction, srcName );
+		const Mesh tempMesh( position, color, phong, reflectance, transmittance, refraction, srcName, v, vt, vn, usemtl, s, f );
 		world.createMesh( tempMesh );
 	}
 	//world.print();
