@@ -13,13 +13,13 @@
 #include "../libs/glm/glm/vec4.hpp"
 
 class Triangle{
-	std::vector < glm::vec4 > v;
-	std::vector < glm::vec4 > vt;
-	glm::vec4 vn;
+	std::vector < glm::vec3 > v;
+	std::vector < glm::vec3 > vt;
+	glm::vec3 vn;
 	std::string usemtl;
 	int s;
 public:
-	Triangle( std::vector< glm::vec4 > v, std::vector< glm::vec4 > vt, glm::vec4 vn, std::string usemtl, int s, glm::vec3 f );
+	Triangle( std::vector< glm::vec3 > v, std::vector< glm::vec3 > vt, glm::vec3 vn, std::string usemtl, int s );
 	Triangle( const Triangle& );
 	Triangle& operator=( const Triangle& );
 	virtual ~Triangle();

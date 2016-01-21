@@ -14,7 +14,7 @@
 #include "Triangle.h"
 using namespace std;
 
-Triangle::Triangle( std::vector< glm::vec4 > v, std::vector< glm::vec4 > vt, glm::vec4 vn, std::string usemtl, int s, glm::vec3 f ){
+Triangle::Triangle( std::vector< glm::vec3 > v, std::vector< glm::vec3 > vt, glm::vec3 vn, std::string usemtl, int s ){
 	this->v = v;
 	this->vt = vt;
 	this->vn = vn;
@@ -36,7 +36,6 @@ Triangle& Triangle::operator=( const Triangle& ){
 Triangle::~Triangle() { };
 
 void Triangle::print() {
-	cout << ":::triangle:::" << endl;
 	cout << "v: ";
 	for( unsigned int i = 0; i < v.size(); ++i ){
 		cout << glm::to_string( v.at( i ) ) << " ";
@@ -55,7 +54,7 @@ void Triangle::print() {
 
 	cout << "usemtl: " << usemtl << endl;
 	cout << "s: " << s << endl;
-	cout << ":::        :::" << endl;
+	cout << "___________" << endl << endl;
 }
 
 

@@ -45,10 +45,8 @@ using namespace std;
 					cout << glm::to_string( vtTemp.at( i ) ) << endl;
 				}
 			}
-
-
-			//Triangle triangle( v, vt, vn, usemtl, s, f );
-			//triangles.push_back( triangle );
+			Triangle triangle( vTemp, vtTemp, vnTemp, usemtl, s );
+			triangles.push_back( triangle );
 		}
 
 
@@ -72,7 +70,8 @@ using namespace std;
 		Surface::print();
 		cout << "srcName: " << this->srcName << endl;
 
-		cout << "triangles: ";
+		cout << "triangles: " << endl;
+		cout << "___________" << endl << endl;
 		for( unsigned int i = 0; i < triangles.size(); ++i ){
 			triangles.at( i ).print();
 
