@@ -127,6 +127,7 @@ void RayTracer::main() {
 	//glm::vec4 posSphere( 0.0, 0.0, 0.0, 1.0 );
 	//Sphere sphere( posSphere, 1.0 );
 	//sphere.print();
+
 /*
 	vector <float> intersections = {-11, -13, -4.3, 0, 0 };
 

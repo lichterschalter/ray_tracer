@@ -26,14 +26,31 @@ using namespace std;
 		this->s = s;
 		this->f = f;
 
+		//create for every face f a triangle
 		for( unsigned int i = 0; i < f.size(); ++i ){
-			vector < glm::vec4 > vTemp;
 
+			//this code uses f to save the points
+			vector < glm::vec3 > vTemp;
+			vector < glm::vec3 > vtTemp;
+			glm::vec3 vnTemp = vn.at( f.at( i ).at( 0 )[ 2 ] - 1 );
+			int k = 0;
+			for( unsigned int j = 0; j < f.at( i ).size(); ++j ){
+				vTemp.push_back( v.at( f.at( i ).at( k )[ 0 ] - 1 ) );
+				vtTemp.push_back( vt.at( f.at( i ).at( k )[ 1 ] - 1 ) );
+				++k;
+			}
+
+			if( i == 0 ){
+				for( unsigned int i = 0; i < vTemp.size(); ++i ){
+					cout << glm::to_string( vtTemp.at( i ) ) << endl;
+				}
+			}
 
 
 			//Triangle triangle( v, vt, vn, usemtl, s, f );
 			//triangles.push_back( triangle );
 		}
+
 
 		cout << "V: " << v.size() << " VT: " << vt.size() << " VN: " << vn.size() << " F: " << f.size() << endl;
 	};
