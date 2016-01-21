@@ -26,10 +26,10 @@ using namespace std;
 		this->s = s;
 		this->f = f;
 
-		//create for every face f a triangle
+		//1. create for every face f a triangle
 		for( unsigned int i = 0; i < f.size(); ++i ){
 
-			//this code uses f to save the points
+			//2. set the points (v,vt,vn) of the triangle with f
 			vector < glm::vec3 > vTemp;
 			vector < glm::vec3 > vtTemp;
 			glm::vec3 vnTemp = vn.at( f.at( i ).at( 0 )[ 2 ] - 1 );
@@ -40,17 +40,10 @@ using namespace std;
 				++k;
 			}
 
-			if( i == 0 ){
-				for( unsigned int i = 0; i < vTemp.size(); ++i ){
-					cout << glm::to_string( vtTemp.at( i ) ) << endl;
-				}
-			}
+			//3. initialize triangle
 			Triangle triangle( vTemp, vtTemp, vnTemp, usemtl, s );
 			triangles.push_back( triangle );
 		}
-
-
-		cout << "V: " << v.size() << " VT: " << vt.size() << " VN: " << vn.size() << " F: " << f.size() << endl;
 	};
 	Mesh::Mesh( const Mesh& mesh ) : Surface( mesh ) {
 		this->srcName = mesh.srcName;
