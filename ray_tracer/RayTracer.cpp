@@ -108,7 +108,7 @@ void RayTracer::main() {
 		const Mesh tempMesh( position, color, phong, reflectance, transmittance, refraction, srcName, v, vt, vn, usemtl, s, f );
 		world.createMesh( tempMesh );
 	}
-	//world.print();
+	world.print();
 
 
 	//PERFORM RAY TRACING

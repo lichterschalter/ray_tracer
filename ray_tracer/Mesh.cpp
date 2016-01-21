@@ -6,10 +6,12 @@
  */
 
 #include <iostream>
+#include <vector>
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
 #include "../libs/glm/glm/gtx/string_cast.hpp"
 #include "Mesh.h"
+#include "Triangle.h"
 using namespace std;
 
 	Mesh::Mesh( glm::vec4 position, glm::vec3 color, glm::vec4 phong, float reflectance, float transmittance, float refraction, string srcName,
@@ -23,9 +25,21 @@ using namespace std;
 		this->usemtl = usemtl;
 		this->s = s;
 		this->f = f;
+
+		for( unsigned int i = 0; i < f.size(); ++i ){
+			vector < glm::vec4 > vTemp;
+
+
+
+			//Triangle triangle( v, vt, vn, usemtl, s, f );
+			//triangles.push_back( triangle );
+		}
+
+		cout << "V: " << v.size() << " VT: " << vt.size() << " VN: " << vn.size() << " F: " << f.size() << endl;
 	};
 	Mesh::Mesh( const Mesh& mesh ) : Surface( mesh ) {
 		this->srcName = mesh.srcName;
+		this->triangles = mesh.triangles;
 		this->v = mesh.v;
 		this->vt = mesh.vt;
 		this->vn = mesh.vn;
@@ -40,6 +54,12 @@ using namespace std;
 		cout << endl << "--Mesh--" << endl;
 		Surface::print();
 		cout << "srcName: " << this->srcName << endl;
+
+		cout << "triangles: ";
+		for( unsigned int i = 0; i < triangles.size(); ++i ){
+			triangles.at( i ).print();
+
+		}
 
 		cout << "v: ";
 		for( unsigned int i = 0; i < v.size(); ++i ){

@@ -13,9 +13,11 @@
 #include "../libs/glm/glm/vec3.hpp"
 #include "../libs/glm/glm/vec4.hpp"
 #include "Surface.h"
+#include "Triangle.h"
 
 class Mesh: public Surface{
 	std::string srcName;
+	std::vector < Triangle > triangles;
 	std::vector < glm::vec3 > v;
 	std::vector < glm::vec3 > vt;
 	std::vector < glm::vec3 > vn;
