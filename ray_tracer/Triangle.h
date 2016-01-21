@@ -24,6 +24,12 @@ public:
 	Triangle& operator=( const Triangle& );
 	virtual ~Triangle();
 	void print();
+
+	std::vector < glm::vec3 > get_v();
+	std::vector < glm::vec3 > get_vt();
+	glm::vec3 get_vn();
+	std::string get_usemtl();
+	int get_s();
 };
 
 

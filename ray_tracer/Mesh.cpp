@@ -104,4 +104,7 @@ using namespace std;
 
 	}
 
+	std::vector< Triangle > Mesh::get_triangles(){
+		return triangles;
+	}
 

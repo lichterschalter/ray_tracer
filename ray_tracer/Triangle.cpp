@@ -57,4 +57,20 @@ void Triangle::print() {
 	cout << "___________" << endl << endl;
 }
 
+std::vector < glm::vec3 > Triangle::get_v(){
+	return v;
+}
+std::vector < glm::vec3 > Triangle::get_vt(){
+	return vt;
+}
+glm::vec3 Triangle::get_vn(){
+	return vn;
+}
+std::string Triangle::get_usemtl(){
+	return usemtl;
+}
+int Triangle::get_s(){
+	return s;
+}
+
 

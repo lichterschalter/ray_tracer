@@ -35,6 +35,7 @@ public:
 	virtual ~Mesh();
 
 	void print();
+	std::vector< Triangle > get_triangles();
 };
 
 
