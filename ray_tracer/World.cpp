@@ -272,8 +272,15 @@ void World::performRayTracing(){
 
 			//2. perform intersection test ray-triangle
 			for( unsigned int i = 0; i < meshes.size(); ++i ){
-				for( unsigned int j = 0; j < meshes.at( i ).get_triangles().size(); ++j ){
-
+				std::vector < Triangle > triangles = meshes.at( i ).get_triangles();
+				for( unsigned int j = 0; j < triangles.size(); ++j ){
+					glm::vec3 n = triangles.at( j ).get_n();
+					float nd = glm::dot( matrixvecmath.vec4ToVec3( ray ), n );
+					if( nd != 0 ){
+						glm::vec3 v1 = triangles.at( j ).get_v().at( 0 );
+						float lambda = ( glm::dot( n, v1 ) - glm::dot( n, matrixvecmath.vec4ToVec3( posCamera ) ) ) / nd;
+						cout << lambda << endl;
+					}
 				}
 			}
 
