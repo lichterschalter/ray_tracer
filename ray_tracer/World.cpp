@@ -288,7 +288,7 @@ void World::performRayTracing(){
 						glm::vec3 s = matrixvecmath.vec4ToVec3( posCamera ) - triangles.at( j ).get_v().at( 0 );
 
 						barycentricPos[ 0 ] = f * glm::dot( s, p );
-						if( barycentricPos[ 0 ] > 0.0 && barycentricPos[ 0 ] < 1.0 ){
+						if( barycentricPos[ 0 ] >= 0.0 && barycentricPos[ 0 ] <= 1.0 ){
 
 							glm::vec3 q = glm::cross( s, triangles.at( j ).get_e1() );
 							barycentricPos[ 1 ] = f * glm::dot( matrixvecmath.vec4ToVec3( ray ), q );
