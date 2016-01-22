@@ -377,8 +377,6 @@ void World::performRayTracing(){
 		    	if( intersectedObjType == "triangle" ){
 		    		glm::vec4 phong = intersectedMeshes.at( indexSmallestTri ).get_phong();
 		    		glm::vec3 colorSurface = intersectedMeshes.at( indexSmallestTri ).get_color();
-		    		colorSurface = glm::vec3 (0.5, 0.5, 0.5);
-		    		cout << glm::to_string( colorSurface ) << endl;
 
 		    		glm::vec3 intersectPoint(
 		    				posCamera[ 0 ] + lambdaTriangles.at( indexSmallest ) * ray[ 0 ],
@@ -387,7 +385,6 @@ void World::performRayTracing(){
 		    		);
 
 		    		pixelCol = phongShading( phong, colorSurface, intersectPoint, matrixvecmath.vec3ToVec4( normalTri ) );
-		    		cout << glm::to_string( pixelCol ) << endl;
 		    	}
 
 		    	//5.c save results from phong shading
