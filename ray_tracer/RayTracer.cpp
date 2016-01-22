@@ -63,21 +63,15 @@ void RayTracer::main() {
 	std::vector < glm::vec3 > pointLightsPos = xmlParser.get_pointLightsPos();
 
 
-	//READING IN THE OBJECT FILE
-	ObjLoader objLoader( "../scenes/open_room.obj" );
-	std::vector < glm::vec3 > v = objLoader.get_v();
-	std::vector < glm::vec3 > vt = objLoader.get_vt();
-	std::vector < glm::vec3 > vn = objLoader.get_vn();
-	std::string usemtl = objLoader.get_usemtl();
-	int s = objLoader.get_s();
-	std::vector < std::vector < glm::vec3 > > f = objLoader.get_f();
-
-
 	//CREATING THE WORLD
-	//posCamera[ 0 ] = -4.0;
-	//lookAtCamera[ 0 ] = -4.0;
-	//posCamera[ 2 ] += 100;
-	//lookAtCamera[ 2 ] += 100;
+	//posCamera[ 1 ] += 1.0;
+	//lookAtCamera[ 1 ] += 1.0;
+/*	posCamera[ 0 ] = 0.0;
+	lookAtCamera[ 0 ] = 0.0;
+	posCamera[ 1 ] = 6.0;
+	lookAtCamera[ 1 ] = 2.5;
+	posCamera[ 2 ] = -3.0;
+	lookAtCamera[ 2 ] = -3.0; */
 	World world( posCamera, upCamera, lookAtCamera, horizontal_fov, maxBounces, heightImgPlane, widthImgPlane, bgcolor,
 			     ambientLight,	parallelLightCol,	parallelLightDir,
 				 pointLightsCol, pointLightsPos );
@@ -99,8 +93,19 @@ void RayTracer::main() {
 		world.createSphere( tempSphere );
 	}
 	vector< vector<float> > dataMeshes = xmlParser.dataMeshes();
+
 	for( unsigned int i = 0; i < dataMeshes.size(); ++i ){
 		string srcName = xmlParser.get_meshNames().at( i );
+
+		//READING IN THE OBJECT FILE
+		ObjLoader objLoader( "../scenes/" + srcName );
+		std::vector < glm::vec3 > v = objLoader.get_v();
+		std::vector < glm::vec3 > vt = objLoader.get_vt();
+		std::vector < glm::vec3 > vn = objLoader.get_vn();
+		std::string usemtl = objLoader.get_usemtl();
+		int s = objLoader.get_s();
+		std::vector < std::vector < glm::vec3 > > f = objLoader.get_f();
+
 		glm::vec4 position( dataMeshes.at( i ).at( 0 ), dataMeshes.at( i ).at( 1 ), dataMeshes.at( i ).at( 2 ), 1.0 );
 		glm::vec3 color( dataMeshes.at( i ).at( 3 ), dataMeshes.at( i ).at( 4 ), dataMeshes.at( i ).at( 5 ) );
 		glm::vec4 phong( dataMeshes.at( i ).at( 6 ), dataMeshes.at( i ).at( 7 ), dataMeshes.at( i ).at( 8 ), dataMeshes.at( i ).at( 9 ) );

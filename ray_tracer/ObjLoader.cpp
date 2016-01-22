@@ -23,7 +23,7 @@ ObjLoader::ObjLoader( std::string srcPath ) {
 
 	ifstream myfile ( srcPath );
 	if( myfile ){
-		cout << "Opening .obj file \'" << srcPath << "\' was successfull." << endl;
+		cout << "Loading .obj file \'" << srcPath << "\' was successfull." << endl;
 		while( !myfile.eof() ) {
 			getline ( myfile, line );
 
