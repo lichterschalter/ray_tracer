@@ -42,7 +42,7 @@ float Matrix_vec_math::lengthVec3( glm::vec3 vector3 ){
 }
 
 float Matrix_vec_math::lengthVec4( glm::vec4 vector4 ){
-	return sqrt( pow( vector4[ 0 ], 2 ) + pow( vector4[ 1 ], 2 ) + pow( vector4[ 2 ], 2 ) );
+	return sqrt( pow( vector4[ 0 ] / vector4[ 3 ], 2 ) + pow( vector4[ 1 ] / vector4[ 3 ], 2 ) + pow( vector4[ 2 ] / vector4[ 3 ], 2 ) );
 }
 
 glm::vec4 Matrix_vec_math::crossVec4(glm::vec4 _vec1, glm::vec4 _vec2){
@@ -53,7 +53,7 @@ glm::vec4 Matrix_vec_math::crossVec4(glm::vec4 _vec1, glm::vec4 _vec2){
 }
 
 glm::vec4 Matrix_vec_math::normalize(glm::vec4 vector){
-	float length = sqrt( pow( vector[ 0 ], 2 ) + pow( vector[ 1 ], 2 ) + pow( vector[ 2 ], 2 ) );
+	float length = sqrt( pow( vector[ 0 ] / vector[ 3 ], 2 ) + pow( vector[ 1 ] / vector[ 3 ], 2 ) + pow( vector[ 2 ] / vector[ 3 ], 2 ) );
 	vector[ 0 ] = vector[ 0 ] / length;
 	vector[ 1 ] = vector[ 1 ] / length;
 	vector[ 2 ] = vector[ 2 ] / length;
