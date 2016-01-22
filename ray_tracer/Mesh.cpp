@@ -108,3 +108,11 @@ using namespace std;
 		return triangles;
 	}
 
+	glm::vec4 Mesh::get_phong(){
+		return phong;
+	}
+
+	glm::vec3 Mesh::get_color(){
+		return color;
+	}
+

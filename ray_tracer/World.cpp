@@ -270,6 +270,8 @@ void World::performRayTracing(){
 
 			//2. perform intersection test ray-triangle
 			vector< float > lambdaTriangles;
+			vector< Mesh > intersectedMeshes;
+			vector< glm::vec3 > posTriangles;
 			for( unsigned int i = 0; i < meshes.size(); ++i ){
 				std::vector < Triangle > triangles = meshes.at( i ).get_triangles();
 				unsigned int j = 0;
@@ -295,6 +297,8 @@ void World::performRayTracing(){
 								if( barycentricPos[ 2 ] >= 0 ){
 
 									lambdaTriangles.push_back( barycentricPos[ 2 ] );
+									intersectedMeshes.push_back( meshes.at( i ) );
+									posTriangles.push_back( barycentricPos );
 								}
 
 							}
@@ -308,7 +312,7 @@ void World::performRayTracing(){
 			//3. there is an intersection
 			if( lambdaSpheres.size() != 0 || lambdaTriangles.size() != 0){
 
-				//4.a. find biggest lambda spheres
+				//4.a. find smallest lambda spheres
 				int indexSmallest = 0;
 				for( unsigned int i = 0; i < lambdaSpheres.size(); ++i ){
 					float* smallest = &lambdaSpheres.at( i );
@@ -323,7 +327,7 @@ void World::performRayTracing(){
 					}
 				}
 
-				//4.b. find biggest lambda triangles
+				//4.b. find smallest lambda triangles
 				int indexSmallestTri = 0;
 				for( unsigned int i = 0; i < lambdaTriangles.size(); ++i ){
 					float* smallest = &lambdaTriangles.at( i );
@@ -347,10 +351,11 @@ void World::performRayTracing(){
 					if( lambdaSpheres.at( indexSmallest ) > lambdaTriangles.at( indexSmallestTri ) ) intersectedObjType = "triangle";
 		    	}
 
+		    	//5. phong shading
+		    	glm::vec3 pixelCol;
 
-				//5.phong shading
+				//5.a calculate phong shading for sphere
 		    	if( intersectedObjType == "sphere" ){
-
 		    		glm::vec4 phong = intersectedSpheres.at( indexSmallest ).get_phong();
 		    		glm::vec3 colorSurface = intersectedSpheres.at( indexSmallest ).get_color();
 
@@ -363,8 +368,28 @@ void World::performRayTracing(){
 		    		glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
 		    		sphereNormal = matrixvecmath.normalize( sphereNormal );
 
-		    		glm::vec3 pixelCol = phongShading( phong, colorSurface, intersectPoint, sphereNormal );
+		    		pixelCol = phongShading( phong, colorSurface, intersectPoint, sphereNormal );
+		    	}
 
+		    	//5.b. calculate phong shading for triangle
+		    	if( intersectedObjType == "triangle" ){
+		    		glm::vec4 phong = intersectedMeshes.at( indexSmallestTri ).get_phong();
+		    		glm::vec3 colorSurface = intersectedMeshes.at( indexSmallestTri ).get_color();
+
+		    		glm::vec3 intersectPoint(
+		    				posCamera[ 0 ] + lambdaTriangles.at( indexSmallest ) * ray[ 0 ],
+		    				posCamera[ 1 ] + lambdaTriangles.at( indexSmallest ) * ray[ 1 ],
+		    				posCamera[ 2 ] + lambdaTriangles.at( indexSmallest ) * ray[ 2 ]
+		    		);
+
+		    		glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - posTriangles.at( indexSmallestTri ) );
+		    		sphereNormal = matrixvecmath.normalize( sphereNormal );
+
+		    		pixelCol = phongShading( phong, colorSurface, intersectPoint, sphereNormal );
+		    	}
+
+		    	//5.c save results from phong shading
+		    	if( intersectedObjType == "sphere" || intersectedObjType == "triangle" ){
 					//6.1 save just color
 					//const string pixelColor = intersectColor.at( indexSmallest );
 					//contentImgPlane.at( i ).push_back( pixelColor );
@@ -374,17 +399,13 @@ void World::performRayTracing(){
 					sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
 					string colorPixel = sstr.str();
 					contentImgPlane.at( i ).push_back( colorPixel );
-					/*
-					//6.3 save normal
+
+				/*	//6.3 save normal
 					stringstream sstr;
 					sstr << int ( abs( sphereNormal[ 0 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 1 ] * 255 ) ) << " " << int ( abs( sphereNormal[ 2 ] * 255 ) ) << "    ";
 					string colorPixel = sstr.str();
 					contentImgPlane.at( i ).push_back( colorPixel );
 					*/
-		    	}
-
-		    	if( intersectedObjType == "triangle" ){
-		    		contentImgPlane.at( i ).push_back( "255 255 255   " );
 		    	}
 
 			//3.b. no intersection --> bgcolor

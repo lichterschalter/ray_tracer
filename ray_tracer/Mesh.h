@@ -36,6 +36,8 @@ public:
 
 	void print();
 	std::vector< Triangle > get_triangles();
+	glm::vec4 get_phong();
+	glm::vec3 get_color();
 };
 
 
