@@ -233,14 +233,14 @@ void World::performRayTracing(){
 
 			//2. trace ray
 			glm::vec3 pixelCol = traceRay( ray, 0 );
+
 			if( pixelCol[ 0 ] > 255 ) pixelCol[ 0 ] = 255;
 			if( pixelCol[ 1 ] > 255 ) pixelCol[ 1 ] = 255;
 			if( pixelCol[ 2 ] > 255 ) pixelCol[ 2 ] = 255;
 
-
 	    	//3. save results to imgPlane
 			stringstream sstr;
-			sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
+			sstr << int ( pixelCol[ 0 ] * 255 ) << " " << int ( pixelCol[ 1 ] * 255 ) << " " << int ( pixelCol[ 2 ] * 255 ) << "    ";
 			string colorPixel = sstr.str();
 			contentImgPlane.at( i ).push_back( colorPixel );
 
@@ -515,6 +515,7 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 
 			//5. phong shading
 			glm::vec3 pixelCol;
+			glm::vec4 sphereNormal;
 
 			//5.a calculate phong shading for sphere
 			if( intersectedObjType == "sphere" ){
@@ -527,18 +528,17 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 						posCamera[ 2 ] + lambdaSpheres.at( indexSmallest ) * ray[ 2 ]
 				);
 
-				glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
+				sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
 				sphereNormal = matrixvecmath.normalize( sphereNormal );
 
 				pixelCol = phongShading( phong, colorSurface, intersectPoint, sphereNormal );
 
 				reflection = intersectedSpheres.at( indexSmallest ).get_reflectance();
 				if( reflection != 0.0 ){
-					//d − 2(d · n)n
 					glm::vec4 reflRay(
 							ray[ 0 ] - 2 * ( glm::dot( ray[ 0 ], sphereNormal[ 0 ] ) * sphereNormal[ 0 ] ),
-							ray[ 1 ] - 2 * ( glm::dot( ray[ 1 ], sphereNormal[ 1 ] ) * sphereNormal[ 0 ] ),
-							ray[ 2 ] - 2 * ( glm::dot( ray[ 2 ], sphereNormal[ 2 ] ) * sphereNormal[ 0 ] ),
+							ray[ 1 ] - 2 * ( glm::dot( ray[ 1 ], sphereNormal[ 1 ] ) * sphereNormal[ 1 ] ),
+							ray[ 2 ] - 2 * ( glm::dot( ray[ 2 ], sphereNormal[ 2 ] ) * sphereNormal[ 2 ] ),
 							1.0
 					);
 					++bounces;
@@ -559,21 +559,32 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 
 				pixelCol = phongShading( phong, colorSurface, intersectPoint, matrixvecmath.vec3ToVec4( normalTri ) );
 
-				reflection = intersectedMeshes.at( indexSmallest ).get_reflectance();
+				reflection = intersectedMeshes.at( indexSmallestTri ).get_reflectance();
+				if( reflection != 0.0 ){
+					glm::vec4 reflRay(
+							ray[ 0 ] - 2 * ( glm::dot( ray[ 0 ], normalTri[ 0 ] ) * normalTri[ 0 ] ),
+							ray[ 1 ] - 2 * ( glm::dot( ray[ 1 ], normalTri[ 1 ] ) * normalTri[ 1 ] ),
+							ray[ 2 ] - 2 * ( glm::dot( ray[ 2 ], normalTri[ 2 ] ) * normalTri[ 2 ] ),
+							1.0
+					);
+					++bounces;
+					pixelCol = ( 1 - reflection) * pixelCol + reflection * traceRay( reflRay, bounces );
+				}
 			}
 
 			//5.c save results from phong shading
 			if( intersectedObjType == "sphere" || intersectedObjType == "triangle" ){
 
 				//6.1 save color + phong
-				return pixelCol;
+				//return pixelCol;
 
-			/*	//6.2 save normal
+				//6.2 save normal
 				sphereNormal[ 0 ] = abs( sphereNormal[ 0 ] );
 				sphereNormal[ 1 ] = abs( sphereNormal[ 1 ] );
 				sphereNormal[ 2 ] = abs( sphereNormal[ 2 ] );
-				return sphereNormal;
-				*/
+				sphereNormal[ 3 ] = 1.0;
+				return matrixvecmath.vec4ToVec3( sphereNormal );
+
 			}
 		}
 
