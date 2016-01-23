@@ -64,8 +64,8 @@ void RayTracer::main() {
 
 
 	//CREATING THE WORLD
-	//posCamera[ 1 ] += 1.0;
-	//lookAtCamera[ 1 ] += 1.0;
+//	posCamera[ 2 ] += 2.0;
+//	lookAtCamera[ 2 ] += 2.0;
 /*	posCamera[ 0 ] = 0.0;
 	lookAtCamera[ 0 ] = 0.0;
 	posCamera[ 1 ] = 0.0;
