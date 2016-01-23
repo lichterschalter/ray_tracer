@@ -240,7 +240,7 @@ void World::performRayTracing(){
 
 	    	//3. save results to imgPlane
 			stringstream sstr;
-			sstr << int ( pixelCol[ 0 ] * 255 ) << " " << int ( pixelCol[ 1 ] * 255 ) << " " << int ( pixelCol[ 2 ] * 255 ) << "    ";
+			sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
 			string colorPixel = sstr.str();
 			contentImgPlane.at( i ).push_back( colorPixel );
 
@@ -260,28 +260,32 @@ glm::vec3 World::phongShading( glm::vec4 phong, glm::vec3 colorSurface, glm::vec
 
 	glm::vec3 phongPixel = phong_ka; //the sum of all shading therms
 
-
-
 	glm::vec4 view = matrixvecmath.vec3ToVec4( matrixvecmath.vec4ToVec3( posCamera ) - intersectPoint );
 	view = matrixvecmath.normalize( view );
 
 	//phong_kd, phong_ks for parallel light
 	if( parallelLightDir[ 0 ] != 0 || parallelLightDir[ 1 ] != 0 || parallelLightDir[ 2 ] != 0 ){
+
 		glm::vec4 lightVec( -parallelLightDir[ 0 ], -parallelLightDir[ 1 ], -parallelLightDir[ 2 ], 1.0 );
 		lightVec = matrixvecmath.normalize( lightVec );
-		float skalarNL = normalVec[ 0 ] * lightVec[ 0 ] + normalVec[ 1 ] * lightVec[ 1 ] + normalVec[ 2 ] * lightVec[ 2 ];
-		glm::vec4 reflectVec(
-				2 * skalarNL * normalVec[ 0 ] - lightVec[ 0 ],
-				2 * skalarNL * normalVec[ 1 ] - lightVec[ 1 ],
-				2 * skalarNL * normalVec[ 2 ] - lightVec[ 2 ],
-				1.0
-		);
-		reflectVec = matrixvecmath.normalize( reflectVec );
-		float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
 
-		phong_kd = phongDiffuse( phong, colorSurface, parallelLightCol, skalarNL );
-		phong_ks = phongSpecular( phong, skalarRV, parallelLightCol );
-		phongPixel += phong_kd + phong_ks;
+		if( !shadowRay( lightVec + glm::vec4( 0.2, 0.2, 0.2, 0.0 ), matrixvecmath.vec3ToVec4( intersectPoint ) ) ){
+			float skalarNL = normalVec[ 0 ] * lightVec[ 0 ] + normalVec[ 1 ] * lightVec[ 1 ] + normalVec[ 2 ] * lightVec[ 2 ];
+			glm::vec4 reflectVec(
+					2 * skalarNL * normalVec[ 0 ] - lightVec[ 0 ],
+					2 * skalarNL * normalVec[ 1 ] - lightVec[ 1 ],
+					2 * skalarNL * normalVec[ 2 ] - lightVec[ 2 ],
+					1.0
+			);
+			reflectVec = matrixvecmath.normalize( reflectVec );
+			float skalarRV = reflectVec[ 0 ] * view[ 0 ] + reflectVec[ 1 ] * view[ 1 ] + reflectVec[ 2 ] * view[ 2 ];
+
+			phong_kd = phongDiffuse( phong, colorSurface, parallelLightCol, skalarNL );
+			phong_ks = phongSpecular( phong, skalarRV, parallelLightCol );
+			phongPixel += phong_kd + phong_ks;
+		}else{
+			//phongPixel = glm::vec3( 0, 0, 0 );
+		}
 	}
 
 	//phong_kd, phong_ks for point light(s)
@@ -576,15 +580,15 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 			if( intersectedObjType == "sphere" || intersectedObjType == "triangle" ){
 
 				//6.1 save color + phong
-				//return pixelCol;
+				return pixelCol;
 
 				//6.2 save normal
-				sphereNormal[ 0 ] = abs( sphereNormal[ 0 ] );
+			/*	sphereNormal[ 0 ] = abs( sphereNormal[ 0 ] );
 				sphereNormal[ 1 ] = abs( sphereNormal[ 1 ] );
 				sphereNormal[ 2 ] = abs( sphereNormal[ 2 ] );
 				sphereNormal[ 3 ] = 1.0;
 				return matrixvecmath.vec4ToVec3( sphereNormal );
-
+			*/
 			}
 		}
 
@@ -593,4 +597,93 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 	}
 
 	return bgcolor;
+}
+
+bool World::shadowRay( glm::vec4 ray, glm::vec4 p ){
+	Matrix_vec_math matrixvecmath;
+
+	//1. perform intersection test ray-sphere
+	vector< float > lambdaSpheres;
+	for( unsigned int i = 0; i < spheres.size(); ++i ){
+		glm::vec4 posSphere( spheres.at( i ).get_position() );
+		float radiusSphere = spheres.at( i ).get_radius();
+		float a =  ray[ 0 ] * ray[ 0 ] +
+				   ray[ 1 ] * ray[ 1 ] +
+				   ray[ 2 ] * ray[ 2 ];
+
+		float b =  ( 2 * p[ 0 ] * ray[ 0 ] - 2 * posSphere[ 0 ] * ray[ 0 ] ) +
+				   ( 2 * p[ 1 ] * ray[ 1 ] - 2 * posSphere[ 1 ] * ray[ 1 ] ) +
+				   ( 2 * p[ 2 ] * ray[ 2 ] - 2 * posSphere[ 2 ] * ray[ 2 ] );
+
+		float c = pow ( p[ 0 ] - posSphere[ 0 ], 2 ) +
+				  pow ( p[ 1 ] - posSphere[ 1 ], 2 ) +
+				  pow ( p[ 2 ] - posSphere[ 2 ], 2 ) -
+				  pow ( radiusSphere, 2 );
+		float intersection = pow( b, 2 ) - 4 * a * c;
+		if( intersection >= 0 ){
+			float lambdaOne = ( -b + sqrt( intersection ) ) / 2 * a;
+			float lambdaTwo = ( -b - sqrt( intersection ) ) / 2 * a;
+			if( lambdaOne <= lambdaTwo ) lambdaSpheres.push_back( lambdaOne );
+			if( lambdaOne > lambdaTwo ) lambdaSpheres.push_back( lambdaTwo );
+		}
+	}
+
+	/*
+	cout << "INTERSECTIONS: " << endl;
+	for( unsigned int i = 0; i < lambdaSpheres.size(); ++i ){
+		cout << lambdaSpheres.at( i ) << endl;
+	}
+	*/
+
+	//2. perform intersection test ray-triangle
+	vector< float > lambdaTriangles;
+	for( unsigned int iTri = 0; iTri < meshes.size(); ++iTri ){
+		std::vector < Triangle > triangles = meshes.at( iTri ).get_triangles();
+		unsigned int jTri = 0;
+		for( ; jTri < triangles.size(); ++jTri ){
+			//if( j > 0 ) cout << "BINGO" << endl;
+			glm::vec3 barycentricPos;
+
+			glm::vec3 p = glm::cross( matrixvecmath.vec4ToVec3( ray ), triangles.at( jTri ).get_e2() );
+			float a = glm::dot( triangles.at( jTri ).get_e1(), p );
+			if( a >= 0 ){
+
+				float f = 1.0 / a;
+				glm::vec3 s =  p - triangles.at( jTri ).get_v().at( 0 );
+
+				barycentricPos[ 0 ] = f * glm::dot( s, p );
+				if( barycentricPos[ 0 ] >= 0.0 && barycentricPos[ 0 ] <= 1.0 ){
+
+					glm::vec3 q = glm::cross( s, triangles.at( jTri ).get_e1() );
+					barycentricPos[ 1 ] = f * glm::dot( matrixvecmath.vec4ToVec3( ray ), q );
+/*					if( i == 355 && j == 240 ){
+						barycentricPos[ 0 ] = 0.5;
+						barycentricPos[ 1 ] = 0.1;
+					}*/
+					if( barycentricPos[ 1 ] >= 0.0 && ( barycentricPos[ 0 ] + barycentricPos[ 1 ] ) <= 1.0 ){
+
+						barycentricPos[ 2 ] = f * glm::dot( triangles.at( jTri ).get_e2(), q );
+						if( barycentricPos[ 2 ] >= 0 ){
+							//if( barycentricPos[ 0 ] == barycentricPos[ 1 ] ) cout << barycentricPos[ 1 ] << " " << barycentricPos[ 1 ] << endl;
+
+							lambdaTriangles.push_back( barycentricPos[ 2 ] );
+						}
+
+					}
+
+				}
+			}
+
+		}
+	}
+
+	for( unsigned int i = 0; i < lambdaSpheres.size(); ++i ){
+		if( lambdaSpheres.at( i ) > 0.0 ) return true;
+	}
+
+	for( unsigned int i = 0; i < lambdaTriangles.size(); ++i ){
+		if( lambdaTriangles.at( i ) > 0.0 ) return true;
+	}
+
+	return false;
 }
