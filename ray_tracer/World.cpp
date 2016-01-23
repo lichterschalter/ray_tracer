@@ -451,7 +451,7 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 
 						glm::vec3 q = glm::cross( s, triangles.at( jTri ).get_e1() );
 						barycentricPos[ 1 ] = f * glm::dot( matrixvecmath.vec4ToVec3( ray ), q );
-	/*					if( i == 355 && j == 240 ){
+					/*	if( barycentricPos[ 0 ] == 0.56875 && barycentricPos[ 1 ] == 0.610938 ){
 							barycentricPos[ 0 ] = 0.5;
 							barycentricPos[ 1 ] = 0.1;
 						}*/
