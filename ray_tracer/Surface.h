@@ -91,6 +91,10 @@ public:
 		std::cout << "texture_name: " << texture_name << std::endl;
 		std::cout << "color: " << glm::to_string(color) << std::endl;
 	}
+
+	float get_reflectance(){
+		return reflectance;
+	}
 };
 
 

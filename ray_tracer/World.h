@@ -71,7 +71,7 @@ private:
 	glm::vec3 phongAmbient( glm::vec4 phong, glm::vec3 colorSurface );
 	glm::vec3 phongDiffuse( glm::vec4 phong, glm::vec3 colorSurface, glm::vec3 lightColor, float skalarNL );
 	glm::vec3 phongSpecular( glm::vec4 phong, float skalarRV, glm::vec3 lightColor );
-	glm::vec3 traceRay( glm::vec4 ray );
+	glm::vec3 traceRay( glm::vec4 ray, int bounces );
 };
 
 

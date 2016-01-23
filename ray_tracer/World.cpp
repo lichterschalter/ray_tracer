@@ -232,7 +232,10 @@ void World::performRayTracing(){
 			ray = matrixvecmath.normalize( ray );
 
 			//2. trace ray
-			glm::vec3 pixelCol = traceRay( ray );
+			glm::vec3 pixelCol = traceRay( ray, 0 );
+			if( pixelCol[ 0 ] > 255 ) pixelCol[ 0 ] = 255;
+			if( pixelCol[ 1 ] > 255 ) pixelCol[ 1 ] = 255;
+			if( pixelCol[ 2 ] > 255 ) pixelCol[ 2 ] = 255;
 
 
 	    	//3. save results to imgPlane
@@ -377,185 +380,206 @@ string World::posRayToString( glm::vec4 ray ){
 	return posX + " " + posY + " " + posZ;
 }
 
-glm::vec3 World::traceRay( glm::vec4 ray ){
+glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 	Matrix_vec_math matrixvecmath;
 
-	//1. perform intersection test ray-sphere
-	vector< float > lambdaSpheres;
-	vector< Sphere > intersectedSpheres;
-	for( unsigned int i = 0; i < spheres.size(); ++i ){
-		glm::vec4 posSphere( spheres.at( i ).get_position() );
-		float radiusSphere = spheres.at( i ).get_radius();
-		float a =  ray[ 0 ] * ray[ 0 ] +
-				   ray[ 1 ] * ray[ 1 ] +
-				   ray[ 2 ] * ray[ 2 ];
+	if( bounces < maxBounces ) {
 
-		float b =  ( 2 * posCamera[ 0 ] * ray[ 0 ] - 2 * posSphere[ 0 ] * ray[ 0 ] ) +
-				   ( 2 * posCamera[ 1 ] * ray[ 1 ] - 2 * posSphere[ 1 ] * ray[ 1 ] ) +
-				   ( 2 * posCamera[ 2 ] * ray[ 2 ] - 2 * posSphere[ 2 ] * ray[ 2 ] );
+		float reflection = 0.0;
 
-		float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) +
-				  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) +
-				  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
-				  pow ( radiusSphere, 2 );
-		float intersection = pow( b, 2 ) - 4 * a * c;
-		if( intersection >= 0 ){
-			float lambdaOne = ( -b + sqrt( intersection ) ) / 2 * a;
-			float lambdaTwo = ( -b - sqrt( intersection ) ) / 2 * a;
-			if( lambdaOne <= lambdaTwo ) lambdaSpheres.push_back( lambdaOne );
-			if( lambdaOne > lambdaTwo ) lambdaSpheres.push_back( lambdaTwo );
+		//1. perform intersection test ray-sphere
+		vector< float > lambdaSpheres;
+		vector< Sphere > intersectedSpheres;
+		for( unsigned int i = 0; i < spheres.size(); ++i ){
+			glm::vec4 posSphere( spheres.at( i ).get_position() );
+			float radiusSphere = spheres.at( i ).get_radius();
+			float a =  ray[ 0 ] * ray[ 0 ] +
+					   ray[ 1 ] * ray[ 1 ] +
+					   ray[ 2 ] * ray[ 2 ];
 
-			intersectedSpheres.push_back( spheres.at( i ) );
+			float b =  ( 2 * posCamera[ 0 ] * ray[ 0 ] - 2 * posSphere[ 0 ] * ray[ 0 ] ) +
+					   ( 2 * posCamera[ 1 ] * ray[ 1 ] - 2 * posSphere[ 1 ] * ray[ 1 ] ) +
+					   ( 2 * posCamera[ 2 ] * ray[ 2 ] - 2 * posSphere[ 2 ] * ray[ 2 ] );
+
+			float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) +
+					  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) +
+					  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
+					  pow ( radiusSphere, 2 );
+			float intersection = pow( b, 2 ) - 4 * a * c;
+			if( intersection >= 0 ){
+				float lambdaOne = ( -b + sqrt( intersection ) ) / 2 * a;
+				float lambdaTwo = ( -b - sqrt( intersection ) ) / 2 * a;
+				if( lambdaOne <= lambdaTwo ) lambdaSpheres.push_back( lambdaOne );
+				if( lambdaOne > lambdaTwo ) lambdaSpheres.push_back( lambdaTwo );
+
+				intersectedSpheres.push_back( spheres.at( i ) );
+			}
 		}
-	}
 
-	/*
-	cout << "INTERSECTIONS: " << endl;
-	for( unsigned int i = 0; i < lambdaSpheres.size(); ++i ){
-		cout << lambdaSpheres.at( i ) << endl;
-	}
-	*/
+		/*
+		cout << "INTERSECTIONS: " << endl;
+		for( unsigned int i = 0; i < lambdaSpheres.size(); ++i ){
+			cout << lambdaSpheres.at( i ) << endl;
+		}
+		*/
 
-	//2. perform intersection test ray-triangle
-	vector< float > lambdaTriangles;
-	vector< Mesh > intersectedMeshes;
-	vector< glm::vec3 > posTriangles;
-	glm::vec3 normalTri;
-	for( unsigned int iTri = 0; iTri < meshes.size(); ++iTri ){
-		std::vector < Triangle > triangles = meshes.at( iTri ).get_triangles();
-		unsigned int jTri = 0;
-		for( ; jTri < triangles.size(); ++jTri ){
-			//if( j > 0 ) cout << "BINGO" << endl;
-			glm::vec3 barycentricPos;
+		//2. perform intersection test ray-triangle
+		vector< float > lambdaTriangles;
+		vector< Mesh > intersectedMeshes;
+		vector< glm::vec3 > posTriangles;
+		glm::vec3 normalTri;
+		for( unsigned int iTri = 0; iTri < meshes.size(); ++iTri ){
+			std::vector < Triangle > triangles = meshes.at( iTri ).get_triangles();
+			unsigned int jTri = 0;
+			for( ; jTri < triangles.size(); ++jTri ){
+				//if( j > 0 ) cout << "BINGO" << endl;
+				glm::vec3 barycentricPos;
 
-			glm::vec3 p = glm::cross( matrixvecmath.vec4ToVec3( ray ), triangles.at( jTri ).get_e2() );
-			float a = glm::dot( triangles.at( jTri ).get_e1(), p );
-			if( a >= 0 ){
+				glm::vec3 p = glm::cross( matrixvecmath.vec4ToVec3( ray ), triangles.at( jTri ).get_e2() );
+				float a = glm::dot( triangles.at( jTri ).get_e1(), p );
+				if( a >= 0 ){
 
-				float f = 1.0 / a;
-				glm::vec3 s = matrixvecmath.vec4ToVec3( posCamera ) - triangles.at( jTri ).get_v().at( 0 );
+					float f = 1.0 / a;
+					glm::vec3 s = matrixvecmath.vec4ToVec3( posCamera ) - triangles.at( jTri ).get_v().at( 0 );
 
-				barycentricPos[ 0 ] = f * glm::dot( s, p );
-				if( barycentricPos[ 0 ] >= 0.0 && barycentricPos[ 0 ] <= 1.0 ){
+					barycentricPos[ 0 ] = f * glm::dot( s, p );
+					if( barycentricPos[ 0 ] >= 0.0 && barycentricPos[ 0 ] <= 1.0 ){
 
-					glm::vec3 q = glm::cross( s, triangles.at( jTri ).get_e1() );
-					barycentricPos[ 1 ] = f * glm::dot( matrixvecmath.vec4ToVec3( ray ), q );
-/*					if( i == 355 && j == 240 ){
-						barycentricPos[ 0 ] = 0.5;
-						barycentricPos[ 1 ] = 0.1;
-					}*/
-					if( barycentricPos[ 1 ] >= 0.0 && ( barycentricPos[ 0 ] + barycentricPos[ 1 ] ) <= 1.0 ){
+						glm::vec3 q = glm::cross( s, triangles.at( jTri ).get_e1() );
+						barycentricPos[ 1 ] = f * glm::dot( matrixvecmath.vec4ToVec3( ray ), q );
+	/*					if( i == 355 && j == 240 ){
+							barycentricPos[ 0 ] = 0.5;
+							barycentricPos[ 1 ] = 0.1;
+						}*/
+						if( barycentricPos[ 1 ] >= 0.0 && ( barycentricPos[ 0 ] + barycentricPos[ 1 ] ) <= 1.0 ){
 
-						barycentricPos[ 2 ] = f * glm::dot( triangles.at( jTri ).get_e2(), q );
-						if( barycentricPos[ 2 ] >= 0 ){
-							//if( barycentricPos[ 0 ] == barycentricPos[ 1 ] ) cout << barycentricPos[ 1 ] << " " << barycentricPos[ 1 ] << endl;
+							barycentricPos[ 2 ] = f * glm::dot( triangles.at( jTri ).get_e2(), q );
+							if( barycentricPos[ 2 ] >= 0 ){
+								//if( barycentricPos[ 0 ] == barycentricPos[ 1 ] ) cout << barycentricPos[ 1 ] << " " << barycentricPos[ 1 ] << endl;
 
-							lambdaTriangles.push_back( barycentricPos[ 2 ] );
-							intersectedMeshes.push_back( meshes.at( iTri ) );
-							posTriangles.push_back( barycentricPos );
-							normalTri = triangles.at( jTri ).get_n();
+								lambdaTriangles.push_back( barycentricPos[ 2 ] );
+								intersectedMeshes.push_back( meshes.at( iTri ) );
+								posTriangles.push_back( barycentricPos );
+								normalTri = triangles.at( jTri ).get_n();
+							}
+
 						}
 
 					}
+				}
 
+			}
+		}
+
+		//3. there is an intersection
+		if( lambdaSpheres.size() != 0 || lambdaTriangles.size() != 0){
+
+			//4.a. find smallest lambda spheres
+			int indexSmallest = 0;
+			for( unsigned int i = 0; i < lambdaSpheres.size(); ++i ){
+				float* smallest = &lambdaSpheres.at( i );
+				for( unsigned int j = 1; j < lambdaSpheres.size() - i; ++j ){
+					float* smaller = &lambdaSpheres.at( i + j );
+					if( *smallest > *smaller ){
+						indexSmallest = j;
+						//float temp = *smaller;
+						//*smaller = *biggest;
+						*smallest = *smaller;
+					}
 				}
 			}
 
+			//4.b. find smallest lambda triangles
+			int indexSmallestTri = 0;
+			for( unsigned int i = 0; i < lambdaTriangles.size(); ++i ){
+				float* smallest = &lambdaTriangles.at( i );
+				for( unsigned int j = 1; j < lambdaTriangles.size() - i; ++j ){
+					float* smaller = &lambdaTriangles.at( i + j );
+					if( *smallest > *smaller ){
+						indexSmallestTri = j;
+						//float temp = *smaller;
+						//*smaller = *biggest;
+						*smallest = *smaller;
+					}
+				}
+			}
+
+			//4.c. check if sphere or triangle is in the front
+			string intersectedObjType;
+			if( lambdaSpheres.size() != 0 ) intersectedObjType = "sphere";
+			if( lambdaTriangles.size() != 0 ) intersectedObjType = "triangle";
+			if( lambdaSpheres.size() != 0 && lambdaTriangles.size() != 0){
+				if( lambdaSpheres.at( indexSmallest ) <= lambdaTriangles.at( indexSmallestTri ) ) intersectedObjType = "sphere";
+				if( lambdaSpheres.at( indexSmallest ) > lambdaTriangles.at( indexSmallestTri ) ) intersectedObjType = "triangle";
+			}
+
+			//5. phong shading
+			glm::vec3 pixelCol;
+
+			//5.a calculate phong shading for sphere
+			if( intersectedObjType == "sphere" ){
+				glm::vec4 phong = intersectedSpheres.at( indexSmallest ).get_phong();
+				glm::vec3 colorSurface = intersectedSpheres.at( indexSmallest ).get_color();
+
+				glm::vec3 intersectPoint(
+						posCamera[ 0 ] + lambdaSpheres.at( indexSmallest ) * ray[ 0 ],
+						posCamera[ 1 ] + lambdaSpheres.at( indexSmallest ) * ray[ 1 ],
+						posCamera[ 2 ] + lambdaSpheres.at( indexSmallest ) * ray[ 2 ]
+				);
+
+				glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
+				sphereNormal = matrixvecmath.normalize( sphereNormal );
+
+				pixelCol = phongShading( phong, colorSurface, intersectPoint, sphereNormal );
+
+				reflection = intersectedSpheres.at( indexSmallest ).get_reflectance();
+				if( reflection != 0.0 ){
+					//d − 2(d · n)n
+					glm::vec4 reflRay(
+							ray[ 0 ] - 2 * ( glm::dot( ray[ 0 ], sphereNormal[ 0 ] ) * sphereNormal[ 0 ] ),
+							ray[ 1 ] - 2 * ( glm::dot( ray[ 1 ], sphereNormal[ 1 ] ) * sphereNormal[ 0 ] ),
+							ray[ 2 ] - 2 * ( glm::dot( ray[ 2 ], sphereNormal[ 2 ] ) * sphereNormal[ 0 ] ),
+							1.0
+					);
+					++bounces;
+					pixelCol = ( 1 - reflection) * pixelCol + reflection * traceRay( reflRay, bounces );
+				}
+			}
+
+			//5.b. calculate phong shading for triangle
+			if( intersectedObjType == "triangle" ){
+				glm::vec4 phong = intersectedMeshes.at( indexSmallestTri ).get_phong();
+				glm::vec3 colorSurface = intersectedMeshes.at( indexSmallestTri ).get_color();
+
+				glm::vec3 intersectPoint(
+						posCamera[ 0 ] + lambdaTriangles.at( indexSmallest ) * ray[ 0 ],
+						posCamera[ 1 ] + lambdaTriangles.at( indexSmallest ) * ray[ 1 ],
+						posCamera[ 2 ] + lambdaTriangles.at( indexSmallest ) * ray[ 2 ]
+				);
+
+				pixelCol = phongShading( phong, colorSurface, intersectPoint, matrixvecmath.vec3ToVec4( normalTri ) );
+
+				reflection = intersectedMeshes.at( indexSmallest ).get_reflectance();
+			}
+
+			//5.c save results from phong shading
+			if( intersectedObjType == "sphere" || intersectedObjType == "triangle" ){
+
+				//6.1 save color + phong
+				return pixelCol;
+
+			/*	//6.2 save normal
+				sphereNormal[ 0 ] = abs( sphereNormal[ 0 ] );
+				sphereNormal[ 1 ] = abs( sphereNormal[ 1 ] );
+				sphereNormal[ 2 ] = abs( sphereNormal[ 2 ] );
+				return sphereNormal;
+				*/
+			}
 		}
+
+		//3.b. no intersection --> bgcolor
+		return bgcolor;
 	}
 
-	//3. there is an intersection
-	if( lambdaSpheres.size() != 0 || lambdaTriangles.size() != 0){
-
-		//4.a. find smallest lambda spheres
-		int indexSmallest = 0;
-		for( unsigned int i = 0; i < lambdaSpheres.size(); ++i ){
-			float* smallest = &lambdaSpheres.at( i );
-			for( unsigned int j = 1; j < lambdaSpheres.size() - i; ++j ){
-				float* smaller = &lambdaSpheres.at( i + j );
-				if( *smallest > *smaller ){
-					indexSmallest = j;
-					//float temp = *smaller;
-					//*smaller = *biggest;
-					*smallest = *smaller;
-				}
-			}
-		}
-
-		//4.b. find smallest lambda triangles
-		int indexSmallestTri = 0;
-		for( unsigned int i = 0; i < lambdaTriangles.size(); ++i ){
-			float* smallest = &lambdaTriangles.at( i );
-			for( unsigned int j = 1; j < lambdaTriangles.size() - i; ++j ){
-				float* smaller = &lambdaTriangles.at( i + j );
-				if( *smallest > *smaller ){
-					indexSmallestTri = j;
-					//float temp = *smaller;
-					//*smaller = *biggest;
-					*smallest = *smaller;
-				}
-			}
-		}
-
-		//4.c. check if sphere or triangle is in the front
-    	string intersectedObjType;
-    	if( lambdaSpheres.size() != 0 ) intersectedObjType = "sphere";
-    	if( lambdaTriangles.size() != 0 ) intersectedObjType = "triangle";
-    	if( lambdaSpheres.size() != 0 && lambdaTriangles.size() != 0){
-			if( lambdaSpheres.at( indexSmallest ) <= lambdaTriangles.at( indexSmallestTri ) ) intersectedObjType = "sphere";
-			if( lambdaSpheres.at( indexSmallest ) > lambdaTriangles.at( indexSmallestTri ) ) intersectedObjType = "triangle";
-    	}
-
-    	//5. phong shading
-    	glm::vec3 pixelCol;
-
-		//5.a calculate phong shading for sphere
-    	if( intersectedObjType == "sphere" ){
-    		glm::vec4 phong = intersectedSpheres.at( indexSmallest ).get_phong();
-    		glm::vec3 colorSurface = intersectedSpheres.at( indexSmallest ).get_color();
-
-    		glm::vec3 intersectPoint(
-    				posCamera[ 0 ] + lambdaSpheres.at( indexSmallest ) * ray[ 0 ],
-    				posCamera[ 1 ] + lambdaSpheres.at( indexSmallest ) * ray[ 1 ],
-    				posCamera[ 2 ] + lambdaSpheres.at( indexSmallest ) * ray[ 2 ]
-    		);
-
-    		glm::vec4 sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
-    		sphereNormal = matrixvecmath.normalize( sphereNormal );
-
-    		pixelCol = phongShading( phong, colorSurface, intersectPoint, sphereNormal );
-    	}
-
-    	//5.b. calculate phong shading for triangle
-    	if( intersectedObjType == "triangle" ){
-    		glm::vec4 phong = intersectedMeshes.at( indexSmallestTri ).get_phong();
-    		glm::vec3 colorSurface = intersectedMeshes.at( indexSmallestTri ).get_color();
-
-    		glm::vec3 intersectPoint(
-    				posCamera[ 0 ] + lambdaTriangles.at( indexSmallest ) * ray[ 0 ],
-    				posCamera[ 1 ] + lambdaTriangles.at( indexSmallest ) * ray[ 1 ],
-    				posCamera[ 2 ] + lambdaTriangles.at( indexSmallest ) * ray[ 2 ]
-    		);
-
-    		pixelCol = phongShading( phong, colorSurface, intersectPoint, matrixvecmath.vec3ToVec4( normalTri ) );
-    	}
-
-    	//5.c save results from phong shading
-    	if( intersectedObjType == "sphere" || intersectedObjType == "triangle" ){
-
-			//6.1 save color + phong
-    		return pixelCol;
-
-		/*	//6.2 save normal
-		    sphereNormal[ 0 ] = abs( sphereNormal[ 0 ] );
-		    sphereNormal[ 1 ] = abs( sphereNormal[ 1 ] );
-		    sphereNormal[ 2 ] = abs( sphereNormal[ 2 ] );
-			return sphereNormal;
-			*/
-    	}
-	}
-
-	//3.b. no intersection --> bgcolor
-    return bgcolor;
-
+	return bgcolor;
 }
