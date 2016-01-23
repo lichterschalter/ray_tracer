@@ -540,9 +540,9 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 				reflection = intersectedSpheres.at( indexSmallest ).get_reflectance();
 				if( reflection != 0.0 ){
 					glm::vec4 reflRay(
-							ray[ 0 ] - 2 * ( glm::dot( ray[ 0 ], sphereNormal[ 0 ] ) * sphereNormal[ 0 ] ),
-							ray[ 1 ] - 2 * ( glm::dot( ray[ 1 ], sphereNormal[ 1 ] ) * sphereNormal[ 1 ] ),
-							ray[ 2 ] - 2 * ( glm::dot( ray[ 2 ], sphereNormal[ 2 ] ) * sphereNormal[ 2 ] ),
+							ray[ 0 ] + 2 * ( glm::dot( ray[ 0 ], sphereNormal[ 0 ] ) * sphereNormal[ 0 ] ),
+							ray[ 1 ] + 2 * ( glm::dot( ray[ 1 ], sphereNormal[ 1 ] ) * sphereNormal[ 1 ] ),
+							ray[ 2 ] + 2 * ( glm::dot( ray[ 2 ], sphereNormal[ 2 ] ) * sphereNormal[ 2 ] ),
 							1.0
 					);
 					++bounces;
@@ -566,9 +566,9 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 				reflection = intersectedMeshes.at( indexSmallestTri ).get_reflectance();
 				if( reflection != 0.0 ){
 					glm::vec4 reflRay(
-							ray[ 0 ] - 2 * ( glm::dot( ray[ 0 ], normalTri[ 0 ] ) * normalTri[ 0 ] ),
-							ray[ 1 ] - 2 * ( glm::dot( ray[ 1 ], normalTri[ 1 ] ) * normalTri[ 1 ] ),
-							ray[ 2 ] - 2 * ( glm::dot( ray[ 2 ], normalTri[ 2 ] ) * normalTri[ 2 ] ),
+							ray[ 0 ] + 2 * ( glm::dot( ray[ 0 ], normalTri[ 0 ] ) * normalTri[ 0 ] ),
+							ray[ 1 ] + 2 * ( glm::dot( ray[ 1 ], normalTri[ 1 ] ) * normalTri[ 1 ] ),
+							ray[ 2 ] + 2 * ( glm::dot( ray[ 2 ], normalTri[ 2 ] ) * normalTri[ 2 ] ),
 							1.0
 					);
 					++bounces;
