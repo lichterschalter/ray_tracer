@@ -269,7 +269,7 @@ glm::vec3 World::phongShading( glm::vec4 phong, glm::vec3 colorSurface, glm::vec
 		glm::vec4 lightVec( -parallelLightDir[ 0 ], -parallelLightDir[ 1 ], -parallelLightDir[ 2 ], 1.0 );
 		lightVec = matrixvecmath.normalize( lightVec );
 
-		if( !shadowRay( lightVec + glm::vec4( 0.2, 0.2, 0.2, 0.0 ), matrixvecmath.vec3ToVec4( intersectPoint ) ) ){
+		if( !shadowRay( lightVec, matrixvecmath.vec3ToVec4( intersectPoint ) ) ){
 			float skalarNL = normalVec[ 0 ] * lightVec[ 0 ] + normalVec[ 1 ] * lightVec[ 1 ] + normalVec[ 2 ] * lightVec[ 2 ];
 			glm::vec4 reflectVec(
 					2 * skalarNL * normalVec[ 0 ] - lightVec[ 0 ],
