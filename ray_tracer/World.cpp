@@ -273,34 +273,39 @@ void World::performRayTracing(){
 			vector< Mesh > intersectedMeshes;
 			vector< glm::vec3 > posTriangles;
 			glm::vec3 normalTri;
-			for( unsigned int i = 0; i < meshes.size(); ++i ){
-				std::vector < Triangle > triangles = meshes.at( i ).get_triangles();
-				unsigned int j = 0;
-				for( ; j < triangles.size(); ++j ){
+			for( unsigned int iTri = 0; iTri < meshes.size(); ++iTri ){
+				std::vector < Triangle > triangles = meshes.at( iTri ).get_triangles();
+				unsigned int jTri = 0;
+				for( ; jTri < triangles.size(); ++jTri ){
 					//if( j > 0 ) cout << "BINGO" << endl;
 					glm::vec3 barycentricPos;
 
-					glm::vec3 p = glm::cross( matrixvecmath.vec4ToVec3( ray ), triangles.at( j ).get_e2() );
-					float a = glm::dot( triangles.at( j ).get_e1(), p );
+					glm::vec3 p = glm::cross( matrixvecmath.vec4ToVec3( ray ), triangles.at( jTri ).get_e2() );
+					float a = glm::dot( triangles.at( jTri ).get_e1(), p );
 					if( a >= 0 ){
 
 						float f = 1.0 / a;
-						glm::vec3 s = matrixvecmath.vec4ToVec3( posCamera ) - triangles.at( j ).get_v().at( 0 );
+						glm::vec3 s = matrixvecmath.vec4ToVec3( posCamera ) - triangles.at( jTri ).get_v().at( 0 );
 
 						barycentricPos[ 0 ] = f * glm::dot( s, p );
 						if( barycentricPos[ 0 ] >= 0.0 && barycentricPos[ 0 ] <= 1.0 ){
 
-							glm::vec3 q = glm::cross( s, triangles.at( j ).get_e1() );
+							glm::vec3 q = glm::cross( s, triangles.at( jTri ).get_e1() );
 							barycentricPos[ 1 ] = f * glm::dot( matrixvecmath.vec4ToVec3( ray ), q );
+							if( i == 355 && j == 240 ){
+								barycentricPos[ 0 ] = 0.5;
+								barycentricPos[ 1 ] = 0.1;
+							}
 							if( barycentricPos[ 1 ] >= 0.0 && ( barycentricPos[ 0 ] + barycentricPos[ 1 ] ) <= 1.0 ){
 
-								barycentricPos[ 2 ] = f * glm::dot( triangles.at( j ).get_e2(), q );
+								barycentricPos[ 2 ] = f * glm::dot( triangles.at( jTri ).get_e2(), q );
 								if( barycentricPos[ 2 ] >= 0 ){
+									//if( barycentricPos[ 0 ] == barycentricPos[ 1 ] ) cout << barycentricPos[ 1 ] << " " << barycentricPos[ 1 ] << endl;
 
 									lambdaTriangles.push_back( barycentricPos[ 2 ] );
-									intersectedMeshes.push_back( meshes.at( i ) );
+									intersectedMeshes.push_back( meshes.at( iTri ) );
 									posTriangles.push_back( barycentricPos );
-									normalTri = triangles.at( j ).get_n();
+									normalTri = triangles.at( jTri ).get_n();
 								}
 
 							}
@@ -413,6 +418,8 @@ void World::performRayTracing(){
 	    		//cout << posRayToString( ray );
 	    		//contentImgPlane.at( i ).push_back( posRayToString( ray ) + "  " );
 			}
+
+
 
 	    }
     	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every row
