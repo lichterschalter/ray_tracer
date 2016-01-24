@@ -39,7 +39,7 @@ void RayTracer::main() {
 	//string inputFileName = "";
 	//cout << "Type in the name of the input file (f.e.: '../scenes/example1.xml' ): ";
 	//cin >> inputFileName;
-	string inputFileName = "../scenes/example3.xml";
+	string inputFileName = "../scenes/example6.xml";
 
 
 	//PARSING GENERAL INPUT FROM XML FILE
@@ -125,9 +125,21 @@ void RayTracer::main() {
 	string ppmOutput;
 	int width = world.getWidthImgPlane();
 	int height = world.getHeightImgPlane();
+	string maxColor = "512";
+	if( height >= width ){
+		stringstream ss;
+		ss << height;
+		maxColor = ss.str();
+	}
+	if( height < width ){
+		stringstream ss;
+		ss << width;
+		maxColor = ss.str();
+	}
+
 	ppmOutput = world.contentImgPlaneToString();
 	OutputImage* outputImage = new OutputPPM();
-	outputImage->createOutput( outputFileName, ppmOutput, "512", height, width );
+	outputImage->createOutput( outputFileName, ppmOutput, maxColor, height, width );
 
 
 	//OTHER STUFF

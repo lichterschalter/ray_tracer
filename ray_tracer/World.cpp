@@ -232,7 +232,7 @@ void World::performRayTracing(){
 			ray = matrixvecmath.normalize( ray );
 
 			//2. trace ray
-			glm::vec3 pixelCol = traceRay( ray, 0 );
+			glm::vec3 pixelCol = traceRay( ray, posCamera, 0 );
 
 			if( pixelCol[ 0 ] > 255 ) pixelCol[ 0 ] = 255;
 			if( pixelCol[ 1 ] > 255 ) pixelCol[ 1 ] = 255;
@@ -384,7 +384,7 @@ string World::posRayToString( glm::vec4 ray ){
 	return posX + " " + posY + " " + posZ;
 }
 
-glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
+glm::vec3 World::traceRay( glm::vec4 ray, glm::vec4 ip, int bounces ){
 	Matrix_vec_math matrixvecmath;
 
 	if( bounces < maxBounces ) {
@@ -401,13 +401,13 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 					   ray[ 1 ] * ray[ 1 ] +
 					   ray[ 2 ] * ray[ 2 ];
 
-			float b =  ( 2 * posCamera[ 0 ] * ray[ 0 ] - 2 * posSphere[ 0 ] * ray[ 0 ] ) +
-					   ( 2 * posCamera[ 1 ] * ray[ 1 ] - 2 * posSphere[ 1 ] * ray[ 1 ] ) +
-					   ( 2 * posCamera[ 2 ] * ray[ 2 ] - 2 * posSphere[ 2 ] * ray[ 2 ] );
+			float b =  ( 2 * ip[ 0 ] * ray[ 0 ] - 2 * posSphere[ 0 ] * ray[ 0 ] ) +
+					   ( 2 * ip[ 1 ] * ray[ 1 ] - 2 * posSphere[ 1 ] * ray[ 1 ] ) +
+					   ( 2 * ip[ 2 ] * ray[ 2 ] - 2 * posSphere[ 2 ] * ray[ 2 ] );
 
-			float c = pow ( posCamera[ 0 ] - posSphere[ 0 ], 2 ) +
-					  pow ( posCamera[ 1 ] - posSphere[ 1 ], 2 ) +
-					  pow ( posCamera[ 2 ] - posSphere[ 2 ], 2 ) -
+			float c = pow ( ip[ 0 ] - posSphere[ 0 ], 2 ) +
+					  pow ( ip[ 1 ] - posSphere[ 1 ], 2 ) +
+					  pow ( ip[ 2 ] - posSphere[ 2 ], 2 ) -
 					  pow ( radiusSphere, 2 );
 			float intersection = pow( b, 2 ) - 4 * a * c;
 			if( intersection >= 0 ){
@@ -444,7 +444,7 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 				if( a >= 0 ){
 
 					float f = 1.0 / a;
-					glm::vec3 s = matrixvecmath.vec4ToVec3( posCamera ) - triangles.at( jTri ).get_v().at( 0 );
+					glm::vec3 s = matrixvecmath.vec4ToVec3( ip ) - triangles.at( jTri ).get_v().at( 0 );
 
 					barycentricPos[ 0 ] = f * glm::dot( s, p );
 					if( barycentricPos[ 0 ] >= 0.0 && barycentricPos[ 0 ] <= 1.0 ){
@@ -515,7 +515,10 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 			if( lambdaSpheres.size() != 0 && lambdaTriangles.size() != 0){
 				if( lambdaSpheres.at( indexSmallest ) <= lambdaTriangles.at( indexSmallestTri ) ) intersectedObjType = "sphere";
 				if( lambdaSpheres.at( indexSmallest ) > lambdaTriangles.at( indexSmallestTri ) ) intersectedObjType = "triangle";
+				//cout << bounces << ": " << intersectedObjType << " " << lambdaSpheres.at( indexSmallest ) << " " << lambdaTriangles.at( indexSmallestTri ) << endl;
+				intersectedObjType = "sphere";
 			}
+			//if( bounces > 6 ) cout << lambdaSpheres.size() << " " << lambdaTriangles.size() << endl;
 
 			//5. phong shading
 			glm::vec3 pixelCol;
@@ -527,9 +530,9 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 				glm::vec3 colorSurface = intersectedSpheres.at( indexSmallest ).get_color();
 
 				glm::vec3 intersectPoint(
-						posCamera[ 0 ] + lambdaSpheres.at( indexSmallest ) * ray[ 0 ],
-						posCamera[ 1 ] + lambdaSpheres.at( indexSmallest ) * ray[ 1 ],
-						posCamera[ 2 ] + lambdaSpheres.at( indexSmallest ) * ray[ 2 ]
+						ip[ 0 ] + lambdaSpheres.at( indexSmallest ) * ray[ 0 ],
+						ip[ 1 ] + lambdaSpheres.at( indexSmallest ) * ray[ 1 ],
+						ip[ 2 ] + lambdaSpheres.at( indexSmallest ) * ray[ 2 ]
 				);
 
 				sphereNormal =  matrixvecmath.vec3ToVec4( intersectPoint - matrixvecmath.vec4ToVec3( intersectedSpheres.at( indexSmallest ).get_position() ) / intersectedSpheres.at( indexSmallest ).get_radius() );
@@ -545,8 +548,10 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 							ray[ 2 ] + 2 * ( glm::dot( ray[ 2 ], sphereNormal[ 2 ] ) * sphereNormal[ 2 ] ),
 							1.0
 					);
+					reflRay = matrixvecmath.normalize( reflRay );
+					//cout << bounces << " - " << glm::to_string( ip ) << " " << glm::to_string( reflRay ) << endl;
 					++bounces;
-					pixelCol = ( 1 - reflection) * pixelCol + reflection * traceRay( reflRay, bounces );
+					pixelCol = ( 1 - reflection) * pixelCol + reflection * traceRay( reflRay, ip, bounces );
 				}
 			}
 
@@ -556,9 +561,9 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 				glm::vec3 colorSurface = intersectedMeshes.at( indexSmallestTri ).get_color();
 
 				glm::vec3 intersectPoint(
-						posCamera[ 0 ] + lambdaTriangles.at( indexSmallest ) * ray[ 0 ],
-						posCamera[ 1 ] + lambdaTriangles.at( indexSmallest ) * ray[ 1 ],
-						posCamera[ 2 ] + lambdaTriangles.at( indexSmallest ) * ray[ 2 ]
+						ip[ 0 ] + lambdaTriangles.at( indexSmallest ) * ray[ 0 ],
+						ip[ 1 ] + lambdaTriangles.at( indexSmallest ) * ray[ 1 ],
+						ip[ 2 ] + lambdaTriangles.at( indexSmallest ) * ray[ 2 ]
 				);
 
 				pixelCol = phongShading( phong, colorSurface, intersectPoint, matrixvecmath.vec3ToVec4( normalTri ) );
@@ -571,8 +576,10 @@ glm::vec3 World::traceRay( glm::vec4 ray, int bounces ){
 							ray[ 2 ] + 2 * ( glm::dot( ray[ 2 ], normalTri[ 2 ] ) * normalTri[ 2 ] ),
 							1.0
 					);
+					reflRay = matrixvecmath.normalize( reflRay );
 					++bounces;
-					pixelCol = ( 1 - reflection) * pixelCol + reflection * traceRay( reflRay, bounces );
+					//pixelCol = ( 1 - reflection) * colorSurface + reflection * traceRay( reflRay, ip, bounces );
+					pixelCol = ( 1 - reflection) * pixelCol + reflection * traceRay( reflRay, ip, bounces );
 				}
 			}
 
