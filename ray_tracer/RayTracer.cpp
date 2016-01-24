@@ -32,6 +32,7 @@ int main() {
 }
 
 void RayTracer::main() {
+	bool supersampling = true;
 
 	//USER INTERFACE
 	cout << "RayTracer is activated!" << endl;
@@ -39,8 +40,18 @@ void RayTracer::main() {
 	//string inputFileName = "";
 	//cout << "Type in the name of the input file (f.e.: '../scenes/example1.xml' ): ";
 	//cin >> inputFileName;
-	string inputFileName = "../scenes/example6.xml";
-
+	string inputFileName = "../scenes/example3.xml";
+/*
+	string susa;
+	cout << "Use supersampling? (N/y) ";
+	cin >> susa;
+	if( susa == "y" ){
+		supersampling = true;
+		cout << "Supersampling is ON!" << endl;
+	}else{
+		cout << "Supersampling is OFF!" << endl;
+	}
+*/
 
 	//PARSING GENERAL INPUT FROM XML FILE
 	XMLParser xmlParser( inputFileName );
@@ -119,7 +130,7 @@ void RayTracer::main() {
 
 
 	//PERFORM RAY TRACING
-	world.performRayTracing();
+	world.performRayTracing( supersampling );
 
 	//CREATE OUTPUT
 	string ppmOutput;

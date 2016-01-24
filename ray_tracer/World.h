@@ -65,7 +65,7 @@ public:
 	std::string posRayToString( glm::vec4 ray );
 	int getWidthImgPlane();
 	int getHeightImgPlane();
-	void performRayTracing();
+	void performRayTracing( bool supersampling );
 private:
 	glm::vec3 phongShading( glm::vec4 phong, glm::vec3 colorSurface, glm::vec3 intersectPoint, glm::vec4 normalVec );
 	glm::vec3 phongAmbient( glm::vec4 phong, glm::vec3 colorSurface );

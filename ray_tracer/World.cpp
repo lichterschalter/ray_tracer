@@ -72,8 +72,12 @@ World::World( glm::vec4 posCamera, glm::vec4 upCamera, glm::vec4 lookAtCamera, \
 
 	glm::vec3 topLeftTemp = lookAtTemp + ( width / 2 * ( -rightVecTemp ) ) + ( height / 2 * ( upCameraTemp ) );
 	posImgPlaneTopLeft = matrixvecmath.vec3ToVec4( topLeftTemp );
-	//posImgPlaneTopLeft[ 0 ] += pixelWidth;
-	posImgPlaneTopLeft[ 1 ] -= pixelHeight;
+/*	posImgPlaneTopLeft[ 0 ] += pixelWidth / 2 * rightVec[ 0 ];
+	posImgPlaneTopLeft[ 1 ] += pixelWidth / 2 * rightVec[ 1 ];
+	posImgPlaneTopLeft[ 2 ] += pixelWidth / 2 * rightVec[ 2 ]; */
+	posImgPlaneTopLeft[ 0 ] -= pixelHeight * upCamera[ 0 ];
+	posImgPlaneTopLeft[ 1 ] -= pixelHeight * upCamera[ 1 ];
+	posImgPlaneTopLeft[ 2 ] -= pixelHeight * upCamera[ 2 ];
 
 
 	//FILL CONTENT OF IMGPLANE WITH BLACK PIXELS (use contentImgPlane[row][column])
@@ -199,7 +203,7 @@ int World::getHeightImgPlane(){
 	return heightImgPlane;
 }
 
-void World::performRayTracing(){
+void World::performRayTracing( bool supersampling ){
 	Matrix_vec_math matrixvecmath;
 	cout << "Shooting rays into the world..." << endl;
 
@@ -217,32 +221,81 @@ void World::performRayTracing(){
 	for (unsigned int i = 0; i < contentImgPlane.size(); i++) {
 	    for (int j = 0; j < widthImgPlane; j++) {
 
-	    	//1. calculate direction of ray
-	    	glm::vec4 posRayOnPlane = posImgPlaneTopLeft;
-			posRayOnPlane[ 0 ] = posRayOnPlane[ 0 ] + j * rightVec[ 0 ] * pixelWidth - i * (upCamera[ 0 ]) * pixelHeight;
-			posRayOnPlane[ 1 ] = posRayOnPlane[ 1 ] + j * rightVec[ 1 ] * pixelWidth - i * (upCamera[ 1 ]) * pixelHeight;
-			posRayOnPlane[ 2 ] = posRayOnPlane[ 2 ] + j * rightVec[ 2 ] * pixelWidth - i * (upCamera[ 2 ]) * pixelHeight;
-	    	glm::vec4 ray(
-	    			posRayOnPlane[ 0 ] - posCamera[ 0 ],
-					posRayOnPlane[ 1 ] - posCamera[ 1 ],
-					posRayOnPlane[ 2 ] - posCamera[ 2 ],
-					1.0 );
-			//cout << "i: " << i << " j: " << j << endl;
-	    	//cout << ray.toString() << endl;
-			ray = matrixvecmath.normalize( ray );
+	    	if( !supersampling ){
+				//1. calculate direction of ray
+				glm::vec4 posRayOnPlane = posImgPlaneTopLeft;
+				posRayOnPlane[ 0 ] = posRayOnPlane[ 0 ] + j * rightVec[ 0 ] * pixelWidth - i * (upCamera[ 0 ]) * pixelHeight;
+				posRayOnPlane[ 1 ] = posRayOnPlane[ 1 ] + j * rightVec[ 1 ] * pixelWidth - i * (upCamera[ 1 ]) * pixelHeight;
+				posRayOnPlane[ 2 ] = posRayOnPlane[ 2 ] + j * rightVec[ 2 ] * pixelWidth - i * (upCamera[ 2 ]) * pixelHeight;
+				glm::vec4 ray(
+						posRayOnPlane[ 0 ] - posCamera[ 0 ],
+						posRayOnPlane[ 1 ] - posCamera[ 1 ],
+						posRayOnPlane[ 2 ] - posCamera[ 2 ],
+						1.0 );
+				//cout << "i: " << i << " j: " << j << endl;
+				//cout << ray.toString() << endl;
+				ray = matrixvecmath.normalize( ray );
 
-			//2. trace ray
-			glm::vec3 pixelCol = traceRay( ray, posCamera, 0 );
+				//2. trace ray
+				glm::vec3 pixelCol = traceRay( ray, posCamera, 0 );
 
-			if( pixelCol[ 0 ] > 255 ) pixelCol[ 0 ] = 255;
-			if( pixelCol[ 1 ] > 255 ) pixelCol[ 1 ] = 255;
-			if( pixelCol[ 2 ] > 255 ) pixelCol[ 2 ] = 255;
+				if( pixelCol[ 0 ] > 255 ) pixelCol[ 0 ] = 255;
+				if( pixelCol[ 1 ] > 255 ) pixelCol[ 1 ] = 255;
+				if( pixelCol[ 2 ] > 255 ) pixelCol[ 2 ] = 255;
 
-	    	//3. save results to imgPlane
-			stringstream sstr;
-			sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
-			string colorPixel = sstr.str();
-			contentImgPlane.at( i ).push_back( colorPixel );
+				//3. save results to imgPlane
+				stringstream sstr;
+				sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
+				string colorPixel = sstr.str();
+				contentImgPlane.at( i ).push_back( colorPixel );
+	    	}else{
+	    		glm::vec3 pixelCol;
+
+				//1. calculate direction of ray
+				glm::vec4 posRayOnPlane = posImgPlaneTopLeft;
+
+				posRayOnPlane[ 0 ] += pixelWidth / 2 * rightVec[ 0 ];
+				posRayOnPlane[ 1 ] += pixelWidth / 2 * rightVec[ 1 ];
+				posRayOnPlane[ 2 ] += pixelWidth / 2 * rightVec[ 2 ];
+
+				posRayOnPlane[ 0 ] = posRayOnPlane[ 0 ] + j * rightVec[ 0 ] * pixelWidth - i * (upCamera[ 0 ]) * pixelHeight;
+				posRayOnPlane[ 1 ] = posRayOnPlane[ 1 ] + j * rightVec[ 1 ] * pixelWidth - i * (upCamera[ 1 ]) * pixelHeight;
+				posRayOnPlane[ 2 ] = posRayOnPlane[ 2 ] + j * rightVec[ 2 ] * pixelWidth - i * (upCamera[ 2 ]) * pixelHeight;
+				posRayOnPlane[ 0 ] -= pixelHeight / 2 * upCamera[ 0 ];
+				posRayOnPlane[ 1 ] -= pixelHeight / 2 * upCamera[ 1 ];
+				posRayOnPlane[ 2 ] -= pixelHeight / 2 * upCamera[ 2 ];
+
+	    		for( int w = -1; w <= 1; w += 2 ){
+	    			for( int h = -1; h <= 1; h += 2 ){
+						posRayOnPlane[ 0 ] = posRayOnPlane[ 0 ] + w * rightVec[ 0 ] * pixelWidth / 2 - h * (upCamera[ 0 ]) * pixelHeight / 2;
+						posRayOnPlane[ 1 ] = posRayOnPlane[ 1 ] + w * rightVec[ 1 ] * pixelWidth / 2 - h * (upCamera[ 1 ]) * pixelHeight / 2;
+						posRayOnPlane[ 2 ] = posRayOnPlane[ 2 ] + w * rightVec[ 2 ] * pixelWidth / 2 - h * (upCamera[ 2 ]) * pixelHeight / 2;
+						glm::vec4 ray(
+								posRayOnPlane[ 0 ] - posCamera[ 0 ],
+								posRayOnPlane[ 1 ] - posCamera[ 1 ],
+								posRayOnPlane[ 2 ] - posCamera[ 2 ],
+								1.0 );
+						ray = matrixvecmath.normalize( ray );
+
+						//2. trace ray
+						glm::vec3 rayCol = traceRay( ray, posCamera, 0 );
+
+						if( rayCol[ 0 ] > 255 ) rayCol[ 0 ] = 255;
+						if( rayCol[ 1 ] > 255 ) rayCol[ 1 ] = 255;
+						if( rayCol[ 2 ] > 255 ) rayCol[ 2 ] = 255;
+
+						pixelCol[ 0 ] += rayCol[ 0 ] / 4;
+						pixelCol[ 1 ] += rayCol[ 1 ] / 4;
+						pixelCol[ 2 ] += rayCol[ 2 ] / 4;
+	    			}
+	    		}
+
+				//3. save results to imgPlane
+				stringstream sstr;
+				sstr << int ( pixelCol[ 0 ] ) << " " << int ( pixelCol[ 1 ] ) << " " << int ( pixelCol[ 2 ] ) << "    ";
+				string colorPixel = sstr.str();
+				contentImgPlane.at( i ).push_back( colorPixel );
+	    	}
 
 	    }
     	contentImgPlane.at( i ).push_back( "\n" ); // Add column to every row
